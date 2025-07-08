@@ -16,10 +16,10 @@ import CommunityWrite from '@/views/CommunityWrite.vue'
 import Shopping from '@/views/Shopping.vue'
 import Shopping_detail from '@/views/Shopping_detail.vue'
 import Refrigerator from '@/views/Refrigerator.vue'
-
 import Login from '@/views/Login.vue'
 import SignupTypeSelect from '@/views/SignupTypeSelect.vue'
 import Signup from '@/views/Signup.vue'
+import { useUserStore } from '@/store/useUserStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,12 +27,14 @@ const router = createRouter({
     {
       path: '/recipe',
       name: 'recipe',
-      component: Recipe
+      component: Recipe,
+      meta: { requiresAuth: true },
     },
     {
       path: '/recipe/detail',
       name: 'recipedetail',
-      component: RecipeDetail
+      component: RecipeDetail,
+      meta: { requiresAuth: true },
     },
     {
       path: '/community',
@@ -42,7 +44,8 @@ const router = createRouter({
     {
       path: '/community/:id',
       name: 'communityDetail',
-      component: CommunityDetail
+      component: CommunityDetail,
+      meta: { requiresAuth: true },
     },
     {
       path: '/community/write',
@@ -52,12 +55,13 @@ const router = createRouter({
     {
       path: '/shopping',
       name: 'shopping',
-      component: Shopping
+      component: Shopping,
     },
     {
       path: '/shopping/detail/:id',
       name: 'shoppingdetail',
-      component: Shopping_detail
+      component: Shopping_detail,
+      meta: { requiresAuth: true },
     },
     {
       path: '/mypage',
@@ -71,16 +75,18 @@ const router = createRouter({
         { path: 'user_info', name: 'mypage-info', component: UserInfo },
         { path: 'write_list', name: 'mypage-write', component: WriteList },
       ],
+      meta: { requiresAuth: true },
     },
     {
       path: '/',
       name: 'main',
-      component: Main
+      component: Main,
     },
     {
       path: '/refrigerator',
       name: 'refrigerator',
-      component: Refrigerator
+      component: Refrigerator,
+      meta: { requiresAuth: true },
     },
     {
       path: '/login',
@@ -101,6 +107,17 @@ const router = createRouter({
       meta: { hideLayout: true },
     },
   ],
+})
+
+// 전역 가드
+router.beforeEach((to, from, next) => {
+  const auth = useUserStore()
+  const isLoggedIn = auth.isLogin
+
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    return next('/login')
+  }
+  next()
 })
 
 export default router

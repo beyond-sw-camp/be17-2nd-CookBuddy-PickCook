@@ -1,7 +1,9 @@
 <br>
 
 <h1 align="center" style="color: #FFD675;">🍽️ PickCook </h1><br>
-
+<div align="center">
+  <img src="images/pickcook_logo.png" alt="pickcook logo" height="400" align="center" />
+</div>
 <h3 align="center">5팀 - Team CookBuddy </h3><br>
 
 ## 🕵️ 팀원 소개
@@ -15,29 +17,36 @@
 </div>
 <br><br><br>
 
-## 🍕 프로젝트 소개
+## 📌 프로젝트 소개
 
 PickCook은 냉장고 속 재료를 등록해 재고와 유통기한을 관리하고, 그 재료로 만들 수 있는 요리를 추천해주는 플랫폼입니다. 만들고 싶은 요리를 고르면 필요한 재료도 알려주고, 부족한 재료는 바로 구매할 수 있어 요리가 더 쉬워집니다.
 
 <br>
 
-## 🍔 기술 스택
+## 🔗 접속 주소
 
-![AWS EC2](https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=Amazon%20EC2&logoColor=white)
-![Ubuntu](https://img.shields.io/badge/ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=FFFFFF)
+## 🛠️ 기술 스택
 
-![Figma](https://img.shields.io/badge/figma-F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
+### 프론트엔드
 
-![Vue.js](https://img.shields.io/badge/vue.js-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D) ![pinia](https://img.shields.io/badge/Pinia-ffd859?style=for-the-badge&logoColor=black) ![NginX](https://img.shields.io/badge/NginX-009639?style=for-the-badge&logo=nginx&logoColor=white)
+![Vue.js](https://img.shields.io/badge/vue.js-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D) ![pinia](https://img.shields.io/badge/Pinia-ffd859?style=for-the-badge&logoColor=black) ![NginX](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+
+### 협업 & 기타
 
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+![AWS EC2](https://img.shields.io/badge/Amazon%20EC2-FF9900?style=for-the-badge&logo=Amazon%20EC2&logoColor=white)
+![Ubuntu](https://img.shields.io/badge/ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=FFFFFF)
+![Figma](https://img.shields.io/badge/figma-F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white)
+![Notion](https://img.shields.io/badge/notion-000000.svg?style=for-the-badge&logo=notion&logoColor=white)
 ![Discord](https://img.shields.io/badge/Discord-5865F2.svg?style=for-the-badge&logo=discord&logoColor=white)
 
 <br>
 
-## 🎨 화면 설계서
+## 🖼️ Figma 설계
 
-## ✨ 접속 주소
+### 📄 페이지 설계
+
+### 🧩 컴포넌트 설계
 
 ## 🔍 프로젝트 시연

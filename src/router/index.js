@@ -30,7 +30,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/recipe/detail',
+      path: '/recipe/detail/:id',
       name: 'recipedetail',
       component: RecipeDetail,
       meta: { requiresAuth: true },
@@ -39,12 +39,18 @@ const router = createRouter({
       path: '/community',
       name: 'community',
       component: Community,
+      component: Community,
     },
     {
       path: '/community/:id',
       name: 'communityDetail',
       component: CommunityDetail,
       meta: { requiresAuth: true },
+    },
+    {
+      path: '/community/write',
+      name: 'communityWrite',
+      component: CommunityWrite,
     },
     {
       path: '/shopping',

@@ -9,6 +9,7 @@ const getRecipeList = async () => {
   if (data && data.success) {
     if (data.results) {
       recipeList.push(...data.results)
+      console.log(recipeList)
     }
   } else {
     recipeList.splice(0)

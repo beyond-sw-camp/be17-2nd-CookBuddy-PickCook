@@ -54,13 +54,13 @@ const searchPlaceholder = computed(() => {
       </div>
       <!-- 로그인 했을 경우 -->
       <div v-if="user.isLogin" class="header-right">
-        <RouterLink to="/">
+        <RouterLink to="/mypage/scrap_list">
           <img class="header-icon" src="/assets/icons/ic-scrap-header.png" />
         </RouterLink>
         <RouterLink to="/">
           <img class="header-icon" src="/assets/icons/ic-notification-header.png" />
         </RouterLink>
-        <RouterLink to="/">
+        <RouterLink to="/mypage/order_list">
           <img class="header-icon" src="/assets/icons/ic-cart-header.png" />
         </RouterLink>
         <div id="header-profile-img-container">

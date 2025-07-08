@@ -4,6 +4,7 @@
   "message": "정상적으로 처리되었습니다",
   "results": [
     {
+      "id": 1,
       "title": "간단하고 맛있는 프렌치토스트 만들기",
       "thumbnail": "https://gomean.co.kr/wp-content/uploads/2023/06/gm-frenchtoasttiny.jpg",
       "likes": 255,
@@ -12,6 +13,7 @@
       "servings": "4인분"
     },
     {
+      "id": 1,
       "title": "간단하고 맛있는 프렌치토스트 만들기",
       "thumbnail": "https://gomean.co.kr/wp-content/uploads/2023/06/gm-frenchtoasttiny.jpg",
       "likes": 255,
@@ -20,6 +22,7 @@
       "servings": "4인분"
     },
     {
+      "id": 1,
       "title": "간단하고 맛있는 프렌치토스트 만들기",
       "thumbnail": "https://gomean.co.kr/wp-content/uploads/2023/06/gm-frenchtoasttiny.jpg",
       "likes": 255,
@@ -28,6 +31,7 @@
       "servings": "4인분"
     },
     {
+      "id": 1,
       "title": "간단하고 맛있는 프렌치토스트 만들기",
       "thumbnail": "https://gomean.co.kr/wp-content/uploads/2023/06/gm-frenchtoasttiny.jpg",
       "likes": 255,
@@ -36,6 +40,7 @@
       "servings": "4인분"
     },
     {
+      "id": 1,
       "title": "간단하고 맛있는 프렌치토스트 만들기",
       "thumbnail": "https://gomean.co.kr/wp-content/uploads/2023/06/gm-frenchtoasttiny.jpg",
       "likes": 255,

@@ -51,6 +51,7 @@ const router = createRouter({
       path: '/community/write',
       name: 'communityWrite',
       component: CommunityWrite,
+      meta: { requiresAuth: true },
     },
     {
       path: '/shopping',

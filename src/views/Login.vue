@@ -1,18 +1,48 @@
 <script setup>
 import { useUserStore } from '@/store/useUserStore'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const auth = useUserStore()
 const router = useRouter()
-const userEmail = ref('')
-const userPassword = ref('')
+
+// 템플릿에서 참조할 ref들 정의
+const formRef = ref(null)
+const emailRef = ref(null)
+const passwordRef = ref(null)
+
 const login = () => {
-  auth.checkLogin(userEmail.value, userPassword.value)
+  auth.checkLogin(emailRef.value, passwordRef.value)
   if (auth.isLogin) {
     router.push('/')
   }
 }
+
+onMounted(() => {
+  const form = formRef.value
+  const emailInput = emailRef.value
+  const passwordInput = passwordRef.value
+
+  form.addEventListener('submit', (e) => {
+    const email = emailInput.value
+    const password = passwordInput.value
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+
+    if (!emailRegex.test(email)) {
+      e.preventDefault()
+      alert('올바른 이메일 형식을 입력해주세요.')
+      return
+    }
+
+    if (!passwordRegex.test(password)) {
+      e.preventDefault()
+      alert('비밀번호는 영문자와 숫자를 포함해 8자 이상이어야 합니다.')
+      return
+    }
+  })
+})
 </script>
 
 <template>
@@ -20,12 +50,11 @@ const login = () => {
     <div class="login-container">
       <a class="logo-text" href="/index.html">PickCook</a>
       <span id="title">로그인</span>
-
-      <form action="/login" method="post" @submit.prevent="login">
+      <form ref="formRef" action="/login" method="post" @submit.prevent="login">
         <div class="form-items">
           <label for="email">이메일</label>
           <input
-            v-model="userEmail"
+            ref="emailRef"
             class="login-and-signup-input"
             type="email"
             name="email"
@@ -36,7 +65,7 @@ const login = () => {
         <div class="form-items">
           <label for="password">비밀번호</label>
           <input
-            v-model="userPassword"
+            ref="passwordRef"
             class="login-and-signup-input"
             type="password"
             name="password"
@@ -68,5 +97,4 @@ const login = () => {
     </div>
   </div>
 </template>
-
 <style scoped></style>

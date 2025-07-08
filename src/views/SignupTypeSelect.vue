@@ -30,9 +30,9 @@
             <div></div>
         </div>
 
-        <a id="common-signup" href="/signup.html">
+        <RouterLink id="common-signup" to="/signup/write">
             ID/PW 회원가입
-        </a>
+        </RouterLink>
     </div>
     </div>
 </template>

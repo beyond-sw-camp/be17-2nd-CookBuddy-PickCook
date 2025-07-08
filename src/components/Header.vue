@@ -57,7 +57,7 @@ const searchPlaceholder = computed(() => {
         <RouterLink to="/mypage/scrap_list">
           <img class="header-icon" src="/assets/icons/ic-scrap-header.png" />
         </RouterLink>
-        <RouterLink to="/">
+        <RouterLink to="#">
           <img class="header-icon" src="/assets/icons/ic-notification-header.png" />
         </RouterLink>
         <RouterLink to="/mypage/order_list">
@@ -72,14 +72,14 @@ const searchPlaceholder = computed(() => {
           />
           <ProfileModal v-if="showProfileModal" @click="profileModalToggle" class="profile-modal" />
         </div>
-        <a href="#" class="write-btn">글쓰기 &nbsp;&nbsp;▼</a>
+        <RouterLink to="/community/write" class="write-btn">글쓰기 &nbsp;&nbsp;▼</RouterLink>
       </div>
       <!-- 로그인 안 했을 경우 -->
       <div v-else class="header-right">
         <RouterLink to="/login">로그인</RouterLink>
         <RouterLink to="/signup">회원가입</RouterLink>
         <a href="#">고객센터</a>
-        <a href="#" class="write-btn">글쓰기 &nbsp;&nbsp;▼</a>
+        <RouterLink to="/community/write" class="write-btn">글쓰기 &nbsp;&nbsp;▼</RouterLink>
       </div>
     </div>
   </header>

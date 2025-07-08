@@ -1,7 +1,7 @@
 <script setup>
 import { useUserStore } from '@/store/useUserStore'
-import { onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { RouterLink, useRouter } from 'vue-router'
 
 const auth = useUserStore()
 const router = useRouter()
@@ -73,7 +73,7 @@ const login = () => {
         <span>|</span>
         <a href="/find-password.html">비밀번호 찾기</a>
         <span>|</span>
-        <a href="/signup_type_select.html">회원가입</a>
+        <RouterLink to="/signup">회원가입</RouterLink>
       </div>
 
       <div class="sns-login">

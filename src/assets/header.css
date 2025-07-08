@@ -62,6 +62,16 @@
   color: var(--color-dark-strong);
 }
 
+#header-profile-img-container {
+  position: relative;
+  cursor: pointer;
+}
+
+#header-profile-image {
+  width: 25px;
+  height: 25px;
+}
+
 .header-right {
   position: relative;
   display: flex;
@@ -102,7 +112,7 @@ a:hover {
   position: absolute;
   text-align: center;
   top: 100%; /* 이미지 아래로 딱 붙음 */
-  left: -32px;
+  left: 0;
   margin-top: 8px;
   background: white;
   border-radius: 8px;
@@ -113,12 +123,15 @@ a:hover {
 
 .profile-modal-container {
   color: var(--color-gray);
+  overflow: hidden;
 }
 
 .profile-modal-container div {
-  padding: 5px;
+  padding: 12px 0;
+  font-size: 14px;
 }
 
 .profile-modal-container div:hover {
   background-color: #f3f3f3;
+  color: var(--color-dark-strong);
 }

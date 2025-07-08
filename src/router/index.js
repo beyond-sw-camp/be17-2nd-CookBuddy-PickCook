@@ -12,6 +12,7 @@ import RecipeDetail from '@/views/RecipeDetail.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import Community from '@/views/Community.vue'
 import CommunityDetail from '@/views/CommunityDetail.vue'
+import CommunityWrite from '@/views/CommunityWrite.vue'
 import Shopping from '@/views/Shopping.vue'
 import Shopping_detail from '@/views/Shopping_detail.vue'
 import Refrigerator from '@/views/Refrigerator.vue'
@@ -36,12 +37,17 @@ const router = createRouter({
     {
       path: '/community',
       name: 'community',
-      component: Community,
+      component: Community
     },
     {
       path: '/community/:id',
       name: 'communityDetail',
-      component: CommunityDetail,
+      component: CommunityDetail
+    },
+    {
+      path: '/community/write',
+      name: 'communityWrite',
+      component: CommunityWrite
     },
     {
       path: '/shopping',

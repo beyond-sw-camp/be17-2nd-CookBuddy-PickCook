@@ -7,6 +7,7 @@ const router = useRouter()
 
 const activePath = ref(route.path.split('/').pop())
 
+// 각 메뉴 항목 클릭 시 해당 경로로 이동
 const goTo = (path) => {
   activePath.value = path
   router.push(`/mypage/${path}`)
@@ -22,57 +23,99 @@ watch(
 </script>
 
 <template>
-  <div class="mypage-sub-bar-container">
-    <div
-      class="mypage-sub-bar-items"
-      :class="{ active: activePath === 'cart' }"
-      @click="goTo('cart')"
-    >
-      <div class="mypage-sub-bar-items-el">
-        <div class="mypage-icon mypage-icon-cart"></div>
-        <span class="mypage-sub-bar-el-name">장바구니</span>
+  <div class="mypage-sub-menu-bar">
+    <!-- 인사말 -->
+    <div class="mypage-sub-menu-each-container">
+      <p id="mypage-sub-menu-bar-hello">반가워요! <span id="mypage-sub-menu-bar-user">뇸뇸</span>님 :)</p>
+    </div>
+
+    <!-- 쇼핑 메뉴 -->
+    <div class="mypage-sub-menu-each-container">
+      <span class="mypage-sub-menu-bar-items-category">쇼핑</span>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'order_list' }"
+        @click="goTo('order_list')"
+      >
+        <img src="/public/assets/icons/ic-mypage-order-list.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">주문 내역</p>
+      </div>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'cart' }"
+        @click="goTo('cart')"
+      >
+        <img src="/public/assets/icons/ic-mypage-shopping-cart.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">장바구니</p>
+      </div>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'payment-method' }"
+        @click="goTo('payment-method')"
+      >
+        <img src="/public/assets/icons/ic-mypage-credit_card.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">결제수단</p>
       </div>
     </div>
-    <div
-      class="mypage-sub-bar-items"
-      :class="{ active: activePath === 'order_list' }"
-      @click="goTo('order_list')"
-    >
-      <div class="mypage-sub-bar-items-el">
-        <div class="mypage-icon mypage-icon-check"></div>
-        <span class="mypage-sub-bar-el-name">구매목록</span>
+
+    <!-- 커뮤니티 메뉴 -->
+    <div class="mypage-sub-menu-each-container">
+      <span class="mypage-sub-menu-bar-items-category">커뮤니티</span>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'write_list' }"
+        @click="goTo('write_list')"
+      >
+        <img src="/public/assets/icons/ic-mypage-write-list.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">내 게시글 관리</p>
+      </div>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'like_list' }"
+        @click="goTo('like_list')"
+      >
+        <img src="/public/assets/icons/ic-mypage-like-list.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">좋아요 단 게시글</p>
+      </div>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'scrap_list' }"
+        @click="goTo('scrap_list')"
+      >
+        <img src="/public/assets/icons/ic-mypage-scrap-list.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">스크랩한 게시글</p>
+      </div>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'reply_list' }"
+        @click="goTo('reply_list')"
+      >
+        <img src="/public/assets/icons/ic-mypage-reply-list.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">댓글 단 게시글</p>
       </div>
     </div>
-    <div
-      class="mypage-sub-bar-items"
-      :class="{ active: activePath === 'write_list' }"
-      @click="goTo('write_list')"
-    >
-      <div class="mypage-sub-bar-items-el">
-        <div class="mypage-icon mypage-icon-write"></div>
-        <span class="mypage-sub-bar-el-name">게시글</span>
+
+    <!-- 내 정보관리 메뉴 -->
+    <div class="mypage-sub-menu-each-container">
+      <span class="mypage-sub-menu-bar-items-category">내 정보관리</span>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'delivery-address' }"
+        @click="goTo('delivery-address')"
+      >
+        <img src="/public/assets/icons/ic-mypage-delivery.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">배송지 관리</p>
+      </div>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'user_info' }"
+        @click="goTo('user_info')"
+      >
+        <img src="/public/assets/icons/ic-mypage-user.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">회원 정보 관리</p>
       </div>
     </div>
-    <div
-      class="mypage-sub-bar-items"
-      :class="{ active: ['like_list', 'scrap_list', 'reply_list'].includes(activePath) }"
-      @click="goTo('like_list')"
-    >
-      <div class="mypage-sub-bar-items-el">
-        <div class="mypage-icon mypage-icon-scrap"></div>
-        <span class="mypage-sub-bar-el-name">내 활동</span>
-      </div>
-    </div>
-    <div
-      class="mypage-sub-bar-items"
-      :class="{ active: activePath === 'user_info' }"
-      @click="goTo('user_info')"
-    >
-      <div class="mypage-sub-bar-items-el">
-        <div class="mypage-icon mypage-icon-user"></div>
-        <span class="mypage-sub-bar-el-name">내 프로필</span>
-      </div>
-    </div>
+
   </div>
 </template>
 

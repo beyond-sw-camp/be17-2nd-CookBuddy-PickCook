@@ -1,17 +1,23 @@
 <script setup>
 import { ref } from 'vue'
 
+// 프로필 이미지 관련
 const fileInput = ref(null)
 const profileImage = ref(
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlaTCW_H-l1mSyOngrADrGNhk2nTIl-iDew&s', // 기본 이미지(기본이미지 정해지면 바꿀게용)
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlaTCW_H-l1mSyOngrADrGNhk2nTIl-iDew&s', // 기본 이미지
 )
 
-// 프로필 이미지 수정 버튼 클릭 시 파일탐색기 열기
+// 사용자 정보 관련
+const email = ref('')
+const nickname = ref('')
+const name = ref('')
+const phone = ref('')
+
+// 프로필 이미지 파일 선택
 const triggerFileInput = () => {
   fileInput.value?.click()
 }
 
-// 파일 변경 시 처리
 const handleFileChange = (event) => {
   const file = event.target.files[0]
   if (!file) return
@@ -21,18 +27,55 @@ const handleFileChange = (event) => {
     return
   }
 
-  // 미리보기 이미지
   profileImage.value = URL.createObjectURL(file)
 
-  // TODO: 서버 업로드 필요 시 FormData 사용
+  // 서버 업로드 시 사용 예:
   // const formData = new FormData()
   // formData.append('profileImage', file)
   // await axios.post('/api/profile/upload', formData)
+}
+
+// 이메일 유효성 검사
+const isValidEmail = (emailValue) => {
+  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return pattern.test(emailValue)
+}
+
+// 전화번호 자동 하이픈 처리
+const formatPhoneNumber = (value) => {
+  const digits = value.replace(/\D/g, '').slice(0, 11) // 숫자만 추출 (최대 11자리)
+  if (digits.length < 4) return digits
+  if (digits.length < 8) return `${digits.slice(0, 3)}-${digits.slice(3)}`
+  return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`
+}
+
+const onPhoneInput = (event) => {
+  phone.value = formatPhoneNumber(event.target.value)
+}
+
+const onSubmit = () => {
+  if (!isValidEmail(email.value)) {
+    alert('유효한 이메일 주소를 입력하세요.')
+    return
+  }
+
+  console.log('이메일:', email.value)
+  console.log('닉네임:', nickname.value)
+  console.log('이름:', name.value)
+  console.log('연락처:', phone.value)
+
+  // 실제 API 전송 가능
 }
 </script>
 
 <template>
   <div class="mypage-content-container">
+    <div class="mypage-header-box">
+      <div class="mypage-header-box-title">
+        회원 정보 관리
+      </div>
+    </div>
+
     <!-- 프로필 이미지 -->
     <div class="mypage-my-profile-image-container">
       <div class="my-profile-image-box">
@@ -50,40 +93,39 @@ const handleFileChange = (event) => {
       </div>
     </div>
 
-    <!-- 사용자 정보 입력 컨테이너 -->
+    <!-- 사용자 정보 입력 -->
     <div class="mypage-my-profile-info-input-container">
       <div class="mypage-my-profile-info-input-el">
-        <label>이름</label>
-        <input type="text" />
+        <label>이메일</label>
+        <input type="email" v-model="email" placeholder="example@example.com" />
       </div>
       <div class="mypage-my-profile-info-input-el">
         <label>닉네임</label>
-        <input type="text" />
+        <input type="text" v-model="nickname" />
       </div>
       <div class="mypage-my-profile-info-input-el">
-        <label>이메일</label>
-        <input type="text" />
+        <label>이름</label>
+        <input type="text" v-model="name" />
       </div>
       <div class="mypage-my-profile-info-input-el">
         <label>연락처</label>
-        <input type="text" />
-      </div>
-      <div class="mypage-my-profile-info-input-el address-label">
-        <label>주소</label>
-        <div class="mypage-my-address-input-boxes">
-          <div>
-            <input type="text" />
-            <button>주소찾기</button>
-          </div>
-          <input type="text" />
-          <input type="text" />
-        </div>
+        <input
+          type="text"
+          v-model="phone"
+          @input="onPhoneInput"
+          placeholder="000-0000-0000"
+        />
       </div>
       <div class="mypage-my-preofile-info-save">
-        <button>저장하기</button>
+        <button id="goob-bye-button">탈퇴하기</button>
+        <button id="mypage-user-info-edit-button" @click="onSubmit">
+          회원정보수정
+        </button>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+/* 원하는 스타일 여기 추가 가능 */
+</style>

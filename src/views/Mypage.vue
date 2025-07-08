@@ -39,43 +39,14 @@ function goToActivity(path) {
 </script>
 
 <template>
-  <div class="mypage-body">
+<div class="mypage-body">
     <div class="mypage-body-child">
       <!-- 서브바 들어갈 부분 -->
       <MyPageSubMenuBar />
 
       <!-- 내용 부분 -->
       <div class="mypage-main">
-        <!-- 내용 인디케이터 -->
-        <div class="mypage-main-header">
-          <div class="mypage-indicator-container">
-            <!-- '내 활동' 페이지일 경우: 탭 3개 -->
-            <template v-if="isActivityPage">
-              <div
-                v-for="item in activityRoutes"
-                :key="item.path"
-                class="mypage-indicator-items"
-                :class="{ active: currentSubPath === item.path }"
-                @click="goToActivity(item.path)"
-              >
-                <span>{{ item.label }}</span>
-              </div>
-            </template>
-
-            <!-- '내 활동' 페이지가 아닌 일반 페이지일 경우: 제목 하나 -->
-            <template v-else>
-              <div id="none-cursor" class="mypage-indicator-items">
-                <span>{{ currentTitle }}</span>
-              </div>
-            </template>
-          </div>
-        </div>
-
-        <!-- 내용 -->
-        <div class="mypage-main-contents-body">
-          <!-- 하위 라우터 내용 들어갈 부분 -->
-          <RouterView />
-        </div>
+        <RouterView />
       </div>
     </div>
   </div>

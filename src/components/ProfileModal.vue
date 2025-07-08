@@ -10,7 +10,7 @@ const goToMypage = () => {
 }
 const logout = () => {
   router.push('/login')
-  //   auth.proceedLogout()
+  auth.proceedLogout()
 }
 </script>
 

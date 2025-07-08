@@ -4,9 +4,13 @@ import { ref } from 'vue'
 export const useUserStore = defineStore('auth', () => {
   const isLogin = ref(false)
 
-  const login = () => {
-    isLogin.value = true
-    localStorage.setItem('isLogin', 'true')
+  const testEmail = 'test@test.com'
+  const testPassword = 'qwer1234'
+  const checkLogin = (email, password) => {
+    if (testEmail === email && testPassword === password) {
+      isLogin.value = true
+      localStorage.setItem('isLogin', 'true')
+    }
   }
 
   const proceedLogout = () => {
@@ -18,5 +22,5 @@ export const useUserStore = defineStore('auth', () => {
     isLogin.value = localStorage.getItem('isLogin') === 'true'
   }
 
-  return { isLogin, login, proceedLogout, restore }
+  return { isLogin, checkLogin, proceedLogout, restore }
 })

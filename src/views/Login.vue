@@ -12,37 +12,29 @@ const emailRef = ref(null)
 const passwordRef = ref(null)
 
 const login = () => {
-  auth.checkLogin(emailRef.value, passwordRef.value)
+  const email = emailRef.value
+  const password = passwordRef.value
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+
+  console.log(email, password)
+  if (!emailRegex.test(email)) {
+    alert('올바른 이메일 형식을 입력해주세요.')
+    return
+  }
+
+  if (!passwordRegex.test(password)) {
+    alert('비밀번호는 영문자와 숫자를 포함해 8자 이상이어야 합니다.')
+    return
+  }
+
+  auth.checkLogin(email, password)
   if (auth.isLogin) {
     router.push('/')
+  } else {
+    alert('아이디 또는 비밀번호가 일치하지 않습니다.')
   }
 }
-
-onMounted(() => {
-  const form = formRef.value
-  const emailInput = emailRef.value
-  const passwordInput = passwordRef.value
-
-  form.addEventListener('submit', (e) => {
-    const email = emailInput.value
-    const password = passwordInput.value
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-
-    if (!emailRegex.test(email)) {
-      e.preventDefault()
-      alert('올바른 이메일 형식을 입력해주세요.')
-      return
-    }
-
-    if (!passwordRegex.test(password)) {
-      e.preventDefault()
-      alert('비밀번호는 영문자와 숫자를 포함해 8자 이상이어야 합니다.')
-      return
-    }
-  })
-})
 </script>
 
 <template>
@@ -54,7 +46,7 @@ onMounted(() => {
         <div class="form-items">
           <label for="email">이메일</label>
           <input
-            ref="emailRef"
+            v-model="emailRef"
             class="login-and-signup-input"
             type="email"
             name="email"
@@ -65,7 +57,7 @@ onMounted(() => {
         <div class="form-items">
           <label for="password">비밀번호</label>
           <input
-            ref="passwordRef"
+            v-model="passwordRef"
             class="login-and-signup-input"
             type="password"
             name="password"

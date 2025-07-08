@@ -58,7 +58,7 @@ const profileModalToggle = () => {
           src="/public/assets/icons/ic-default-profile-image.png"
           alt="profile image"
         />
-        <ProfileModal v-if="showProfileModal" class="profile-modal" />
+        <ProfileModal v-if="showProfileModal" @click="profileModalToggle" class="profile-modal" />
         <a href="#" class="write-btn">글쓰기 &nbsp;&nbsp;▼</a>
       </div>
       <!-- 로그인 안 했을 경우 -->

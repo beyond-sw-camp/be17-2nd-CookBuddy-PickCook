@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "image": "/assets/banners/pickcook_banner01.png",
+    "title": "이건 꼭 사야 돼! 냉장고 특가 찬스",
+    "subtitle": "PickCook 특가존으로 똑똑하게 채우기",
+    "link": "/",
+    "backgroundColor": "#FF6B35",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "image": "/assets/banners/pickcook_banner02.png",
+    "title": "지금 냉장고, 텅 비었나요?",
+    "subtitle": "필수 재료 최대 50% 할인!",
+    "link": "/?category=freshProducts",
+    "backgroundColor": "#4ECDC4",
+    "isActive": true
+  },
+  {
+    "id": 3,
+    "image": "/assets/banners/pickcook_banner03.png",
+    "title": "유통기한 임박? 가격은 반값!",
+    "subtitle": "알뜰살뜰 냉장고 특템 기회",
+    "link": "/?sale=50",
+    "backgroundColor": "#FF9F43",
+    "isActive": true
+  },
+  {
+    "id": 4,
+    "image": "/assets/banners/pickcook_banner04.png",
+    "title": "매일매일 달라지는 초특가 식재료!",
+    "subtitle": "PickCook 오늘의 냉장고 딜 확인하기",
+    "link": "/?daily=true",
+    "backgroundColor": "#6C5CE7",
+    "isActive": true
+  },
+  {
+    "id": 5,
+    "image": "/assets/banners/pickcook_banner05.png",
+    "title": "냉장고 속에 쟁여둘 기회!",
+    "subtitle": "한정 수량 특가 지금만!",
+    "link": "/?limited=true",
+    "backgroundColor": "#E17055",
+    "isActive": true
+  }
+]

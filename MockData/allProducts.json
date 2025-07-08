@@ -1,0 +1,1253 @@
+[
+  {
+    "id": 1,
+    "title": "[오늘특가] 유기농 채소 모음전",
+    "image": "https://semie.cooking/image/contents/wn/cv/solcqifp/149437687iajp.jpg",
+    "images": [
+      "https://semie.cooking/image/contents/wn/cv/solcqifp/149437687iajp.jpg",
+      "https://picsum.photos/400/300?random=101",
+      "https://picsum.photos/400/300?random=102"
+    ],
+    "discount": 30,
+    "price": 15900,
+    "originalPrice": 22900,
+    "rating": 4.8,
+    "reviewCount": 1234,
+    "likes": 2456,
+    "salesCount": 3421,
+    "category": "freshProducts",
+    "description": "신선한 유기농 채소로 구성된 알찬 모음전입니다.",
+    "detailInfo": {
+      "brand": "자연드림",
+      "origin": "국내산",
+      "weight": "2kg",
+      "storage": "냉장보관"
+    },
+    "tags": ["유기농", "신선", "국내산"]
+  },
+  {
+    "id": 2,
+    "title": "[신선한] 제철 과일 세트",
+    "image": "https://picsum.photos/300/200?random=2",
+    "images": [
+      "https://picsum.photos/300/200?random=2",
+      "https://picsum.photos/400/300?random=201"
+    ],
+    "discount": 25,
+    "price": 12000,
+    "originalPrice": 16000,
+    "rating": 4.9,
+    "reviewCount": 856,
+    "likes": 1823,
+    "salesCount": 2134,
+    "category": "freshProducts",
+    "description": "계절에 맞는 신선한 과일들을 엄선하여 구성한 세트입니다.",
+    "detailInfo": {
+      "brand": "과일나라",
+      "origin": "국내산",
+      "weight": "1.5kg",
+      "storage": "냉장보관"
+    },
+    "tags": ["제철과일", "신선", "비타민"]
+  },
+  {
+    "id": 3,
+    "title": "국내산 한우 등심 1kg",
+    "image": "https://picsum.photos/300/200?random=3",
+    "images": [
+      "https://picsum.photos/300/200?random=3",
+      "https://picsum.photos/400/300?random=301"
+    ],
+    "discount": 20,
+    "price": 48000,
+    "originalPrice": 60000,
+    "rating": 4.7,
+    "reviewCount": 432,
+    "likes": 892,
+    "salesCount": 156,
+    "category": "freshProducts",
+    "description": "프리미엄 국내산 한우 등심으로 부드러운 식감을 자랑합니다.",
+    "detailInfo": {
+      "brand": "한우명가",
+      "origin": "국내산",
+      "weight": "1kg",
+      "storage": "냉동보관"
+    },
+    "tags": ["한우", "국내산", "프리미엄"]
+  },
+  {
+    "id": 4,
+    "title": "[프리미엄] 무염버터 500g",
+    "image": "https://picsum.photos/300/200?random=4",
+    "images": [
+      "https://picsum.photos/300/200?random=4",
+      "https://picsum.photos/400/300?random=401"
+    ],
+    "discount": 25,
+    "price": 8900,
+    "originalPrice": 12000,
+    "rating": 4.7,
+    "reviewCount": 1456,
+    "likes": 3421,
+    "salesCount": 5234,
+    "category": "bakingProducts",
+    "description": "베이킹에 최적화된 프리미엄 무염버터입니다.",
+    "detailInfo": {
+      "brand": "서울우유",
+      "origin": "국내산",
+      "weight": "500g",
+      "storage": "냉장보관"
+    },
+    "tags": ["베이킹", "무염", "프리미엄"]
+  },
+  {
+    "id": 5,
+    "title": "필라델피아 크림치즈 200g",
+    "image": "https://picsum.photos/300/200?random=5",
+    "images": [
+      "https://picsum.photos/300/200?random=5",
+      "https://picsum.photos/400/300?random=501"
+    ],
+    "discount": 20,
+    "price": 4800,
+    "originalPrice": 6000,
+    "rating": 4.6,
+    "reviewCount": 892,
+    "likes": 1567,
+    "salesCount": 3421,
+    "category": "bakingProducts",
+    "description": "부드럽고 진한 맛의 프리미엄 크림치즈입니다.",
+    "detailInfo": {
+      "brand": "필라델피아",
+      "origin": "수입산",
+      "weight": "200g",
+      "storage": "냉장보관"
+    },
+    "tags": ["크림치즈", "베이킹", "프리미엄"]
+  },
+  {
+    "id": 6,
+    "title": "[건강한] 유기농 현미 5kg",
+    "image": "https://picsum.photos/300/200?random=6",
+    "images": [
+      "https://picsum.photos/300/200?random=6",
+      "https://picsum.photos/400/300?random=601"
+    ],
+    "discount": 30,
+    "price": 21000,
+    "originalPrice": 30000,
+    "rating": 4.8,
+    "reviewCount": 1567,
+    "likes": 2341,
+    "salesCount": 1876,
+    "category": "healthyProducts",
+    "description": "영양이 풍부한 유기농 현미로 건강한 식단을 만들어보세요.",
+    "detailInfo": {
+      "brand": "친환경농장",
+      "origin": "국내산",
+      "weight": "5kg",
+      "storage": "상온보관"
+    },
+    "tags": ["유기농", "현미", "건강"]
+  },
+  {
+    "id": 7,
+    "title": "프리미엄 퀴노아 1kg",
+    "image": "https://picsum.photos/300/200?random=7",
+    "images": [
+      "https://picsum.photos/300/200?random=7",
+      "https://picsum.photos/400/300?random=701"
+    ],
+    "discount": 25,
+    "price": 22500,
+    "originalPrice": 30000,
+    "rating": 4.7,
+    "reviewCount": 1234,
+    "likes": 1892,
+    "salesCount": 945,
+    "category": "healthyProducts",
+    "description": "완전식품으로 불리는 슈퍼푸드 퀴노아입니다.",
+    "detailInfo": {
+      "brand": "슈퍼푸드",
+      "origin": "수입산",
+      "weight": "1kg",
+      "storage": "상온보관"
+    },
+    "tags": ["퀴노아", "슈퍼푸드", "건강"]
+  },
+  {
+    "id": 8,
+    "title": "[프리미엄] 천연 간장 500ml",
+    "image": "https://picsum.photos/300/200?random=8",
+    "images": [
+      "https://picsum.photos/300/200?random=8",
+      "https://picsum.photos/400/300?random=801"
+    ],
+    "discount": 25,
+    "price": 11250,
+    "originalPrice": 15000,
+    "rating": 4.8,
+    "reviewCount": 1456,
+    "likes": 2763,
+    "salesCount": 4521,
+    "category": "seasoningProducts",
+    "description": "전통 방식으로 숙성시킨 프리미엄 천연 간장입니다.",
+    "detailInfo": {
+      "brand": "전통장",
+      "origin": "국내산",
+      "weight": "500ml",
+      "storage": "상온보관"
+    },
+    "tags": ["천연", "간장", "전통"]
+  },
+  {
+    "id": 9,
+    "title": "유기농 된장 500g",
+    "image": "https://picsum.photos/300/200?random=9",
+    "images": [
+      "https://picsum.photos/300/200?random=9",
+      "https://picsum.photos/400/300?random=901"
+    ],
+    "discount": 30,
+    "price": 8400,
+    "originalPrice": 12000,
+    "rating": 4.6,
+    "reviewCount": 892,
+    "likes": 1634,
+    "salesCount": 2876,
+    "category": "seasoningProducts",
+    "description": "국내산 콩으로 만든 깊은 맛의 유기농 된장입니다.",
+    "detailInfo": {
+      "brand": "유기농장",
+      "origin": "국내산",
+      "weight": "500g",
+      "storage": "냉장보관"
+    },
+    "tags": ["유기농", "된장", "국내산"]
+  },
+  {
+    "id": 10,
+    "title": "제주 직송 고등어 세트",
+    "image": "https://picsum.photos/300/200?random=10",
+    "images": [
+      "https://picsum.photos/300/200?random=10",
+      "https://picsum.photos/400/300?random=1001"
+    ],
+    "discount": 15,
+    "price": 18700,
+    "originalPrice": 22000,
+    "rating": 4.6,
+    "reviewCount": 678,
+    "likes": 1245,
+    "salesCount": 987,
+    "category": "freshProducts",
+    "description": "제주 바다에서 잡은 신선한 고등어 세트입니다.",
+    "detailInfo": {
+      "brand": "제주바다",
+      "origin": "제주산",
+      "weight": "1kg",
+      "storage": "냉동보관"
+    },
+    "tags": ["제주산", "고등어", "신선"]
+  },
+  {
+    "id": 11,
+    "title": "친환경 계란 30구",
+    "image": "https://picsum.photos/300/200?random=11",
+    "images": [
+      "https://picsum.photos/300/200?random=11",
+      "https://picsum.photos/400/300?random=1101"
+    ],
+    "discount": 10,
+    "price": 9000,
+    "originalPrice": 10000,
+    "rating": 4.8,
+    "reviewCount": 1023,
+    "likes": 2134,
+    "salesCount": 5647,
+    "category": "freshProducts",
+    "description": "자연 방목으로 키운 닭들의 신선한 계란입니다.",
+    "detailInfo": {
+      "brand": "자연농장",
+      "origin": "국내산",
+      "weight": "30구",
+      "storage": "냉장보관"
+    },
+    "tags": ["친환경", "계란", "자연방목"]
+  },
+  {
+    "id": 12,
+    "title": "휘핑크림 200ml",
+    "image": "https://picsum.photos/300/200?random=12",
+    "images": [
+      "https://picsum.photos/300/200?random=12",
+      "https://picsum.photos/400/300?random=1201"
+    ],
+    "discount": 30,
+    "price": 3500,
+    "originalPrice": 5000,
+    "rating": 4.8,
+    "reviewCount": 2134,
+    "likes": 4567,
+    "salesCount": 7823,
+    "category": "bakingProducts",
+    "description": "베이킹과 디저트에 완벽한 프리미엄 휘핑크림입니다.",
+    "detailInfo": {
+      "brand": "베이킹마스터",
+      "origin": "국내산",
+      "weight": "200ml",
+      "storage": "냉장보관"
+    },
+    "tags": ["휘핑크림", "베이킹", "디저트"]
+  },
+  {
+    "id": 13,
+    "title": "바닐라 익스트랙트 100ml",
+    "image": "https://picsum.photos/300/200?random=13",
+    "images": [
+      "https://picsum.photos/300/200?random=13",
+      "https://picsum.photos/400/300?random=1301"
+    ],
+    "discount": 15,
+    "price": 12750,
+    "originalPrice": 15000,
+    "rating": 4.5,
+    "reviewCount": 567,
+    "likes": 892,
+    "salesCount": 1234,
+    "category": "bakingProducts",
+    "description": "진한 바닐라 향이 일품인 프리미엄 익스트랙트입니다.",
+    "detailInfo": {
+      "brand": "바닐라킹",
+      "origin": "수입산",
+      "weight": "100ml",
+      "storage": "상온보관"
+    },
+    "tags": ["바닐라", "익스트랙트", "베이킹"]
+  },
+  {
+    "id": 14,
+    "title": "생 아몬드 500g",
+    "image": "https://picsum.photos/300/200?random=14",
+    "images": [
+      "https://picsum.photos/300/200?random=14",
+      "https://picsum.photos/400/300?random=1401"
+    ],
+    "discount": 35,
+    "price": 19500,
+    "originalPrice": 30000,
+    "rating": 4.5,
+    "reviewCount": 876,
+    "likes": 1456,
+    "salesCount": 2341,
+    "category": "healthyProducts",
+    "description": "고소하고 영양 만점인 프리미엄 생 아몬드입니다.",
+    "detailInfo": {
+      "brand": "너트킹",
+      "origin": "수입산",
+      "weight": "500g",
+      "storage": "상온보관"
+    },
+    "tags": ["아몬드", "견과류", "영양"]
+  },
+  {
+    "id": 15,
+    "title": "프리미엄 호두 300g",
+    "image": "https://picsum.photos/300/200?random=15",
+    "images": [
+      "https://picsum.photos/300/200?random=15",
+      "https://picsum.photos/400/300?random=1501"
+    ],
+    "discount": 28,
+    "price": 14400,
+    "originalPrice": 20000,
+    "rating": 4.7,
+    "reviewCount": 567,
+    "likes": 1123,
+    "salesCount": 1876,
+    "category": "healthyProducts",
+    "description": "오메가3가 풍부한 프리미엄 호두입니다.",
+    "detailInfo": {
+      "brand": "너트킹",
+      "origin": "수입산",
+      "weight": "300g",
+      "storage": "상온보관"
+    },
+    "tags": ["호두", "오메가3", "건강"]
+  },
+  {
+    "id": 16,
+    "title": "국산 고춧가루 500g",
+    "image": "https://picsum.photos/300/200?random=16",
+    "images": [
+      "https://picsum.photos/300/200?random=16",
+      "https://picsum.photos/400/300?random=1601"
+    ],
+    "discount": 20,
+    "price": 16000,
+    "originalPrice": 20000,
+    "rating": 4.7,
+    "reviewCount": 2134,
+    "likes": 3456,
+    "salesCount": 4567,
+    "category": "seasoningProducts",
+    "description": "매콤한 맛이 일품인 국산 고춧가루입니다.",
+    "detailInfo": {
+      "brand": "매운맛",
+      "origin": "국내산",
+      "weight": "500g",
+      "storage": "상온보관"
+    },
+    "tags": ["고춧가루", "국산", "매운맛"]
+  },
+  {
+    "id": 17,
+    "title": "천연 맛소금 1kg",
+    "image": "https://picsum.photos/300/200?random=17",
+    "images": [
+      "https://picsum.photos/300/200?random=17",
+      "https://picsum.photos/400/300?random=1701"
+    ],
+    "discount": 35,
+    "price": 6500,
+    "originalPrice": 10000,
+    "rating": 4.5,
+    "reviewCount": 567,
+    "likes": 987,
+    "salesCount": 6543,
+    "category": "seasoningProducts",
+    "description": "깔끔한 맛의 천연 맛소금으로 요리의 완성도를 높여보세요.",
+    "detailInfo": {
+      "brand": "천연미",
+      "origin": "국내산",
+      "weight": "1kg",
+      "storage": "상온보관"
+    },
+    "tags": ["천연", "맛소금", "조미료"]
+  },
+  {
+    "id": 18,
+    "title": "산지직송 감자 5kg",
+    "image": "https://picsum.photos/300/200?random=18",
+    "images": [
+      "https://picsum.photos/300/200?random=18",
+      "https://picsum.photos/400/300?random=1801"
+    ],
+    "discount": 35,
+    "price": 13000,
+    "originalPrice": 20000,
+    "rating": 4.5,
+    "reviewCount": 345,
+    "likes": 678,
+    "salesCount": 2134,
+    "category": "freshProducts",
+    "description": "포슬포슬한 식감의 산지직송 신선한 감자입니다.",
+    "detailInfo": {
+      "brand": "감자나라",
+      "origin": "강원도",
+      "weight": "5kg",
+      "storage": "상온보관"
+    },
+    "tags": ["감자", "산지직송", "강원도"]
+  },
+  {
+    "id": 19,
+    "title": "유기농 토마토 1kg",
+    "image": "https://picsum.photos/300/200?random=19",
+    "images": [
+      "https://picsum.photos/300/200?random=19",
+      "https://picsum.photos/400/300?random=1901"
+    ],
+    "discount": 40,
+    "price": 7200,
+    "originalPrice": 12000,
+    "rating": 4.9,
+    "reviewCount": 789,
+    "likes": 1567,
+    "salesCount": 3421,
+    "category": "freshProducts",
+    "description": "달콤하고 신선한 유기농 토마토입니다.",
+    "detailInfo": {
+      "brand": "토마토팜",
+      "origin": "국내산",
+      "weight": "1kg",
+      "storage": "냉장보관"
+    },
+    "tags": ["유기농", "토마토", "달콤"]
+  },
+  {
+    "id": 20,
+    "title": "유기농 신선한 딸기 500g",
+    "image": "https://picsum.photos/300/200?random=20",
+    "images": [
+      "https://picsum.photos/300/200?random=20",
+      "https://picsum.photos/400/300?random=2001"
+    ],
+    "discount": 35,
+    "price": 9750,
+    "originalPrice": 15000,
+    "rating": 4.9,
+    "reviewCount": 445,
+    "likes": 2341,
+    "salesCount": 1876,
+    "category": "bakingProducts",
+    "description": "달콤하고 향긋한 유기농 딸기로 디저트를 만들어보세요.",
+    "detailInfo": {
+      "brand": "딸기농장",
+      "origin": "국내산",
+      "weight": "500g",
+      "storage": "냉장보관"
+    },
+    "tags": ["유기농", "딸기", "디저트"]
+  },
+  {
+    "id": 21,
+    "title": "치아시드 500g",
+    "image": "https://picsum.photos/300/200?random=21",
+    "images": [
+      "https://picsum.photos/300/200?random=21",
+      "https://picsum.photos/400/300?random=2101"
+    ],
+    "discount": 40,
+    "price": 18000,
+    "originalPrice": 30000,
+    "rating": 4.8,
+    "reviewCount": 1789,
+    "likes": 2876,
+    "salesCount": 1345,
+    "category": "healthyProducts",
+    "description": "오메가3와 식이섬유가 풍부한 슈퍼푸드 치아시드입니다.",
+    "detailInfo": {
+      "brand": "슈퍼시드",
+      "origin": "수입산",
+      "weight": "500g",
+      "storage": "상온보관"
+    },
+    "tags": ["치아시드", "슈퍼푸드", "오메가3"]
+  },
+  {
+    "id": 22,
+    "title": "엑스트라 버진 올리브오일 500ml",
+    "image": "https://picsum.photos/300/200?random=22",
+    "images": [
+      "https://picsum.photos/300/200?random=22",
+      "https://picsum.photos/400/300?random=2201"
+    ],
+    "discount": 22,
+    "price": 15600,
+    "originalPrice": 20000,
+    "rating": 4.6,
+    "reviewCount": 445,
+    "likes": 1234,
+    "salesCount": 2876,
+    "category": "healthyProducts",
+    "description": "프리미엄 엑스트라 버진 올리브오일로 건강한 요리를 만들어보세요.",
+    "detailInfo": {
+      "brand": "올리브킹",
+      "origin": "수입산",
+      "weight": "500ml",
+      "storage": "상온보관"
+    },
+    "tags": ["올리브오일", "엑스트라버진", "건강"]
+  },
+  {
+    "id": 23,
+    "title": "유기농 마늘분말 200g",
+    "image": "https://picsum.photos/300/200?random=23",
+    "images": [
+      "https://picsum.photos/300/200?random=23",
+      "https://picsum.photos/400/300?random=2301"
+    ],
+    "discount": 18,
+    "price": 8200,
+    "originalPrice": 10000,
+    "rating": 4.8,
+    "reviewCount": 1234,
+    "likes": 1987,
+    "salesCount": 3456,
+    "category": "seasoningProducts",
+    "description": "진한 마늘 향이 일품인 유기농 마늘분말입니다.",
+    "detailInfo": {
+      "brand": "마늘왕",
+      "origin": "국내산",
+      "weight": "200g",
+      "storage": "상온보관"
+    },
+    "tags": ["마늘", "유기농", "분말"]
+  },
+  {
+    "id": 24,
+    "title": "이탈리안 허브믹스 50g",
+    "image": "https://picsum.photos/300/200?random=24",
+    "images": [
+      "https://picsum.photos/300/200?random=24",
+      "https://picsum.photos/400/300?random=2401"
+    ],
+    "discount": 22,
+    "price": 7800,
+    "originalPrice": 10000,
+    "rating": 4.6,
+    "reviewCount": 445,
+    "likes": 823,
+    "salesCount": 1567,
+    "category": "seasoningProducts",
+    "description": "이탈리아 요리에 완벽한 허브믹스입니다.",
+    "detailInfo": {
+      "brand": "허브마스터",
+      "origin": "수입산",
+      "weight": "50g",
+      "storage": "상온보관"
+    },
+    "tags": ["허브", "이탈리안", "향신료"]
+  },
+  {
+    "id": 25,
+    "title": "마스카포네 치즈 250g",
+    "image": "https://picsum.photos/300/200?random=25",
+    "images": [
+      "https://picsum.photos/300/200?random=25",
+      "https://picsum.photos/400/300?random=2501"
+    ],
+    "discount": 22,
+    "price": 11700,
+    "originalPrice": 15000,
+    "rating": 4.7,
+    "reviewCount": 1234,
+    "likes": 2134,
+    "salesCount": 987,
+    "category": "bakingProducts",
+    "description": "부드럽고 진한 맛의 이탈리아 마스카포네 치즈입니다.",
+    "detailInfo": {
+      "brand": "이탈리아",
+      "origin": "수입산",
+      "weight": "250g",
+      "storage": "냉장보관"
+    },
+    "tags": ["마스카포네", "치즈", "이탈리아"]
+  },
+  {
+    "id": 26,
+    "title": "베이킹용 생효모 50g",
+    "image": "https://picsum.photos/300/200?random=26",
+    "images": [
+      "https://picsum.photos/300/200?random=26",
+      "https://picsum.photos/400/300?random=2601"
+    ],
+    "discount": 28,
+    "price": 3600,
+    "originalPrice": 5000,
+    "rating": 4.6,
+    "reviewCount": 678,
+    "likes": 1345,
+    "salesCount": 4567,
+    "category": "bakingProducts",
+    "description": "빵 만들기에 필수인 신선한 생효모입니다.",
+    "detailInfo": {
+      "brand": "브레드킹",
+      "origin": "국내산",
+      "weight": "50g",
+      "storage": "냉장보관"
+    },
+    "tags": ["생효모", "베이킹", "빵"]
+  },
+  {
+    "id": 27,
+    "title": "유기농 케일 300g",
+    "image": "https://picsum.photos/300/200?random=27",
+    "images": [
+      "https://picsum.photos/300/200?random=27",
+      "https://picsum.photos/400/300?random=2701"
+    ],
+    "discount": 25,
+    "price": 4500,
+    "originalPrice": 6000,
+    "rating": 4.8,
+    "reviewCount": 1023,
+    "likes": 1876,
+    "salesCount": 2345,
+    "category": "healthyProducts",
+    "description": "비타민과 무기질이 풍부한 슈퍼푸드 케일입니다.",
+    "detailInfo": {
+      "brand": "그린팜",
+      "origin": "국내산",
+      "weight": "300g",
+      "storage": "냉장보관"
+    },
+    "tags": ["케일", "슈퍼푸드", "유기농"]
+  },
+  {
+    "id": 28,
+    "title": "신선한 아보카도 5개",
+    "image": "https://picsum.photos/300/200?random=28",
+    "images": [
+      "https://picsum.photos/300/200?random=28",
+      "https://picsum.photos/400/300?random=2801"
+    ],
+    "discount": 18,
+    "price": 12300,
+    "originalPrice": 15000,
+    "rating": 4.5,
+    "reviewCount": 234,
+    "likes": 1456,
+    "salesCount": 876,
+    "category": "healthyProducts",
+    "description": "건강한 지방이 풍부한 신선한 아보카도입니다.",
+    "detailInfo": {
+      "brand": "아보팜",
+      "origin": "수입산",
+      "weight": "5개",
+      "storage": "실온보관"
+    },
+    "tags": ["아보카도", "건강지방", "신선"]
+  },
+  {
+    "id": 29,
+    "title": "참기름 250ml",
+    "image": "https://picsum.photos/300/200?random=29",
+    "images": [
+      "https://picsum.photos/300/200?random=29",
+      "https://picsum.photos/400/300?random=2901"
+    ],
+    "discount": 28,
+    "price": 14400,
+    "originalPrice": 20000,
+    "rating": 4.7,
+    "reviewCount": 678,
+    "likes": 1234,
+    "salesCount": 3456,
+    "category": "seasoningProducts",
+    "description": "고소한 맛이 일품인 프리미엄 참기름입니다.",
+    "detailInfo": {
+      "brand": "참맛",
+      "origin": "국내산",
+      "weight": "250ml",
+      "storage": "상온보관"
+    },
+    "tags": ["참기름", "고소", "프리미엄"]
+  },
+  {
+    "id": 30,
+    "title": "냉동 블루베리 500g",
+    "image": "https://picsum.photos/300/200?random=30",
+    "images": [
+      "https://picsum.photos/300/200?random=30",
+      "https://picsum.photos/400/300?random=3001"
+    ],
+    "discount": 32,
+    "price": 10200,
+    "originalPrice": 15000,
+    "rating": 4.9,
+    "reviewCount": 567,
+    "likes": 2876,
+    "salesCount": 1987,
+    "category": "healthyProducts",
+    "description": "안토시아닌이 풍부한 프리미엄 냉동 블루베리입니다.",
+    "detailInfo": {
+      "brand": "베리킹",
+      "origin": "수입산",
+      "weight": "500g",
+      "storage": "냉동보관"
+    },
+    "tags": ["블루베리", "안토시아닌", "냉동"]
+  },
+  {
+    "id": 31,
+    "title": "레몬 농축액 250ml",
+    "image": "https://picsum.photos/300/200?random=31",
+    "images": [
+      "https://picsum.photos/300/200?random=31",
+      "https://picsum.photos/400/300?random=3101"
+    ],
+    "discount": 18,
+    "price": 8200,
+    "originalPrice": 10000,
+    "rating": 4.4,
+    "reviewCount": 789,
+    "likes": 1345,
+    "salesCount": 2134,
+    "category": "bakingProducts",
+    "description": "상큼한 레몬 향이 일품인 농축액입니다.",
+    "detailInfo": {
+      "brand": "레몬킹",
+      "origin": "수입산",
+      "weight": "250ml",
+      "storage": "냉장보관"
+    },
+    "tags": ["레몬", "농축액", "상큼"]
+  },
+  {
+    "id": 32,
+    "title": "다크 초콜릿 칩 200g",
+    "image": "https://picsum.photos/300/200?random=32",
+    "images": [
+      "https://picsum.photos/300/200?random=32",
+      "https://picsum.photos/400/300?random=3201"
+    ],
+    "discount": 40,
+    "price": 6000,
+    "originalPrice": 10000,
+    "rating": 4.8,
+    "reviewCount": 345,
+    "likes": 2567,
+    "salesCount": 4321,
+    "category": "bakingProducts",
+    "description": "진한 코코아 맛의 프리미엄 다크 초콜릿 칩입니다.",
+    "detailInfo": {
+      "brand": "초콜릿마스터",
+      "origin": "수입산",
+      "weight": "200g",
+      "storage": "상온보관"
+    },
+    "tags": ["다크초콜릿", "베이킹", "프리미엄"]
+  },
+  {
+    "id": 33,
+    "title": "유기농 생강가루 100g",
+    "image": "https://picsum.photos/300/200?random=33",
+    "images": [
+      "https://picsum.photos/300/200?random=33",
+      "https://picsum.photos/400/300?random=3301"
+    ],
+    "discount": 30,
+    "price": 7000,
+    "originalPrice": 10000,
+    "rating": 4.5,
+    "reviewCount": 234,
+    "likes": 876,
+    "salesCount": 1567,
+    "category": "seasoningProducts",
+    "description": "매콤하고 따뜻한 맛의 유기농 생강가루입니다.",
+    "detailInfo": {
+      "brand": "생강왕",
+      "origin": "국내산",
+      "weight": "100g",
+      "storage": "상온보관"
+    },
+    "tags": ["생강", "유기농", "매콤"]
+  },
+  {
+    "id": 34,
+    "title": "캐슈넛 300g",
+    "image": "https://picsum.photos/300/200?random=34",
+    "images": [
+      "https://picsum.photos/300/200?random=34",
+      "https://picsum.photos/400/300?random=3401"
+    ],
+    "discount": 35,
+    "price": 16250,
+    "originalPrice": 25000,
+    "rating": 4.6,
+    "reviewCount": 345,
+    "likes": 1234,
+    "salesCount": 987,
+    "category": "healthyProducts",
+    "description": "부드럽고 고소한 맛의 프리미엄 캐슈넛입니다.",
+    "detailInfo": {
+      "brand": "너트프리미엄",
+      "origin": "수입산",
+      "weight": "300g",
+      "storage": "상온보관"
+    },
+    "tags": ["캐슈넛", "견과류", "고소"]
+  },
+  {
+    "id": 35,
+    "title": "천연 식초 500ml",
+    "image": "https://picsum.photos/300/200?random=35",
+    "images": [
+      "https://picsum.photos/300/200?random=35",
+      "https://picsum.photos/400/300?random=3501"
+    ],
+    "discount": 25,
+    "price": 9000,
+    "originalPrice": 12000,
+    "rating": 4.8,
+    "reviewCount": 1023,
+    "likes": 1567,
+    "salesCount": 2876,
+    "category": "seasoningProducts",
+    "description": "자연 발효로 만든 깔끔한 맛의 천연 식초입니다.",
+    "detailInfo": {
+      "brand": "발효마스터",
+      "origin": "국내산",
+      "weight": "500ml",
+      "storage": "상온보관"
+    },
+    "tags": ["천연", "식초", "발효"]
+  },
+  {
+    "id": 36,
+    "title": "국내산 들기름 250ml",
+    "image": "https://picsum.photos/300/200?random=36",
+    "images": [
+      "https://picsum.photos/300/200?random=36",
+      "https://picsum.photos/400/300?random=3601"
+    ],
+    "discount": 32,
+    "price": 13600,
+    "originalPrice": 20000,
+    "rating": 4.9,
+    "reviewCount": 567,
+    "likes": 2134,
+    "salesCount": 1876,
+    "category": "seasoningProducts",
+    "description": "고소하고 건강한 국내산 들기름입니다.",
+    "detailInfo": {
+      "brand": "들기름왕",
+      "origin": "국내산",
+      "weight": "250ml",
+      "storage": "냉장보관"
+    },
+    "tags": ["들기름", "국내산", "고소"]
+  },
+  {
+    "id": 37,
+    "title": "코코넛 오일 500ml",
+    "image": "https://picsum.photos/300/200?random=37",
+    "images": [
+      "https://picsum.photos/300/200?random=37",
+      "https://picsum.photos/400/300?random=3701"
+    ],
+    "discount": 24,
+    "price": 22800,
+    "originalPrice": 30000,
+    "rating": 4.8,
+    "reviewCount": 456,
+    "likes": 1789,
+    "salesCount": 1234,
+    "category": "healthyProducts",
+    "description": "다양한 용도로 활용 가능한 프리미엄 코코넛 오일입니다.",
+    "detailInfo": {
+      "brand": "코코넛킹",
+      "origin": "수입산",
+      "weight": "500ml",
+      "storage": "상온보관"
+    },
+    "tags": ["코코넛오일", "다용도", "프리미엄"]
+  },
+  {
+    "id": 38,
+    "title": "유기농 흑미 2kg",
+    "image": "https://picsum.photos/300/200?random=38",
+    "images": [
+      "https://picsum.photos/300/200?random=38",
+      "https://picsum.photos/400/300?random=3801"
+    ],
+    "discount": 20,
+    "price": 16000,
+    "originalPrice": 20000,
+    "rating": 4.5,
+    "reviewCount": 678,
+    "likes": 1345,
+    "salesCount": 2567,
+    "category": "healthyProducts",
+    "description": "안토시아닌이 풍부한 영양만점 유기농 흑미입니다.",
+    "detailInfo": {
+      "brand": "흑미농장",
+      "origin": "국내산",
+      "weight": "2kg",
+      "storage": "상온보관"
+    },
+    "tags": ["흑미", "유기농", "안토시아닌"]
+  },
+  {
+    "id": 39,
+    "title": "아가베 시럽 250ml",
+    "image": "https://picsum.photos/300/200?random=39",
+    "images": [
+      "https://picsum.photos/300/200?random=39",
+      "https://picsum.photos/400/300?random=3901"
+    ],
+    "discount": 30,
+    "price": 10500,
+    "originalPrice": 15000,
+    "rating": 4.4,
+    "reviewCount": 234,
+    "likes": 876,
+    "salesCount": 1456,
+    "category": "healthyProducts",
+    "description": "천연 감미료로 건강한 단맛을 느껴보세요.",
+    "detailInfo": {
+      "brand": "아가베",
+      "origin": "수입산",
+      "weight": "250ml",
+      "storage": "상온보관"
+    },
+    "tags": ["아가베", "천연감미료", "건강"]
+  },
+  {
+    "id": 40,
+    "title": "유기농 렌틸콩 1kg",
+    "image": "https://picsum.photos/300/200?random=40",
+    "images": [
+      "https://picsum.photos/300/200?random=40",
+      "https://picsum.photos/400/300?random=4001"
+    ],
+    "discount": 28,
+    "price": 10800,
+    "originalPrice": 15000,
+    "rating": 4.7,
+    "reviewCount": 567,
+    "likes": 1234,
+    "salesCount": 1876,
+    "category": "healthyProducts",
+    "description": "단백질이 풍부한 유기농 렌틸콩입니다.",
+    "detailInfo": {
+      "brand": "콩나라",
+      "origin": "수입산",
+      "weight": "1kg",
+      "storage": "상온보관"
+    },
+    "tags": ["렌틸콩", "단백질", "유기농"]
+  },
+  {
+    "id": 41,
+    "title": "히말라야 핑크솔트 500g",
+    "image": "https://picsum.photos/300/200?random=41",
+    "images": [
+      "https://picsum.photos/300/200?random=41",
+      "https://picsum.photos/400/300?random=4101"
+    ],
+    "discount": 22,
+    "price": 7800,
+    "originalPrice": 10000,
+    "rating": 4.6,
+    "reviewCount": 345,
+    "likes": 987,
+    "salesCount": 2345,
+    "category": "seasoningProducts",
+    "description": "미네랄이 풍부한 프리미엄 히말라야 핑크솔트입니다.",
+    "detailInfo": {
+      "brand": "솔트킹",
+      "origin": "수입산",
+      "weight": "500g",
+      "storage": "상온보관"
+    },
+    "tags": ["핑크솔트", "히말라야", "미네랄"]
+  },
+  {
+    "id": 42,
+    "title": "유기농 병아리콩 1kg",
+    "image": "https://picsum.photos/300/200?random=42",
+    "images": [
+      "https://picsum.photos/300/200?random=42",
+      "https://picsum.photos/400/300?random=4201"
+    ],
+    "discount": 35,
+    "price": 9750,
+    "originalPrice": 15000,
+    "rating": 4.8,
+    "reviewCount": 789,
+    "likes": 1456,
+    "salesCount": 987,
+    "category": "healthyProducts",
+    "description": "고단백 저칼로리 유기농 병아리콩입니다.",
+    "detailInfo": {
+      "brand": "콩마스터",
+      "origin": "수입산",
+      "weight": "1kg",
+      "storage": "상온보관"
+    },
+    "tags": ["병아리콩", "고단백", "유기농"]
+  },
+  {
+    "id": 43,
+    "title": "마카다미아 넛 200g",
+    "image": "https://picsum.photos/300/200?random=43",
+    "images": [
+      "https://picsum.photos/300/200?random=43",
+      "https://picsum.photos/400/300?random=4301"
+    ],
+    "discount": 25,
+    "price": 18750,
+    "originalPrice": 25000,
+    "rating": 4.7,
+    "reviewCount": 456,
+    "likes": 1123,
+    "salesCount": 678,
+    "category": "healthyProducts",
+    "description": "부드럽고 고급스러운 맛의 마카다미아 넛입니다.",
+    "detailInfo": {
+      "brand": "너트프리미엄",
+      "origin": "수입산",
+      "weight": "200g",
+      "storage": "상온보관"
+    },
+    "tags": ["마카다미아", "고급", "견과류"]
+  },
+  {
+    "id": 44,
+    "title": "유기농 꿀 500g",
+    "image": "https://picsum.photos/300/200?random=44",
+    "images": [
+      "https://picsum.photos/300/200?random=44",
+      "https://picsum.photos/400/300?random=4401"
+    ],
+    "discount": 30,
+    "price": 21000,
+    "originalPrice": 30000,
+    "rating": 4.8,
+    "reviewCount": 1234,
+    "likes": 2567,
+    "salesCount": 1789,
+    "category": "healthyProducts",
+    "description": "순수 자연에서 얻은 달콤한 유기농 꿀입니다.",
+    "detailInfo": {
+      "brand": "꿀농장",
+      "origin": "국내산",
+      "weight": "500g",
+      "storage": "상온보관"
+    },
+    "tags": ["유기농", "꿀", "천연"]
+  },
+  {
+    "id": 45,
+    "title": "바질 드라이 30g",
+    "image": "https://picsum.photos/300/200?random=45",
+    "images": [
+      "https://picsum.photos/300/200?random=45",
+      "https://picsum.photos/400/300?random=4501"
+    ],
+    "discount": 35,
+    "price": 6500,
+    "originalPrice": 10000,
+    "rating": 4.8,
+    "reviewCount": 456,
+    "likes": 1234,
+    "salesCount": 2876,
+    "category": "seasoningProducts",
+    "description": "상큼한 향이 일품인 프리미엄 바질입니다.",
+    "detailInfo": {
+      "brand": "허브킹",
+      "origin": "수입산",
+      "weight": "30g",
+      "storage": "상온보관"
+    },
+    "tags": ["바질", "허브", "상큼"]
+  },
+  {
+    "id": 46,
+    "title": "유기농 양파분말 200g",
+    "image": "https://picsum.photos/300/200?random=46",
+    "images": [
+      "https://picsum.photos/300/200?random=46",
+      "https://picsum.photos/400/300?random=4601"
+    ],
+    "discount": 24,
+    "price": 7600,
+    "originalPrice": 10000,
+    "rating": 4.5,
+    "reviewCount": 678,
+    "likes": 1345,
+    "salesCount": 1987,
+    "category": "seasoningProducts",
+    "description": "달콤한 양파 맛을 간편하게 즐길 수 있는 분말입니다.",
+    "detailInfo": {
+      "brand": "양파킹",
+      "origin": "국내산",
+      "weight": "200g",
+      "storage": "상온보관"
+    },
+    "tags": ["양파", "유기농", "분말"]
+  },
+  {
+    "id": 47,
+    "title": "로즈마리 드라이 30g",
+    "image": "https://picsum.photos/300/200?random=47",
+    "images": [
+      "https://picsum.photos/300/200?random=47",
+      "https://picsum.photos/400/300?random=4701"
+    ],
+    "discount": 30,
+    "price": 7000,
+    "originalPrice": 10000,
+    "rating": 4.7,
+    "reviewCount": 234,
+    "likes": 876,
+    "salesCount": 1456,
+    "category": "seasoningProducts",
+    "description": "진한 향이 특징인 프리미엄 로즈마리입니다.",
+    "detailInfo": {
+      "brand": "허브마스터",
+      "origin": "수입산",
+      "weight": "30g",
+      "storage": "상온보관"
+    },
+    "tags": ["로즈마리", "허브", "진한향"]
+  },
+  {
+    "id": 48,
+    "title": "천연 육수팩 10개입",
+    "image": "https://picsum.photos/300/200?random=48",
+    "images": [
+      "https://picsum.photos/300/200?random=48",
+      "https://picsum.photos/400/300?random=4801"
+    ],
+    "discount": 28,
+    "price": 10800,
+    "originalPrice": 15000,
+    "rating": 4.8,
+    "reviewCount": 567,
+    "likes": 1789,
+    "salesCount": 3456,
+    "category": "seasoningProducts",
+    "description": "깊은 맛을 내는 천연 재료로만 만든 육수팩입니다.",
+    "detailInfo": {
+      "brand": "육수왕",
+      "origin": "국내산",
+      "weight": "10개입",
+      "storage": "상온보관"
+    },
+    "tags": ["육수", "천연", "깊은맛"]
+  },
+  {
+    "id": 49,
+    "title": "사워크림 200g",
+    "image": "https://picsum.photos/300/200?random=49",
+    "images": [
+      "https://picsum.photos/300/200?random=49",
+      "https://picsum.photos/400/300?random=4901"
+    ],
+    "discount": 30,
+    "price": 5250,
+    "originalPrice": 7500,
+    "rating": 4.8,
+    "reviewCount": 234,
+    "likes": 1456,
+    "salesCount": 2876,
+    "category": "bakingProducts",
+    "description": "상큼하고 부드러운 맛의 프리미엄 사워크림입니다.",
+    "detailInfo": {
+      "brand": "크림마스터",
+      "origin": "국내산",
+      "weight": "200g",
+      "storage": "냉장보관"
+    },
+    "tags": ["사워크림", "상큼", "부드러움"]
+  },
+  {
+    "id": 50,
+    "title": "화이트 초콜릿 200g",
+    "image": "https://picsum.photos/300/200?random=50",
+    "images": [
+      "https://picsum.photos/300/200?random=50",
+      "https://picsum.photos/400/300?random=5001"
+    ],
+    "discount": 27,
+    "price": 10950,
+    "originalPrice": 15000,
+    "rating": 4.7,
+    "reviewCount": 345,
+    "likes": 1987,
+    "salesCount": 1234,
+    "category": "bakingProducts",
+    "description": "달콤하고 부드러운 맛의 프리미엄 화이트 초콜릿입니다.",
+    "detailInfo": {
+      "brand": "초콜릿킹",
+      "origin": "수입산",
+      "weight": "200g",
+      "storage": "상온보관"
+    },
+    "tags": ["화이트초콜릿", "달콤", "프리미엄"]
+  }
+]

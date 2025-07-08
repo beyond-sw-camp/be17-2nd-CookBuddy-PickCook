@@ -1,0 +1,57 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 1,
+      "title": "찹쌀전병을 품은 삼색밀쌈",
+      "description": "찹쌀가루를 사용해 겉은 바삭하고 속은 쫄깃한 찹쌀전 레시피입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/99674_MF_CIMG_02.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "찹쌀가루를 뜨거운 물로 익반죽하여 달궈진 팬에 기름을 두르고 찹쌀 전병으로 지져낸다.(찹쌀가루는 찹쌀을 불려서 분쇄기로 갈아서 사용)",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99674_MF_CIMG_02.jpg"
+        },
+        {
+          "stepNumber": 2,
+          "text": "오이와 당근은 채 썰어 볶아놓고, 쇠고기도 채 썰어 볶아 놓는다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99674_MF_CIMG_04.jpg"
+        },
+        {
+          "stepNumber": 3,
+          "text": "달걀은 황백으로 나눠 지단을 부쳐서 채로 썰어 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99674_MF_CIMG_05.jpg"
+        },
+        {
+          "stepNumber": 4,
+          "text": "밀전병은 밀가루 : 물=1 : 1비율로 숙성 후 3가지색(쑥, 단호박, 백년초)의 밀전병을 만든다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99674_MF_CIMG_06.jpg"
+        },
+        {
+          "stepNumber": 5,
+          "text": "밀전병 위에 찹쌀전병을 얹고 그 위에 볶은 재료를 얹어 돌돌 말아 접시에 담는다. (겨자소스 또는 취향에 맞는 소스를 곁들인다.)",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99674_MF_CIMG_07.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "찹쌀가루", "amount": "2컵" },
+          { "name": "밀가루", "amount": "1컵" },
+          { "name": "소고기", "amount": "200g" },
+          { "name": "오이", "amount": "1개" },
+          { "name": "당근", "amount": "1/2개" },
+          { "name": "계란", "amount": "2개" }
+        ],
+        "seasoning": [
+          { "name": "쑥가루", "amount": "10g" },
+          { "name": "단호박가루", "amount": "10g" },
+          { "name": "백년초가루", "amount": "10g" }
+        ]
+      }
+    }
+  ]
+}

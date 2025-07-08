@@ -1,0 +1,353 @@
+/* 필터 바 */
+
+/* filter-section 이건 레시피 목록 페이지 style과 동일 */
+.filter-section {
+    background-color: white;
+    padding: 10px 0;
+    border-bottom: 1px solid #eaedef;
+}
+
+.refrigerator-search-help-section {
+    max-width: 1256px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-search-keyword {
+    max-width: 1256px;
+    margin: 20px auto 0;
+    font-size: 20px;
+}
+
+.refrigerator-content-section {
+    margin-top: 30px;
+    justify-content: center;
+}
+
+.user-search-keyword>span {
+    padding-left: 20px;
+    font-weight: 500;
+}
+
+.search-bar-container {
+    display: flex;
+    height: 41.6px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  width: 300px;
+}
+
+.input-clear-btn {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #888;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+#refrigerator-item-search {
+  width: 100%;
+  height: 100%;
+  padding: 12px 32px 12px 12px;
+  border: 0.5px solid var(--color-light-gray);
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+  box-sizing: border-box;
+}
+
+#refrigerator-item-search-button {
+    width: 45px;
+    height: 100%;
+    /* background-color: var(--color-primary); */
+    background-color: var(--color-gray);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#refrigerator-item-search-button:hover {
+    background-color: var(--color-dark-strong);
+}
+
+#refrigerator-item-search-button>img {
+    width: 26px;
+}
+
+.refrigerator-filter-container {
+    display: flex;
+    gap: 8px;
+    height: fit-content;
+}
+
+.refrigerator-filter-items {
+    padding: 6px 14px;
+    border: 1px solid #dadce0;
+    border-radius: 20px;
+    background-color: white;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.refrigerator-filter-items:hover {
+    background-color: #f5f5f5;
+}
+
+.refrigerator-section-container {
+    display: flex;
+    gap: 27px;
+    position: relative;
+}
+
+.refrigerator-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.refrigerator-section-name {
+    font-size: 16px;
+    padding-left: 8px;
+    font-weight: 500;
+}
+
+.refrigerator-item-save-boxes {
+    border: 0.5px solid var(--color-light-gray);
+    border-radius: 8px;
+    width: 387px;
+    height: 630px;
+    overflow: hidden;
+    background-color: white;
+}
+
+.refrigerator-item-save-scroll-boxes {
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ingredient-card-container {
+    background-color: #f8f8f8;
+    width: 100%;
+    height: 77px;
+    border-bottom: 0.5px solid var(--color-light-gray);
+    display: flex;
+    gap: 17px;
+    padding: 15px 17px;
+    align-items: center;
+}
+
+.ingredient-item-image {
+    width: 43px;
+    height: 43px;
+    border-radius: 100%;
+    margin-left: 2px;
+}
+
+.ingredient-content-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.ingredient-name-and-qnt-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.ingredient-item-qnt {
+    font-size: 14px;
+    color: var(--color-gray);
+}
+
+.ingredient-category-and-exdate {
+    display: flex;
+}
+
+.ingredient-category-and-exdate>span {
+    font-size: 12px;
+    color: var(--color-gray);
+}
+
+.ingredient-category-and-exdate> :nth-child(2) {
+    margin: 0 5px;
+}
+
+.ingredient-setting-button {
+    width: 22px;
+    height: fit-content;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.add-refrigerator-items-button {
+    background-color: var(--color-primary);
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    position: fixed;
+    z-index: 999;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: bottom 0.2s ease;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.add-refrigerator-items-button>img {
+    width: 30px;
+}
+
+.modal-overlay {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: white;
+    padding: 38px 40px 45px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    min-width: 400px;
+    max-width: 90%;
+    overflow-y: auto;
+    position: relative;
+}
+
+.modal-content>h2 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 44px;
+    text-align: center;
+}
+
+.close-button {
+    position: absolute;
+    top: 28px;
+    right: 40px;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.add-refrigerator-items-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ingredient-info-input-boxes {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ingredient-label {
+    font-size: 14px;
+}
+
+.ingredient-input,
+.ingredient-select {
+    padding: 10px 12px;
+    border-radius: 3px;
+    border: 0.5px solid var(--color-light-gray);
+}
+
+.ingredient-add-btn {
+    padding: 10px 12px;
+    font-size: 14px;
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-top: 28px;
+}
+
+.ingredient-add-btn:hover {
+    background-color: var(--color-primary-dark);
+}
+
+/* 수정/삭제 모달 */
+.edit-delete-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+
+#snackbar {
+    min-width: 300px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 4px;
+    padding: 10px 20px;
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}
+
+#snackbar button {
+    background: none;
+    border: none;
+    color: #f88;
+    margin-left: 20px;
+    cursor: pointer;
+}
+
+.ingredient-edit-modal-button-container {
+    display: flex;
+    gap: 8px;
+}
+
+.ingredient-edit-modal-button-container>button {
+    width: 100%;
+}
+
+#deleteBtn {
+    background-color: var(--color-gray);
+}
+
+#deleteBtn:hover {
+    background-color: #7c7c7c;
+}

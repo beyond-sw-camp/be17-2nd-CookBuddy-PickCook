@@ -79,6 +79,9 @@ const handleFileChange = (event) => {
           <input type="text" />
         </div>
       </div>
+      <div class="mypage-my-preofile-info-save">
+        <button>저장하기</button>
+      </div>
     </div>
   </div>
 </template>

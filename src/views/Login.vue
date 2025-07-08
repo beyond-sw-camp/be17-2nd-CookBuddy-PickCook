@@ -1,36 +1,40 @@
 <script setup>
+import { useUserStore } from '@/store/useUserStore'
 import { onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const auth = useUserStore()
+const router = useRouter()
 
 // 템플릿에서 참조할 ref들 정의
 const formRef = ref(null)
 const emailRef = ref(null)
 const passwordRef = ref(null)
 
-onMounted(() => {
-  const form = formRef.value
-  const emailInput = emailRef.value
-  const passwordInput = passwordRef.value
+const login = () => {
+  const email = emailRef.value
+  const password = passwordRef.value
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 
-  form.addEventListener('submit', (e) => {
-    const email = emailInput.value
-    const password = passwordInput.value
+  console.log(email, password)
+  if (!emailRegex.test(email)) {
+    alert('올바른 이메일 형식을 입력해주세요.')
+    return
+  }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
+  if (!passwordRegex.test(password)) {
+    alert('비밀번호는 영문자와 숫자를 포함해 8자 이상이어야 합니다.')
+    return
+  }
 
-    if (!emailRegex.test(email)) {
-      e.preventDefault()
-      alert('올바른 이메일 형식을 입력해주세요.')
-      return
-    }
-
-    if (!passwordRegex.test(password)) {
-      e.preventDefault()
-      alert('비밀번호는 영문자와 숫자를 포함해 8자 이상이어야 합니다.')
-      return
-    }
-  })
-})
+  auth.checkLogin(email, password)
+  if (auth.isLogin) {
+    router.push('/')
+  } else {
+    alert('아이디 또는 비밀번호가 일치하지 않습니다.')
+  }
+}
 </script>
 
 <template>
@@ -38,15 +42,28 @@ onMounted(() => {
     <div class="login-container">
       <a class="logo-text" href="/index.html">PickCook</a>
       <span id="title">로그인</span>
-
-      <form ref="formRef" action="/login" method="post">
+      <form ref="formRef" action="/login" method="post" @submit.prevent="login">
         <div class="form-items">
           <label for="email">이메일</label>
-          <input ref="emailRef" class="login-and-signup-input" type="email" name="email" placeholder="이메일" required />
+          <input
+            v-model="emailRef"
+            class="login-and-signup-input"
+            type="email"
+            name="email"
+            placeholder="이메일"
+            required
+          />
         </div>
         <div class="form-items">
           <label for="password">비밀번호</label>
-          <input ref="passwordRef" class="login-and-signup-input" type="password" name="password" placeholder="비밀번호" required />
+          <input
+            v-model="passwordRef"
+            class="login-and-signup-input"
+            type="password"
+            name="password"
+            placeholder="비밀번호"
+            required
+          />
         </div>
         <button class="login-button" type="submit">로그인</button>
       </form>
@@ -71,5 +88,5 @@ onMounted(() => {
       </div>
     </div>
   </div>
-  
 </template>
+<style scoped></style>

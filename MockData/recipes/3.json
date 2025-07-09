@@ -1,0 +1,64 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 3,
+      "title": "단호박 약식",
+      "description": "치자 물에 불린 찹쌀에 단호박, 대추, 견과류를 넣고 달콤하게 찐 전통 약식입니다.",
+      "time": "40분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/99676_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "찹쌀은 깨끗이 씻어 치자 한 개를 잘라서 넣고 노란색의 물이 찹쌀에 들 때까지 6시간 정도 불려서 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99676_MF_BIMG_01.jpg"
+        },
+        {
+          "stepNumber": 2,
+          "text": "대추, 호두, 밤, 단호박은 2×2cm 크기로 썰어서 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99676_MF_CIMG_03.jpg"
+        },
+        {
+          "stepNumber": 3,
+          "text": "치자물이 든 ①의 찹쌀을 30분 동안 소쿠리에서 물기를 빼주고 센 불에서 40분 정도 1차로 쪄준다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99676_MF_CIMG_05.jpg"
+        },
+        {
+          "stepNumber": 4,
+          "text": "1차로 찐 찰밥에 분량의 설탕을 넣어 찰밥이 알알이 떨어지도록 흩어준 다음 분량의 단호박, 대추, 호두, 밤, 잣, 단호박가루, 소금을 넣어 밤이 익을 때까지 2차 찌기를 한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99676_MF_CIMG_06.jpg"
+        },
+        {
+          "stepNumber": 5,
+          "text": "참기름을 넣고 마무리한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99676_MF_BIMG_01.jpg"
+        },
+        {
+          "stepNumber": 6,
+          "text": "그릇에 예쁘게 담아낸다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99677_MF_BIMG_01.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "찹쌀", "amount": "2컵" },
+          { "name": "단호박", "amount": "150g" },
+          { "name": "단호박가루", "amount": "12g" },
+          { "name": "대추", "amount": "5개" },
+          { "name": "호두", "amount": "7개" },
+          { "name": "밤", "amount": "5개" },
+          { "name": "잣", "amount": "15g" }
+        ],
+        "seasoning": [
+          { "name": "설탕", "amount": "50g" },
+          { "name": "소금", "amount": "10g" },
+          { "name": "참기름", "amount": "30g" },
+          { "name": "치자", "amount": "1개" }
+        ]
+      }
+    }
+  ]
+}

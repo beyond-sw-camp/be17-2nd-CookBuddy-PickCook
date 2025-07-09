@@ -18,7 +18,7 @@ const recipeList = async () => {
 
 const getRecipe = async (id) => {
   let data = {}
-  let url = `/recipes/detail/${id}.json`
+  let url = `/recipes/${id}.json`
 
   await api
     .get(url, {

@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 10,
+      "title": "파프리카찹쌀튀김",
+      "description": "쫄깃한 찹쌀 반죽에 다채로운 파프리카와 양파를 돌돌 말아 바삭하게 튀겨낸, 식감과 색감 모두 살아있는 별미 간식입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/99684_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "찹쌀가루에 소금을 넣고 뜨거운 물로 익반죽하여 준비한다. (찹쌀은 6시간 불린 후 30분 정도 소쿠리에서 물기를 빼고 분쇄기로 갈아서 찹쌀가루를 준비한다.)",
+          "image": ""
+        },
+        {
+          "stepNumber": 2,
+          "text": "양파는 껍질을 제거하고, 청·홍·황 파프리카와 함께 0.5×5cm로 채로 썰어서 준비한다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 3,
+          "text": "익반죽 해놓은 찹쌀가루 반죽으로 채 썬 양파, 청·홍·황 파프리카를 돌돌 말아 준비한다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 4,
+          "text": "준비 된 재료를 160℃의 튀김팬에 찹쌀가루 반죽이 투명해 질 때까지 튀겨낸다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 5,
+          "text": "접시에 예쁘게 담아낸다.",
+          "image": ""
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "찹쌀가루", "amount": "150g" },
+          { "name": "양파", "amount": "1/2개" },
+          { "name": "청 파프리카", "amount": "1/4개" },
+          { "name": "홍 파프리카", "amount": "1/4개" },
+          { "name": "황 파프리카", "amount": "1/4개" }
+        ],
+        "seasoning": [
+          { "name": "식용유", "amount": "400g" },
+          { "name": "소금", "amount": "7g" }
+        ]
+      }
+    }
+  ]
+}

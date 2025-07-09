@@ -1,0 +1,69 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 16,
+      "title": "닭가슴살 채소조림",
+      "description": "알록달록 채소를 닭가슴살에 말아 졸여낸 건강한 한 끼 반찬. 부드럽고 담백한 맛과 달큰 짭조름한 양념이 어우러져 색감과 영양을 모두 살린 요리입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/200809_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "닭가슴살은 찬물에 헹군 후 넓게 펴서 청주, 소금, 후추로 밑간을 한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200809_MF_CIMG_02.jpg"
+        },
+        {
+          "stepNumber": 2,
+          "text": "양파, 청피망, 노란 파프리카, 빨간 파프리카는 얇게 채썰어 달군 팬에 기름을 두르고 볶는다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200809_MF_CIMG_03.jpg"
+        },
+        {
+          "stepNumber": 3,
+          "text": "양념 재료(간장, 설탕, 물, 참기름, 깨소금, 매실청, 후추)를 팬에 넣고 거품이 일도록 끓인다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200809_MF_CIMG_04.jpg"
+        },
+        {
+          "stepNumber": 4,
+          "text": "밑간한 닭가슴살에 볶은 야채를 넣고 돌돌 말아 대나무꽂이로 고정한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200809_MF_CIMG_05.jpg"
+        },
+        {
+          "stepNumber": 5,
+          "text": "조림 양념에 말아둔 닭가슴살을 굴려가며 졸인다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200809_MF_CIMG_06.jpg"
+        },
+        {
+          "stepNumber": 6,
+          "text": "먹기 좋은 크기로 썰어 접시에 담아낸다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200809_MF_BIMG_01.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [{ "name": "닭가슴살", "amount": "3쪽" }],
+        "sub": [
+          { "name": "양파", "amount": "1/2개" },
+          { "name": "청피망", "amount": "1/2개" },
+          { "name": "노란 파프리카", "amount": "1/2개" },
+          { "name": "빨간 파프리카", "amount": "1/2개" },
+          { "name": "편마늘", "amount": "10g" },
+          { "name": "생강", "amount": "5g" },
+          { "name": "청주", "amount": "15g" }
+        ],
+        "seasoning": [
+          { "name": "간장", "amount": "45g" },
+          { "name": "설탕", "amount": "20g" },
+          { "name": "물", "amount": "45g" },
+          { "name": "참기름", "amount": "8g" },
+          { "name": "깨소금", "amount": "5g" },
+          { "name": "매실청", "amount": "20g" },
+          { "name": "후추", "amount": "약간" },
+          { "name": "소금", "amount": "약간" }
+        ]
+      }
+    }
+  ]
+}

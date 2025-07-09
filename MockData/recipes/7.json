@@ -1,0 +1,60 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 7,
+      "title": "귤소스 샐러드",
+      "description": "찹쌀가루를 사용해 겉은 바삭하고 속은 쫄깃한 찹쌀전 레시피입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/99681_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "귤은 깨끗이 씻어 껍질을 제거하고 2쪽만 남기고 믹서로 곱게 갈아 준 후 올리브오일과 생강시럽, 소금, 식초, 후추, 파슬리가루를 섞어 다시 믹서기로 혼합해서 소스를 준비해 냉장 보관한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99681_MF_CIMG_03.jpg"
+        },
+        {
+          "stepNumber": 2,
+          "text": "바나나는 어슷썰고, 토마토는 반달 모양으로 썰고, 양파는 세워서 8등분으로 썬다. 귤은 모양을 살려 2조각 준비해둔다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99681_MF_CIMG_04.jpg"
+        },
+        {
+          "stepNumber": 3,
+          "text": "바나나, 단호박(찜기에 쪄 둔 것), 양파, 토마토는 달궈진 그릴팬에 구워서 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99681_MF_CIMG_05.jpg"
+        },
+        {
+          "stepNumber": 4,
+          "text": "그릴에 구운 바나나, 단호박, 양파, 토마토를 접시에 예쁘게 담아낸다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 5,
+          "text": "냉장고에 넣어 차갑게 준비한 귤소스와 견과류를 곁들여 낸다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99681_MF_BIMG_01.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "귤", "amount": "3개" },
+          { "name": "바나나", "amount": "1개" },
+          { "name": "단호박", "amount": "1/6개" },
+          { "name": "양파", "amount": "1/2개" },
+          { "name": "토마토", "amount": "1/2개" },
+          { "name": "견과류(피스타치오, 호두, 아몬드, 땅콩)", "amount": "30g" }
+        ],
+        "seasoning": [
+          { "name": "올리브오일", "amount": "50g" },
+          { "name": "소금", "amount": "5g" },
+          { "name": "생강시럽", "amount": "15g" },
+          { "name": "식초", "amount": "10g" },
+          { "name": "후추", "amount": "약간" },
+          { "name": "파슬리가루", "amount": "약간" }
+        ]
+      }
+    }
+  ]
+}

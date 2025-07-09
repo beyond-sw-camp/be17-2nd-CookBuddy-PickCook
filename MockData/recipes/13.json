@@ -1,0 +1,74 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 13,
+      "title": "시래기만두",
+      "description": "부드러운 삶은 시래기와 다진 소고기, 각종 채소를 양념해 직접 만든 만두피에 싸서 찐 건강한 만두입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/200113_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "밀가루에 소금 1/2ts과 물을 넣고 반죽한 뒤 비닐봉지에 넣어 숙성시켜둔다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200113_MF_CIMG_02.jpg"
+        },
+        {
+          "stepNumber": 2,
+          "text": "시래기는 흐르는 물에 깨끗이 씻어 겉껍질을 제거한 뒤 잘게 썬다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200113_MF_CIMG_03.jpg"
+        },
+        {
+          "stepNumber": 3,
+          "text": "불린 표고버섯과 애호박, 당근은 3cm 길이로 가늘게 채로 썰어 준비한다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 4,
+          "text": "다진 소고기에 진간장, 설탕, 다진 파, 다진 마늘, 후춧가루를 넣고 양념한 뒤 팬에 식용유를 두르고 달군 후 애호박, 당근, 표고버섯, 시래기, 소고기를 순서대로 볶는다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200113_MF_CIMG_05.jpg"
+        },
+        {
+          "stepNumber": 5,
+          "text": "④번 재료에 참기름, 깨소금, 소금을 넣고 양념하여 만두소를 만든다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200113_MF_CIMG_06.jpg"
+        },
+        {
+          "stepNumber": 6,
+          "text": "반죽으로 만두피를 만들고, 만두소 재료를 한 스푼 넣어 만두를 빚는다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200113_MF_CIMG_08.jpg"
+        },
+        {
+          "stepNumber": 7,
+          "text": "빚은 만두를 김이 오른 대나무 찜기에 넣고 10분 정도 쪄준다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200113_MF_CIMG_09.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "삶은 시래기", "amount": "400g" },
+          { "name": "다진 소고기", "amount": "200g" },
+          { "name": "밀가루", "amount": "2컵" },
+          { "name": "당근", "amount": "1/2개" },
+          { "name": "애호박", "amount": "1/2개" },
+          { "name": "불린 표고버섯", "amount": "3개" },
+          { "name": "식용유", "amount": "100g" }
+        ],
+        "seasoning": [
+          { "name": "소금", "amount": "1/2 작은술" },
+          { "name": "진간장", "amount": "30g" },
+          { "name": "설탕", "amount": "12g" },
+          { "name": "다진 파", "amount": "15g" },
+          { "name": "다진 마늘", "amount": "10g" },
+          { "name": "후춧가루", "amount": "약간" },
+          { "name": "참기름", "amount": "40g" },
+          { "name": "깨소금", "amount": "10g" },
+          { "name": "소금", "amount": "약간" }
+        ]
+      }
+    }
+  ]
+}

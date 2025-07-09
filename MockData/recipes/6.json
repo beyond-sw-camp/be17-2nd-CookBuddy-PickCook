@@ -1,0 +1,63 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 6,
+      "title": "귤전",
+      "description": "새콤달콤한 귤과 채소를 활용해 만든 부침개로, 다진 귤껍질과 감자, 깻잎, 양파, 쪽파 등을 섞어 부쳐낸 후 구운 귤을 올려 마무리한 향긋한 전 요리입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/99680_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "귤은 깨끗이 씻어 끓는 소금물에 데쳐서 준비한다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 2,
+          "text": "①의 귤껍질은 곱게 다지고, 귤은 모양을 살려 구워서 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99680_MF_CIMG_03.jpgg"
+        },
+        {
+          "stepNumber": 3,
+          "text": "감자, 깻잎, 양파, 쪽파는 깨끗이 씻어 곱게 채 썰어 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99680_MF_CIMG_04.jpg"
+        },
+        {
+          "stepNumber": 4,
+          "text": "다진 귤껍질과 채 썬 감자, 깻잎, 양파, 쪽파에 밀가루, 계란, 소금을 넣어 반죽한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99680_MF_CIMG_05.jpg"
+        },
+        {
+          "stepNumber": 5,
+          "text": "달궈진 후라이팬에 기름을 두르고 ④의 반죽을 지져낸다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99680_MF_CIMG_06.jpg"
+        },
+        {
+          "stepNumber": 6,
+          "text": "지져낸 전 위에 구운 귤을 얹어 예쁘게 그릇에 담아낸다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99680_MF_BIMG_01.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "귤", "amount": "3개" },
+          { "name": "감자", "amount": "1개" },
+          { "name": "깻잎", "amount": "5장" },
+          { "name": "쪽파", "amount": "30g" },
+          { "name": "양파", "amount": "1/4개" },
+          { "name": "계란", "amount": "1개" },
+          { "name": "밀가루", "amount": "100g" }
+        ],
+        "seasoning": [
+          { "name": "소금", "amount": "5g" },
+          { "name": "식용유", "amount": "적당량" },
+          { "name": "치자", "amount": "1개" }
+        ]
+      }
+    }
+  ]
+}

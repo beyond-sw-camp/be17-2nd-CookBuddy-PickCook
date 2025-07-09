@@ -1,0 +1,65 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 1,
+      "title": "귤소스 & 생선스테이크",
+      "description": "상큼한 귤소스와 부드러운 대구살이 어우러진 색감 가득한 생선 요리로, 구운 채소와 함께 담아내어 보기에도 먹기에도 좋은 건강한 한 접시입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/99682_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "귤은 깨끗이 씻어 겉껍질을 벗기고, 속껍질을 제거하여 알맹이를 버터로 살짝 볶고 레몬즙을 뿌린다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99682_MF_CIMG_02.jpg"
+        },
+        {
+          "stepNumber": 2,
+          "text": "①의 재료를 믹서기로 갈고 소금과 후추로 간을 하여 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99682_MF_CIMG_03.jpg"
+        },
+        {
+          "stepNumber": 3,
+          "text": "애호박, 가지, 토마토는 깨끗이 씻어 둥글게 썰어서 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99682_MF_CIMG_04.jpg"
+        },
+        {
+          "stepNumber": 4,
+          "text": "냉동대구는 녹여서 가시를 제거하고 소금과 후추를 뿌리고, 표면에 소금이 보이지 않으면 물기를 제거하고 전분을 묻혀 달궈진 팬에 기름을 두르고 지져 준 후 맛간장이 보글보글 끓으면 지진 대구를 올려 윤기나게 졸인다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99682_MF_CIMG_05.jpg"
+        },
+        {
+          "stepNumber": 5,
+          "text": "동그랗게 자른 애호박, 가지, 토마토는 소금을 살짝 뿌리고 그릴팬에 구워서 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99682_MF_CIMG_06.jpg"
+        },
+        {
+          "stepNumber": 6,
+          "text": "준비된 생선과 야채를 귤소스와 함께 예쁘게 담아낸다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99682_MF_BIMG_01.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "귤", "amount": "2개" },
+          { "name": "냉동대구", "amount": "1/2마리" },
+          { "name": "애호박", "amount": "1/4개" },
+          { "name": "토마토", "amount": "1/2개" },
+          { "name": "가지", "amount": "1/2개" }
+        ],
+        "seasoning": [
+          { "name": "레몬즙", "amount": "15g" },
+          { "name": "버터", "amount": "20g" },
+          { "name": "소금", "amount": "5g" },
+          { "name": "후추", "amount": "약간" },
+          { "name": "전분", "amount": "12g" },
+          { "name": "맛간장", "amount": "100g" },
+          { "name": "파슬리가루", "amount": "약간" }
+        ]
+      }
+    }
+  ]
+}

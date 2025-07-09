@@ -35,10 +35,7 @@ onMounted(() => {
 <template>
   <div class="rd-container">
     <section class="recipe-image">
-      <img
-        src="http://www.nongsaro.go.kr/cms_contents/855/99674_MF_BIMG_01.jpg"
-        alt="레시피 이미지"
-      />
+      <img :src="recipe.thumbnail" alt="레시피 이미지" />
       <h2 class="recipe-title">{{ recipe.title }}</h2>
       <p class="recipe-description">{{ recipe.description }}</p>
       <div>
@@ -73,7 +70,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <RelatedProducts title="찹쌀전병을 품은 삼색밀쌈" />
+    <RelatedProducts :title="recipe.title" :ingredients="recipe.ingredients" />
 
     <section class="recipe-steps">
       <h2>요리 순서</h2>

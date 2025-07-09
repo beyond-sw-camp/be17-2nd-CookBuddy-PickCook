@@ -1,0 +1,70 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 14,
+      "title": "우엉 비빔면",
+      "description": "우엉과 닭가슴살, 신선한 채소를 메밀국수와 함께 양념장에 버무려 시원하고 건강하게 즐기는 메밀면 요리입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/200115_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "우엉은 깨끗이 씻어 껍질을 벗기고 5cm 길이로 가늘게 채로 썰어 식초물에 담가 두었다가 끓는 물에 삶아 찬물에 헹궈서 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200115_MF_CIMG_02.jpg"
+        },
+        {
+          "stepNumber": 2,
+          "text": "닭가슴살에 대파, 생강, 맛술을 넣어 재워 두었다가 팬에 구워 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200115_MF_CIMG_03.jpg"
+        },
+        {
+          "stepNumber": 3,
+          "text": "김은 가위로 가늘게 자르고 양파와 비트는 채로 썰고, 구운 닭가슴살은 어슷썰고, 양파는 달궈진 팬에 물을 조금씩 부어 가면서 볶아 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200115_MF_CIMG_04.jpg"
+        },
+        {
+          "stepNumber": 4,
+          "text": "맛간장, 설탕, 와사비, 레몬즙, 참기름, 통깨, 딸기식초, 생강즙을 섞어 양념장을 만든다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200115_MF_CIMG_05.jpg"
+        },
+        {
+          "stepNumber": 5,
+          "text": "넉넉한 냄비에 2L의 물을 부어 끓으면 메밀면을 넣고 끓인다. 다시 끓어오르면 찬물을 반 컵 정도씩 2~3회 넣어 쫄깃하게 삶아 차가운 물에 여러 번 씻어 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200115_MF_CIMG_06.jpg"
+        },
+        {
+          "stepNumber": 6,
+          "text": "메밀면과 양념장을 잘 버무려 닭가슴살과 야채를 담고 여분의 양념장과 함께 제공한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/200115_MF_BIMG_01.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "우엉", "amount": "200g" },
+          { "name": "닭가슴살", "amount": "200g" },
+          { "name": "메밀국수", "amount": "400g" },
+          { "name": "대파", "amount": "20g" },
+          { "name": "김", "amount": "1장" },
+          { "name": "양파", "amount": "1/2개" },
+          { "name": "비트", "amount": "30g" }
+        ],
+        "seasoning": [
+          { "name": "맛간장", "amount": "50g" },
+          { "name": "생강", "amount": "10g" },
+          { "name": "맛술", "amount": "약간" },
+          { "name": "설탕", "amount": "20g" },
+          { "name": "와사비", "amount": "10g" },
+          { "name": "레몬즙", "amount": "15g" },
+          { "name": "참기름", "amount": "30g" },
+          { "name": "통깨", "amount": "10g" },
+          { "name": "딸기식초", "amount": "4T" },
+          { "name": "생강즙", "amount": "5g" }
+        ]
+      }
+    }
+  ]
+}

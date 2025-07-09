@@ -1,0 +1,67 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 4,
+      "title": "도라지 떡갈비 스테이크",
+      "description": "쓴맛을 제거한 도라지와 다진 고기, 채소를 함께 반죽해 도톰하게 빚어낸 건강한 떡갈비 스테이크입니다",
+      "time": "40분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/99677_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "도라지는 깨끗이 씻어 껍질을 제거하고, 소금물에 담가 쓴맛을 뺀 후 끓는 물에 데쳐 굵게 다진다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99677_MF_CIMG_03.jpg"
+        },
+        {
+          "stepNumber": 2,
+          "text": "돼지고기와 소고기는 곱게 다져서 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99677_MF_CIMG_04.jpg"
+        },
+        {
+          "stepNumber": 3,
+          "text": "양파는 굵게 다져서 투명하게 볶아서 놓는다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99677_MF_CIMG_05.jpg"
+        },
+        {
+          "stepNumber": 4,
+          "text": "굵게 다진 도라지, 돼지고기, 소고기, 볶은 양파, 다진 파, 다진 마늘, 깨소금, 참기름, 후추 약간, 맛간장, 매실액, 찹쌀가루, 모짜렐라 치즈를 반죽하여 지름 10cm의 납작한 타원모양으로 만든다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99677_MF_CIMG_06.jpg"
+        },
+        {
+          "stepNumber": 5,
+          "text": "달궈진 팬에 기름을 두르고 스테이크를 얹어 타지 않게 앞뒤를 익힌 후 육즙에 의해 속까지 익도록 지진다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 6,
+          "text": "접시에 예쁘게 담아낸다. (구운 단호박, 구운 호박, 토마토, 파슬리를 곁들여도 좋다.)",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99677_MF_BIMG_01.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "도라지", "amount": "200g" },
+          { "name": "돼지고기", "amount": "200g" },
+          { "name": "소고기", "amount": "200g" },
+          { "name": "다진양파", "amount": "80g" },
+          { "name": "찹쌀가루", "amount": "20g" },
+          { "name": "모짜렐라 치즈", "amount": "60g" }
+        ],
+        "seasoning": [
+          { "name": "다진파", "amount": "30g" },
+          { "name": "다진마늘", "amount": "15g" },
+          { "name": "깨소금", "amount": "10g" },
+          { "name": "참기름", "amount": "15g" },
+          { "name": "후추", "amount": "약간" },
+          { "name": "맛간장", "amount": "30g" },
+          { "name": "매실액", "amount": "15g" },
+          { "name": "파슬리가루", "amount": "10g" }
+        ]
+      }
+    }
+  ]
+}

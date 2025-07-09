@@ -40,12 +40,104 @@ onMounted(() => {
     },
   ]
 })
+
+const options = ['최신순', '오래된 순']
+const selected = ref('최신순')
+const isOpen = ref(false)
+
+const toggleDropdown = () => {
+  isOpen.value = !isOpen.value
+}
+
+const closeDropdown = () => {
+  isOpen.value = false
+}
+
+const selectOption = (option) => {
+  selected.value = option
+  isOpen.value = false
+}
 </script>
 
 <template>
-  <div class="mypage-main-content-scroll">
-    <MyWritePostItemCard v-for="post in posts" :key="post.id" :post="post" />
+  <div class="mypage-my-order-list-container">
+    <div class="mypage-header-box">
+      <div class="mypage-header-box-title">내 게시글 관리</div>
+
+      <div class="mypage-my-order-list-search-container">
+        <div class="dropdown" @click="toggleDropdown" @blur="closeDropdown" tabindex="0">
+          <div class="dropdown-toggle">
+            {{ selected }}
+            <span class="arrow" :class="{ open: isOpen }">▼</span>
+          </div>
+          <div class="dropdown-menu" v-if="isOpen">
+            <div
+              v-for="option in options"
+              :key="option"
+              class="dropdown-item"
+              @click.stop="selectOption(option)"
+            >
+              {{ option }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="mypage-body-box">
+      <div class="mypage-main-content-scroll">
+        <MyWritePostItemCard v-for="post in posts" :key="post.id" :post="post" />
+      </div>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  font-family: sans-serif;
+  user-select: none;
+  outline: none;
+}
+
+.dropdown-toggle {
+  background-color: white;
+  padding: 10px 15px;
+  border: 1px solid var(--color-light-gray);
+  border-radius: 5px;
+  cursor: pointer;
+  width: 125px;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  width: 100%;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #e9e9e9;
+}
+
+.arrow {
+  float: right;
+  transition: transform 0.2s;
+}
+
+.arrow.open {
+  transform: rotate(180deg);
+}
+</style>

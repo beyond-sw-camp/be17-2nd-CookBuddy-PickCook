@@ -20,6 +20,7 @@ import Login from '@/views/Login.vue'
 import SignupTypeSelect from '@/views/SignupTypeSelect.vue'
 import Signup from '@/views/Signup.vue'
 import { useUserStore } from '@/store/useUserStore'
+import AddressList from '@/components/AddressList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -75,6 +76,7 @@ const router = createRouter({
         { path: 'reply_list', name: 'mypage-reply', component: ReplyList },
         { path: 'user_info', name: 'mypage-info', component: UserInfo },
         { path: 'write_list', name: 'mypage-write', component: WriteList },
+        { path: 'address_list', name: 'mypage-address', component: AddressList },
       ],
       meta: { requiresAuth: true },
     },

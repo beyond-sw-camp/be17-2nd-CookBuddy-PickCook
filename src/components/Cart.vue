@@ -111,31 +111,35 @@ const deleteSelected = async () => {
 <template>
   <div class="mypage-my-cart-items-list-container">
     <!-- 전체 선택 체크박스 -->
-    <div class="my-cart-all-select-box-container">
-      <div class="my-cart-all-select-box-container-left">
-        <label class="custom-checkbox">
-          <input type="checkbox" v-model="isAllSelected" />
-          <span class="checkmark"></span>
-        </label>
-        <p>
-          전체선택 <span>({{ selectedCount }}/{{ cartItems.length }})</span>
-        </p>
-      </div>
-      <div class="my-cart-all-select-box-container-right" @click="deleteSelected">
-        <p>선택삭제</p>
+    <div class="mypage-header-box">
+      <div class="mypage-header-box-child">
+        <div class="my-cart-all-select-box-container-left">
+          <label class="custom-checkbox">
+            <input type="checkbox" v-model="isAllSelected" />
+            <span class="checkmark"></span>
+          </label>
+          <p>
+            전체선택 <span>({{ selectedCount }}/{{ cartItems.length }})</span>
+          </p>
+        </div>
+        <div class="my-cart-all-select-box-container-right" @click="deleteSelected">
+          <p>선택삭제</p>
+        </div>
       </div>
     </div>
 
-    <!-- 장바구니 아이템 리스트 -->
-    <div class="mypage-main-content-scroll">
-      <CartItemCard
-        v-for="item in cartItems"
-        :key="item.cart_item_id"
-        :item="item"
-        :is-checked="checkedItems[item.cart_item_id]"
-        @update:quantity="(newQty) => handleQtyChange(item.cart_item_id, newQty)"
-        @toggle-check="(checked) => handleCheck(item.cart_item_id, checked)"
-      />
+    <div class="mypage-body-box">
+      <!-- 장바구니 아이템 리스트 -->
+      <div class="mypage-main-content-scroll">
+        <CartItemCard
+          v-for="item in cartItems"
+          :key="item.cart_item_id"
+          :item="item"
+          :is-checked="checkedItems[item.cart_item_id]"
+          @update:quantity="(newQty) => handleQtyChange(item.cart_item_id, newQty)"
+          @toggle-check="(checked) => handleCheck(item.cart_item_id, checked)"
+        />
+      </div>
     </div>
   </div>
 </template>

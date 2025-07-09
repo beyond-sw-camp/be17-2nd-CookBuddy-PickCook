@@ -3,6 +3,18 @@ import { ref } from 'vue'
 
 const emit = defineEmits(['close', 'submit'])
 
+const cardNameOptions = [
+  '신한카드',
+  '국민카드',
+  '삼성카드',
+  '현대카드',
+  '롯데카드',
+  '하나카드',
+  '비씨카드',
+  '우리카드',
+]
+
+const cardName = ref(cardNameOptions[0])
 const cardNumber = ref('')
 const expiry = ref('')
 const setAsDefault = ref(false)
@@ -13,6 +25,7 @@ function close() {
 
 function submit() {
   emit('submit', {
+    cardName: cardName.value,
     cardNumber: cardNumber.value.replace(/\s/g, ''),
     expiry: expiry.value,
     isDefault: setAsDefault.value,
@@ -22,10 +35,19 @@ function submit() {
 </script>
 <template>
   <div class="modal-backdrop" @click.self="close">
-    <div class="modal">
+    <div class="pg-add-modal">
       <h3>새 결제 수단 추가</h3>
 
       <form @submit.prevent="submit">
+        <label>
+          카드 이름
+          <select v-model="cardName" class="pm-add-select" required>
+            <option v-for="name in cardNameOptions" :key="name" :value="name">
+              {{ name }}
+            </option>
+          </select>
+        </label>
+
         <label>
           카드 번호
           <input
@@ -69,7 +91,7 @@ function submit() {
   z-index: 1000;
 }
 
-.modal {
+.pg-add-modal {
   background: white;
   padding: 2rem;
   border-radius: 12px;
@@ -78,13 +100,13 @@ function submit() {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-label {
+.pg-add-modal label {
   display: block;
   margin-top: 1rem;
   font-size: 14px;
 }
 
-input[type='text'] {
+.pg-add-modal input[type='text'] {
   margin-top: 0.25rem;
   padding: 0.5rem;
   width: 100%;
@@ -116,6 +138,15 @@ input[type='text'] {
 
 .actions button:last-child {
   background: #aaa;
+}
+
+.pm-add-select {
+  margin-top: 0.25rem;
+  padding: 0.5rem;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
 [type='checkbox'] {

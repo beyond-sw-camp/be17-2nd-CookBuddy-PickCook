@@ -2,7 +2,7 @@ import api from '@/plugins/axiosinterceptor'
 
 const communityList = async () => {
   let data = {}
-  let url = '/api/community.json'
+  let url = '/community.json'
 
   await api
     .get(url)
@@ -18,7 +18,7 @@ const communityList = async () => {
 
 const communityDetail = async (id) => {
   let data = {}
-  let url = `/api/communityDetail/${id}.json`
+  let url = `/communityDetail/${id}.json`
 
   await api
     .get(url)
@@ -31,7 +31,5 @@ const communityDetail = async (id) => {
 
   return data
 }
-
-
 
 export default { communityList, communityDetail }

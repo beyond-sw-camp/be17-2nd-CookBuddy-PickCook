@@ -71,32 +71,35 @@ form {
   font-size: 14px;
   font-weight: 500;
 }
-/* 기본 버튼 스타일 */
+
 #email-cert-button {
   border: 1px solid var(--color-light-gray);
-  background-color: var(--color-main);
+  background-color: var(--color-primary);
   margin-top: 5px;
-  color: var(--color-gray);
+  color: white;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-/* hover 효과 (선택) */
-#email-cert-button:hover {
-  background-color: var(--color-main-dark); /* 더 진한 색 있으면 */
-}
-
 #email-cert-button.disabled {
-  border: 0.5px solid var(--color-light-gray);
-  margin-top: 5px;
   background-color: #f7f8fa;
   color: var(--color-light-gray);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+#email-cert-button.verified {
+  background-color: #8f8c90;
+  color: white;
 }
 
 .message-style {
   font-size: 12px;
   margin-top: 3px;
-  display: none;
+}
+
+.valid-message {
+  color: #585858;
 }
 
 #cert-guide-message,
@@ -104,8 +107,8 @@ form {
   color: var(--color-primary);
 }
 
-#usable-nickname-message {
-  color: var(--color-dark-strong);
+#cert-guide-message.valid-message {
+  color: #585858;
 }
 
 .signup-button {

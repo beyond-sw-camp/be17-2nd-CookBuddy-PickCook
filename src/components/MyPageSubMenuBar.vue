@@ -26,7 +26,9 @@ watch(
   <div class="mypage-sub-menu-bar">
     <!-- 인사말 -->
     <div class="mypage-sub-menu-each-container">
-      <p id="mypage-sub-menu-bar-hello">반가워요! <span id="mypage-sub-menu-bar-user">뇸뇸</span>님 :)</p>
+      <p id="mypage-sub-menu-bar-hello">
+        반가워요! <span id="mypage-sub-menu-bar-user">뇸뇸</span>님 :)
+      </p>
     </div>
 
     <!-- 쇼핑 메뉴 -->
@@ -100,8 +102,8 @@ watch(
       <span class="mypage-sub-menu-bar-items-category">내 정보관리</span>
       <div
         class="mypage-sub-menu-bar-items"
-        :class="{ active: activePath === 'delivery-address' }"
-        @click="goTo('delivery-address')"
+        :class="{ active: activePath === 'address_list' }"
+        @click="goTo('address_list')"
       >
         <img src="/public/assets/icons/ic-mypage-delivery.png" alt="메뉴이미지" />
         <p class="mypage-sub-menu-title">배송지 관리</p>
@@ -115,7 +117,6 @@ watch(
         <p class="mypage-sub-menu-title">회원 정보 관리</p>
       </div>
     </div>
-
   </div>
 </template>
 

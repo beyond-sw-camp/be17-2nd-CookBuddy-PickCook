@@ -84,7 +84,6 @@ const fetchOrders = async () => {
 // 화면 로딩 시 주문 데이터 불러오기
 onMounted(() => fetchOrders())
 
-
 const options = ['3개월', '6개월', '1년', '3년']
 const selected = ref('3개월')
 const isOpen = ref(false)
@@ -107,9 +106,7 @@ const selectOption = (option) => {
 <template>
   <div class="mypage-my-order-list-container">
     <div class="mypage-header-box">
-      <div class="mypage-header-box-title">
-        주문 내역
-      </div>
+      <div class="mypage-header-box-title">주문 내역</div>
 
       <div class="mypage-my-order-list-search-container">
         <div class="dropdown" @click="toggleDropdown" @blur="closeDropdown" tabindex="0">
@@ -129,20 +126,18 @@ const selectOption = (option) => {
           </div>
         </div>
         <div class="mypage-my-order-list-search-bar-container">
-          <img src="#!" alt="돋보기" />
-          <input type="text" placeholder="상품명으로 검색해보세요."/>
+          <img src="/public/assets/icons/ic-search.png" alt="돋보기" />
+          <input type="text" placeholder="상품명으로 검색해보세요." />
         </div>
       </div>
     </div>
 
     <div class="mypage-body-box">
-      
-    <!-- 주문내역 리스트 -->
+      <!-- 주문내역 리스트 -->
       <div class="mypage-main-content-scroll">
         <OderProductItemCard v-for="order in orders" :key="order.orderNumber" :order="order" />
       </div>
     </div>
-    
   </div>
 </template>
 
@@ -162,6 +157,7 @@ const selectOption = (option) => {
   border: 1px solid var(--color-light-gray);
   border-radius: 5px;
   cursor: pointer;
+  width: 100px;
 }
 
 .dropdown-menu {

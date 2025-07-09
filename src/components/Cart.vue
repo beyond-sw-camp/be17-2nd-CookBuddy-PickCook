@@ -129,18 +129,18 @@ const deleteSelected = async () => {
     </div>
 
     <div class="mypage-body-box">
-    <!-- 장바구니 아이템 리스트 -->
-    <div class="mypage-main-content-scroll">
-      <CartItemCard
-        v-for="item in cartItems"
-        :key="item.cart_item_id"
-        :item="item"
-        :is-checked="checkedItems[item.cart_item_id]"
-        @update:quantity="(newQty) => handleQtyChange(item.cart_item_id, newQty)"
-        @toggle-check="(checked) => handleCheck(item.cart_item_id, checked)"
-      />
+      <!-- 장바구니 아이템 리스트 -->
+      <div class="mypage-main-content-scroll">
+        <CartItemCard
+          v-for="item in cartItems"
+          :key="item.cart_item_id"
+          :item="item"
+          :is-checked="checkedItems[item.cart_item_id]"
+          @update:quantity="(newQty) => handleQtyChange(item.cart_item_id, newQty)"
+          @toggle-check="(checked) => handleCheck(item.cart_item_id, checked)"
+        />
+      </div>
     </div>
-  </div>
   </div>
 </template>
 

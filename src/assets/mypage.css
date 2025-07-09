@@ -50,7 +50,7 @@
 }
 
 .mypage-sub-bar-items:hover,
-.mypage-sub-bar-items.active {
+.mypage-sub-menu-bar-items.active {
   background-color: #f6f6f6;
 }
 
@@ -59,7 +59,6 @@
 }
 
 /* 마이페이지 내용 부분 스타일  */
-
 
 .mypage-main-header {
   display: flex;
@@ -107,6 +106,7 @@
 .mypage-main-content-scroll {
   max-height: 600px;
   overflow-y: auto;
+  width: 100%;
 }
 
 /* 체크박스 커스텀 스타일 */
@@ -308,6 +308,11 @@
 
 .mypage-main-my-activity-boards {
   padding: 16px 0 3px;
+  border-bottom: 0.5px solid #f4f4f4;
+}
+
+.mypage-main-my-activity-boards:last-child {
+  border-bottom: none;
 }
 
 .mypage-my-activity-boards-el {
@@ -316,7 +321,7 @@
   padding: 18px 15px;
   background-color: white;
   cursor: pointer;
-  /* border-bottom: 0.5px solid var(--color-light-gray); */
+  gap: 25px;
 }
 
 .mypage-my-activity-boards-left {
@@ -349,7 +354,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 620px;
+  max-width: 590px;
 }
 
 .mypage-my-activity-boards-content > p:last-of-type {
@@ -422,7 +427,6 @@
   font-weight: 500;
   color: var(--color-primary);
 }
-
 
 .mypage-main-my-order-boards {
   background-color: #f7f9fa;
@@ -650,11 +654,8 @@
   cursor: pointer;
 }
 
-
-
 /* //////////////////// */
 /* 새 디자인 */
-
 
 .mypage-sub-menu-bar {
   width: 400px;
@@ -703,7 +704,7 @@
 }
 
 .mypage-sub-menu-bar-items:hover {
-  background-color: #F8F8F8;
+  background-color: #f8f8f8;
 }
 
 .mypage-sub-menu-title {
@@ -721,7 +722,7 @@
   width: 927px;
   background-color: white;
   border-radius: 12px;
-  padding: 26px 28px;
+  padding-bottom: 20px;
 }
 
 .mypage-header-box {
@@ -748,10 +749,16 @@
   width: 100%;
   position: relative;
   border-radius: 8px;
-  background-color: #EFEFEF;
+  background-color: #efefef;
   padding: 0 12px;
   display: flex;
   align-items: center;
+}
+
+.mypage-my-order-list-search-bar-container > img {
+  width: 23px;
+  height: 23px;
+  margin-right: 12px;
 }
 
 .mypage-my-order-list-search-bar-container > input {
@@ -759,6 +766,7 @@
   border: none;
   background-color: inherit;
   font-size: 16px;
+  width: 100%;
 }
 
 .mypage-body-box {
@@ -800,8 +808,9 @@
   background-color: white;
 }
 
-#goob-bye-button:hover {
- background-color: #FFF9F9;
+#goob-bye-button:hover,
+.mypage-default-address-change:hover {
+  background-color: #f9f9f9;
 }
 
 #mypage-user-info-edit-button {
@@ -809,6 +818,132 @@
   color: white;
 }
 
-#mypage-user-info-edit-button:hover {
-  background-color: #DD484A;  
+#mypage-user-info-edit-button:hover,
+.mypage-address-add:hover {
+  background-color: #c94345;
+}
+
+.mypage-address-card-container {
+  border-bottom: 0.5px solid #f4f4f4;
+  padding: 0 15px 22px;
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.mypage-address-button-container {
+  cursor: pointer;
+}
+
+.mypage-address-box-red-circle {
+  background-color: var(--color-primary);
+  width: 18px;
+  height: 18px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mypage-address-box-red-circle > div {
+  background-color: white;
+  width: 9px;
+  height: 9px;
+  border-radius: 100%;
+}
+
+.mypage-address-box-gray-circle {
+  border: 0.5px solid var(--color-light-gray);
+  width: 18px;
+  height: 18px;
+  border-radius: 100%;
+}
+
+.mypage-address-card-content-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mypage-address-tag-default {
+  background-color: #f6f6f6;
+  border-radius: 8px;
+  padding: 3px 7px;
+  width: fit-content;
+  font-size: 10px;
+  color: var(--color-gray);
+}
+
+.mypage-user-address-text {
+  padding-left: 2px;
+}
+
+.mypage-address-body {
+  padding: 0 20px;
+}
+
+.mypage-address-border-bottom {
+  height: 0.5px;
+  width: 100%;
+  background-color: black;
+}
+
+.mypage-address-button-container-parents {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 15px;
+}
+
+.mypage-address-button-container-parents > button {
+  padding: 12px 120px;
+  border-radius: 3px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.mypage-default-address-change {
+  background-color: white;
+  border: 0.5px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.mypage-address-add {
+  background-color: var(--color-primary);
+  color: white;
+  border: none;
+}
+
+.mypage-address-card-content-parent-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.mypage-address-card-content-parent-container > p {
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.mypage-address-card-content-parent-container > p:hover {
+  color: var(--color-primary);
+}
+
+.mypage-address-delete-and-edit-container {
+  display: flex;
+  gap: 8px;
+  font-size: 14px;
+  align-items: end;
+}
+
+.mypage-address-delete-and-edit-container :first-child,
+.mypage-address-delete-and-edit-container :last-child {
+  cursor: pointer;
+}
+
+.mypage-address-delete-and-edit-container :first-child:hover,
+.mypage-address-delete-and-edit-container :last-child:hover {
+  color: var(--color-primary);
 }

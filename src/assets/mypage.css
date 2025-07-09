@@ -902,6 +902,7 @@
   border-radius: 3px;
   font-weight: 500;
   cursor: pointer;
+  font-size: 14px;
 }
 
 .mypage-default-address-change {
@@ -946,4 +947,111 @@
 .mypage-address-delete-and-edit-container :first-child:hover,
 .mypage-address-delete-and-edit-container :last-child:hover {
   color: var(--color-primary);
+}
+
+.mypage-address-form-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  background-color: white;
+  /* overflow-y: scroll; */
+}
+
+.mypage-address-form-title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 75px;
+}
+
+.mypage-address-form-title-container span {
+  color: var(--color-primary);
+}
+
+.mypage-address-form-title-container > p {
+  font-size: 15px;
+}
+
+.address-input-form-container {
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.address-first-input-container {
+  display: flex;
+  gap: 5px;
+}
+
+.address-input-form-container input {
+  padding: 13px 12px;
+  border: 0.5px solid var(--color-light-gray);
+  border-radius: 3px;
+}
+
+#zip-code {
+  width: 270px;
+}
+
+#zip-code-find-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+#zip-code-find-button:hover {
+  background-color: rgb(229, 229, 229);
+}
+
+#detail-address {
+  width: 350px;
+}
+
+#detail-address:focus {
+  border-color: var(--color-primary);
+}
+
+.do-you-want-default-address {
+  text-align: left;
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.default-address-check-box {
+  display: flex;
+  align-items: center;
+}
+
+.do-you-want-default-address img {
+  width: 20px;
+  cursor: pointer;
+}
+
+.do-you-want-default-address > p {
+  font-size: 13px;
+}
+
+.new-address-submit-button {
+  padding: 10px 12px;
+  border-radius: 3px;
+  background-color: var(--color-primary);
+  width: 350px;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  margin-top: 70px;
+  cursor: pointer;
+}
+
+.new-address-submit-button:hover {
+  background-color: var(--color-primary-dark);
 }

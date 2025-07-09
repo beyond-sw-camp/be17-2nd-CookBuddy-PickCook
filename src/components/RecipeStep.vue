@@ -12,7 +12,7 @@ defineProps({
     <div class="step-content">
       <p>{{ text }}</p>
     </div>
-    <img :src="image" alt="요리 이미지" />
+    <img v-show="image" :src="image" alt="요리 이미지" />
   </div>
 </template>
 

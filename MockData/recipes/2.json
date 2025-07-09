@@ -1,0 +1,63 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 2,
+      "title": "찰밥꼬치",
+      "description": "쫀득한 찰밥에 고기와 채소를 더해 한입 크기로 빚고, 지글지글 구워낸 꼬치 요리입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/99675_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "찹쌀을 깨끗이 씻어 6시간 불린 다음 소쿠리에 건져 30분 정도 물기를 빼주고 센 불에서 40분 정도 쪄서 찰밥을 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99675_MF_CIMG_02.jpg"
+        },
+        {
+          "stepNumber": 2,
+          "text": "각 분량의 청·홍·황 파프리카 중 1/3은 1.5×1.5cm 크기로 썰어놓고, 호두, 잣, 양파, 감자, 여분의 청·홍·황 파프리카는 굵게 다져 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99675_MF_CIMG_03.jpg"
+        },
+        {
+          "stepNumber": 3,
+          "text": "다진 채소는 양파, 감자, 청·홍·황 파프리카 순서로 볶아준다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99675_MF_CIMG_04.jpg"
+        },
+        {
+          "stepNumber": 4,
+          "text": "③을 찰밥과 섞어 둥글게 빚고 튀김팬에 식용유를 부어 180℃에서 튀김 가루를 묻혀서 튀긴다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99675_MF_CIMG_06.jpg"
+        },
+        {
+          "stepNumber": 5,
+          "text": "맛간장을 후라이팬에 붓고 보글보글 끓으면 튀겨 놓은 찰밥을 윤기나게 굴려준다. * 맛간장은 분량의 재료를 섞어 1/3정도의 양이 될 때까지 중간 불에서 졸인다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99675_MF_CIMG_07.jpg"
+        },
+        {
+          "stepNumber": 6,
+          "text": "⑤의 찰밥과 사각 파프리카를 꼬치에 꿰어 완성한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99675_MF_BIMG_01.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "찹쌀가루", "amount": "2컵" },
+          { "name": "양파", "amount": "1/2개" },
+          { "name": "감자", "amount": "1개" },
+          { "name": "청·홍·황 파프리카", "amount": "각각 1/2개" },
+          { "name": "호두", "amount": "30g" },
+          { "name": "잣", "amount": "10g" }
+        ],
+        "seasoning": [
+          { "name": "간장", "amount": "100ml" },
+          { "name": "마늘", "amount": "50g" },
+          { "name": "조청", "amount": "10g" },
+          { "name": "다시마", "amount": "10g" }
+        ]
+      }
+    }
+  ]
+}

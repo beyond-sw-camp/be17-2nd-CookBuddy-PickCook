@@ -1,0 +1,58 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 1,
+      "title": "도라지 베이컨조림",
+      "description": "쌉싸름한 도라지와 아삭한 채소를 베이컨에 돌돌 말아 구운 뒤, 달큰한 간장소스로 조려낸 조림 꼬치 요리입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/99674_MF_CIMG_02.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "도라지는 깨끗이 씻어 껍질을 제거하고 채 썰어 소금물로 주물러서 쓴맛을 빼고 끓는 물에 데쳐서 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99678_MF_CIMG_02.jpg"
+        },
+        {
+          "stepNumber": 2,
+          "text": "양파는 껍질을 제거하고, 청·홍·황 파프리카, 도라지와 함께 0.5×4cm로 채로 썰어서 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99678_MF_CIMG_03.jpg"
+        },
+        {
+          "stepNumber": 3,
+          "text": "도라지와 채 썬 채소를 베이컨으로 돌돌 말아서 꼬치에 꿰어 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99678_MF_CIMG_04.jpg"
+        },
+        {
+          "stepNumber": 4,
+          "text": "후라이팬에 맛간장을 붓고 보글보글 끓으면 분량의 굴소스를 넣어 꼬치 재료와 졸이거나 기름 두른 팬에 넣어 굴리면서 익혀주고 맛간장 소스를 곁들인다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99678_MF_CIMG_05.jpg"
+        },
+        {
+          "stepNumber": 5,
+          "text": "마무리 과정에 참기름을 넣어 소스의 풍미를 더해주고 완성한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99678_MF_BIMG_01.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "통도라지", "amount": "4개" },
+          { "name": "베이컨", "amount": "4줄" },
+          { "name": "청파프리카", "amount": "1/2개" },
+          { "name": "홍파프리카", "amount": "1/2개" },
+          { "name": "황파프리카", "amount": "1/2개" },
+          { "name": "양파", "amount": "1/2개" }
+        ],
+        "seasoning": [
+          { "name": "맛간장", "amount": "100g" },
+          { "name": "참기름", "amount": "15g" },
+          { "name": "굴소스", "amount": "10g" },
+          { "name": "꼬치", "amount": "4개" }
+        ]
+      }
+    }
+  ]
+}

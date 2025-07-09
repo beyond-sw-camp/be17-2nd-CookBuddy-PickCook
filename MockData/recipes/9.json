@@ -1,0 +1,53 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 9,
+      "title": "귤소스 & 생선스테이크",
+      "description": "상큼한 귤과 달콤한 설탕, 올리고당을 넣어 부드럽고 진한 맛으로 끓여낸 홈메이드 귤잼입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/99683_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "귤은 깨끗이 씻어 겉껍질과 속껍질을 제거하여 알맹이를 준비한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99683_MF_CIMG_02.jpg"
+        },
+        {
+          "stepNumber": 2,
+          "text": "귤 알맹이에 분량의 설탕을 섞어둔다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 3,
+          "text": "설탕을 넣은 귤 알맹이를 냄비에 담고 불의 세기를 조절하면서 30분 정도 끓여 준다(물이 담긴 컵에 떨어뜨려 퍼지지 않으면 된다).",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99683_MF_CIMG_03.jpg"
+        },
+        {
+          "stepNumber": 4,
+          "text": "③의 재료가 1/2로 줄어들면 올리고당을 넣고 잠시 끓이다가 레몬즙을 넣고 마무리한다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99683_MF_CIMG_04.jpg"
+        },
+        {
+          "stepNumber": 5,
+          "text": "바게트와 곁들여 낸다.",
+          "image": "http://www.nongsaro.go.kr/cms_contents/855/99683_MF_BIMG_01.jpg"
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "귤", "amount": "500g" },
+          { "name": "바게트", "amount": "적당량" }
+        ],
+        "seasoning": [
+          { "name": "설탕", "amount": "200g" },
+          { "name": "올리고당", "amount": "80g" },
+          { "name": "레몬즙", "amount": "15g" }
+        ]
+      }
+    }
+  ]
+}

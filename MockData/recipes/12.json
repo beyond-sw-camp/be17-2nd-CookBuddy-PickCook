@@ -1,0 +1,67 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "id": 12,
+      "title": "사태찜",
+      "description": "부드럽게 삶은 사태 고기와 다양한 채소, 밤, 대추를 찜 양념장에 버무려 중불에서 서서히 졸여낸 전통 한식 찜 요리입니다.",
+      "time": "30분",
+      "difficulty": "보통",
+      "thumbnail": "http://www.nongsaro.go.kr/cms_contents/855/99689_MF_BIMG_01.jpg",
+      "steps": [
+        {
+          "stepNumber": 1,
+          "text": "소고기(사태)는 덩어리째 찬물에 담가 핏물을 빼서 건져 끓는 물 10컵에 붓고 삶는다. 무와 당근은 고기가 반 이상 무르면 통째로 넣어 덜 무를 정도로만 삶는다. 육수는 면보에 거른다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 2,
+          "text": "표고버섯은 물에 불려서 꼭지를 뗀다. 밤은 속껍질까지 깨끗이 벗기고, 대추는 씨를 발라내고, 잣은 고깔을 뗀다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 3,
+          "text": "삶은 고기와 무를 약 3cm 크기로 토막 내고, 고기, 무, 밤, 대추, 표고버섯을 한데 합하여 찜 양념장으로 고루 버무려 냄비에 안친다. 재료가 덮힐 정도로 육수를 부어 중불에서 서서히 끓인다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 4,
+          "text": "붉은 고추는 씨를 빼고 어슷하게 썬다.",
+          "image": ""
+        },
+        {
+          "stepNumber": 5,
+          "text": "국물이 거의 졸아들면 고추를 넣어 잠시 더 끓여준다.",
+          "image": ""
+        }
+      ],
+      "ingredients": {
+        "main": [
+          { "name": "쇠고기(사태)", "amount": "400g" },
+          { "name": "무", "amount": "200g" },
+          { "name": "당근", "amount": "100g" },
+          { "name": "마른 표고버섯(소)", "amount": "4장" },
+          { "name": "밤", "amount": "5개" },
+          { "name": "대추", "amount": "5개" },
+          { "name": "미나리", "amount": "20g" },
+          { "name": "잣", "amount": "5g" },
+          { "name": "은행", "amount": "5개" },
+          { "name": "붉은 고추", "amount": "1개" },
+          { "name": "달걀", "amount": "1개" }
+        ],
+        "seasoning": [
+          { "name": "간장", "amount": "60g" },
+          { "name": "배즙", "amount": "60g" },
+          { "name": "설탕", "amount": "25g" },
+          { "name": "다진파", "amount": "30g" },
+          { "name": "다진마늘", "amount": "15g" },
+          { "name": "참기름", "amount": "15g" },
+          { "name": "깨소금", "amount": "15g" },
+          { "name": "후춧가루", "amount": "약간" }
+        ]
+      }
+    }
+  ]
+}

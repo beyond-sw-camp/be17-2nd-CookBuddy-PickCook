@@ -53,7 +53,7 @@ watch(
       <div
         class="mypage-sub-menu-bar-items"
         :class="{ active: activePath === 'payment-method' }"
-        @click="goTo('payment-method')"
+        @click="goTo('payment_method')"
       >
         <img src="/public/assets/icons/ic-mypage-credit_card.png" alt="메뉴이미지" />
         <p class="mypage-sub-menu-title">결제수단</p>

@@ -1,27 +1,24 @@
 import api from '@/plugins/axiosinterceptor'
 
 const getAllProducts = async () => {
-    const response = await api.get('/api/allProducts.json')
-    return response.data
+  const response = await api.get('/allProducts.json')
+  return response.data
 }
 
-
 const getProductDetail = async (productId) => {
-    const response = await api.get('/api/allProducts.json')
-    const product = response.data.find(item => item.id == productId)
+  const response = await api.get('/allProducts.json')
+  const product = response.data.find((item) => item.id == productId)
 
-    if (!product) {
-        throw new Error('상품을 찾을 수 없습니다.')
-    }
+  if (!product) {
+    throw new Error('상품을 찾을 수 없습니다.')
+  }
 
-    return product
+  return product
 }
 
 const shoppingAPI = {
-    getAllProducts,
-    getProductDetail
+  getAllProducts,
+  getProductDetail,
 }
-
-
 
 export default shoppingAPI

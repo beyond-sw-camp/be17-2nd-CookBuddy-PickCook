@@ -22,6 +22,7 @@ import Signup from '@/views/Signup.vue'
 import { useUserStore } from '@/store/useUserStore'
 import AddressList from '@/components/AddressList.vue'
 import AddressFormPage from '@/components/AddressFormPage.vue'
+import ShoppingDetailPage from '@/views/Shopping_detail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

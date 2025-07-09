@@ -2,14 +2,12 @@
 import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 
-
 const props = defineProps({
   recipe: {
     type: Object,
     required: true,
   },
 })
-
 
 const isLiked = ref(false)
 const likeCount = ref(props.recipe.likes || 0)
@@ -35,13 +33,12 @@ const toggleLike = (event) => {
   }, 300)
 }
 
-
 const isScrapped = ref(false)
 const scrapCount = ref(props.recipe.scrapCount || 0)
 const scrapAnimating = ref(false)
 
 const scrapSrc = computed(() =>
-  isScrapped.value ? '/assets/icons/ic-full-scrap.png' : '/assets/icons/ic-gray-empty-scrap.png',
+  isScrapped.value ? '/assets/icons/ic-full-scrap.png' : '/assets/icons/ic-empty-scrap.png',
 )
 
 const toggleScrap = (event) => {
@@ -78,7 +75,7 @@ const toggleScrap = (event) => {
       <div class="recipe-card-content card-content">
         <div class="recipe-title-container">
           <h3 class="recipe-title card-title">{{ props.recipe.title }}</h3>
-          <span class="recipe-likes-count" @click="toggleLike" style="cursor:pointer;">
+          <span class="recipe-likes-count" @click="toggleLike" style="cursor: pointer">
             {{ likeCount }}
             <img
               class="like-js"

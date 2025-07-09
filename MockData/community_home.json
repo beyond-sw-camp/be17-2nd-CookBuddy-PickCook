@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "code": 1000,
+  "message": "정상적으로 처리되었습니다",
+  "results": [
+    {
+      "board_id": 1,
+      "board_img": "https://semie.cooking/image/contents/xv/ey/eiskaiit/143562653ixqx.jpg",
+      "title": "냉장고 정리 수납 꿀팁 대방출!",
+      "writer_nickname": "정리의달인",
+      "writer_profil_img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQezhwWTAIYNDsnAu2JS94OP7gimu8-Apy87g&s",
+      "board_contents": "test content",
+      "view_count": 152,
+      "board_like_count": 43,
+      "board_scrap_count": 23,
+      "created_at": "2025-06-27T13:45:00"
+    },
+    {
+      "board_id": 2,
+      "board_img": "https://sahubconn001.blob.core.windows.net/ct-sahubconn001/img/newshop/goods/003600/003600_1.jpg",
+      "title": "제가 오늘 쿠키를 만들어봣는데요 진짜 너무 맛있어서 공유를 해드릴까 합니다. 이거 보시면 얼른",
+      "writer_nickname": "쿠쿸닼슼",
+      "writer_profil_img": "https://dthezntil550i.cloudfront.net/ps/latest/ps2201272314365330022817814/1280_960/56cf6ec5-7084-48e1-a543-79b1d5908eab.png",
+      "board_contents": "test content",
+      "view_count": 1,
+      "board_like_count": 1,
+      "board_scrap_count": 1,
+      "created_at": "2025-06-27T13:45:00"
+    },
+    {
+      "board_id": 3,
+      "board_img": "https://blog.lgchem.com/wp-content/uploads/2020/03/200325_remen_recipe_02_1.jpg",
+      "title": "도와주세요.. 레시피에서 적당히라고 적혀있는데 대체 적당히가 뭐죠..?",
+      "writer_nickname": "뇸뇸",
+      "writer_profil_img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlaTCW_H-l1mSyOngrADrGNhk2nTIl-iDew&s",
+      "board_contents": "test content",
+      "view_count": 1,
+      "board_like_count": 1,
+      "board_scrap_count": 1,
+      "created_at": "2025-06-27T13:45:00"
+    },
+    {
+      "board_id": 4,
+      "board_img": "https://wimg.heraldcorp.com/content/default/2024/05/30/20240530050694_0.jpg",
+      "title": "내가 한 거랑 뭐가 다르길래 이렇게 맛있는지ㅠ",
+      "writer_nickname": "친절한 이웃",
+      "writer_profil_img": "https://mblogthumb-phinf.pstatic.net/MjAyMDExMDFfMTgy/MDAxNjA0MjI4ODc1NDMw.Ex906Mv9nnPEZGCh4SREknadZvzMO8LyDzGOHMKPdwAg.ZAmE6pU5lhEdeOUsPdxg8-gOuZrq_ipJ5VhqaViubI4g.JPEG.gambasg/%EC%9C%A0%ED%8A%9C%EB%B8%8C_%EA%B8%B0%EB%B3%B8%ED%94%84%EB%A1%9C%ED%95%84_%ED%95%98%EB%8A%98%EC%83%89.jpg?type=w800",
+      "board_contents": "내용입니다",
+      "view_count": 34,
+      "board_like_count": 5,
+      "board_scrap_count": 0,
+      "created_at": "2025-06-26T10:15:00"
+    }
+  ]
+}

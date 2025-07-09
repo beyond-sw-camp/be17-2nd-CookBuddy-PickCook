@@ -16,23 +16,20 @@ const recipeList = async () => {
   return data
 }
 
-const getRecipe = async (id) => {
+const communityList = async () => {
   let data = {}
-  let url = `/recipes/detail/${id}.json`
+  let url = '/community_home.json'
 
   await api
-    .get(url, {
-      responseType: 'json',
-    })
+    .get(url)
     .then((res) => {
-      data = res.data.results[0]
+      data = res.data
     })
     .catch((error) => {
-      console.error('❌ API 오류:', error)
-      data = error.response?.data || { success: false }
+      data = error.data
     })
 
   return data
 }
 
-export default { recipeList, getRecipe }
+export default { recipeList, communityList }

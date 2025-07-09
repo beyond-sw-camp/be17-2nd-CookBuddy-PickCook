@@ -1,0 +1,27 @@
+{
+    "success": true,
+    "results": [
+        {
+            "id": 1,
+            "type": "일반",
+            "title": "아이들 점심시간이 즐거워지는 도시락 아이디어",
+            "content": "안녕하세요! 오늘은 제가 최근에 저희 아들에게 만들어준 도시락을 소개해드리려고 해요! 얼마전 유치원으로부터 아들이 음식을 잘 먹지 않는다는 연락을 받았어요.",
+            "nickname": "nickname01",
+            "createdAt": "1시간",
+            "comments": 12,
+            "likes": 34,
+            "imageUrl": "https://www.lunchbasket.co.kr/data/item/999999906/0428_LUNCH_BASKET_MAIN0440.jpg"
+        },
+        {
+            "id": 2,
+            "type": "질문",
+            "title": "유치원 도시락, 어떤 반찬이 좋을까요?",
+            "content": "아이 입맛에 맞는 반찬을 찾기가 너무 어려워요. 혹시 추천해주실만한 게 있을까요?",
+            "nickname": "nickname02",
+            "createdAt": "2시간",
+            "comments": 5,
+            "likes": 20,
+            "imageUrl": "https://www.lunchbasket.co.kr/data/item/999999906/0428_LUNCH_BASKET_MAIN0440.jpg"
+        }
+    ]
+}

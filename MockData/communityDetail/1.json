@@ -1,0 +1,41 @@
+{
+    "success": true,
+    "result": {
+        "title": "아이들 점심시간이 즐거워지는 도시락 아이디어",
+        "author": "도시락락락",
+        "updatedAt": "2025년 6월 20일",
+        "images": [
+            "https://www.lunchbasket.co.kr/data/item/999999906/0428_LUNCH_BASKET_MAIN0440.jpg",
+            "https://www.lunchbasket.co.kr/data/item/999999906/0428_LUNCH_BASKET_MAIN0440.jpg",
+            "https://www.lunchbasket.co.kr/data/item/999999906/0428_LUNCH_BASKET_MAIN0440.jpg"
+        ],
+        "contents": [
+            "안녕하세요! 오늘은...",
+            "저희 집에서는 잘 먹는데...",
+            "그래서 제가 찾은 방법은..."
+        ],
+        "likes": 527,
+        "scraps": 189,
+        "tags": [
+            "도시락",
+            "아이들점심",
+            "도시락구성",
+            "편의점도시락",
+            "알록달록"
+        ],
+        "comments": [
+            {
+                "author": "훈이맘",
+                "text": "우와 매일 이렇게...",
+                "time": "2시간 전",
+                "likes": 1
+            },
+            {
+                "author": "마미초보",
+                "text": "야채 사용법 궁금해요ㅠ",
+                "time": "3시간 전",
+                "likes": 2
+            }
+        ]
+    }
+}

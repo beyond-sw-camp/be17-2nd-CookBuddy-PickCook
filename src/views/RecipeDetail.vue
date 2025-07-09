@@ -2,9 +2,11 @@
 import RecipeStep from '@/components/RecipeStep.vue'
 import RelatedProducts from './RelatedProducts.vue'
 import api from '@/api/recipe'
-import { onMounted, ref, reactive } from 'vue'
+import { onMounted, reactive } from 'vue'
+import { useRoute } from 'vue-router'
 
-const recipeSteps = ref([])
+const route = useRoute()
+
 const recipe = reactive({
   title: '',
   time: '',
@@ -18,7 +20,8 @@ const recipe = reactive({
 })
 
 const getRecipe = async () => {
-  const data = await api.getRecipe()
+  const id = route.params.id
+  const data = await api.getRecipe(id)
   if (data) {
     Object.assign(recipe, data)
   }

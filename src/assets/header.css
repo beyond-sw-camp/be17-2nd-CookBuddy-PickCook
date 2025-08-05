@@ -24,6 +24,13 @@
   margin-right: 30px;
 }
 
+@media (max-width: 1023px) {
+  .logo {
+    font-size: 19px;
+    margin-right: 0;
+  }
+}
+
 .nav-menu {
   display: flex;
   gap: 30px;
@@ -134,4 +141,23 @@ a:hover {
 .profile-modal-container div:hover {
   background-color: #f3f3f3;
   color: var(--color-dark-strong);
+}
+
+.header-search-icon {
+  width: 20px;
+  margin-top: 2px;
+}
+
+.header-mobile-and-tablet {
+  width: 100%;
+  padding: 0 25px;
+  height: 58px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-mobile-and-tablet > img {
+  width: 25px;
+  cursor: pointer;
 }

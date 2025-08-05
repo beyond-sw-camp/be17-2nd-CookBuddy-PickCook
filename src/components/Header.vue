@@ -2,13 +2,14 @@
 import { useUserStore } from '@/store/useUserStore'
 import { RouterLink, useRoute } from 'vue-router'
 import ProfileModal from './ProfileModal.vue'
-import { ref, computed } from 'vue'
+import { ref, computed, defineEmits } from 'vue'
 import { useBreakpoints } from '@/composables/useBreakpoints.js'
 
 const route = useRoute()
 const user = useUserStore()
 const showProfileModal = ref(false)
 const { isDesktop, isMobileOrTablet } = useBreakpoints()
+const emit = defineEmits(['open-menu'])
 
 // 경로 확인 (기존)
 const isActive = (path) => {
@@ -33,14 +34,23 @@ const searchPlaceholder = computed(() => {
   if (route.path.startsWith('/community')) return '커뮤니티 검색'
   return '통합검색' // 기본값
 })
+
+// 태블릿, 모바일 환경에서 메뉴 열기
+function openMenu() {
+  emit('open-menu')
+}
+
+function openSearchSlide() {
+  emit('open-search-slide')
+}
 </script>
 
 <template>
   <header class="header">
     <div v-if="isMobileOrTablet" class="header-mobile-and-tablet">
-      <img src="/assets/icons/ic-header-more-button.png" alt="더보기" />
+      <img src="/assets/icons/ic-header-more-button.png" alt="더보기" @click="openMenu" />
       <RouterLink to="/" class="logo">PickCook</RouterLink>
-      <img src="/assets/icons/ic-search-header.png" alt="검색" />
+      <img src="/assets/icons/ic-search-header.png" alt="검색" @click="openSearchSlide"/>
     </div>
     <div v-else class="header-top">
       <RouterLink to="/" class="logo">PickCook</RouterLink>
@@ -94,6 +104,4 @@ const searchPlaceholder = computed(() => {
   </header>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

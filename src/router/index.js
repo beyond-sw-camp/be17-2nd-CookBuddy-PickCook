@@ -23,6 +23,7 @@ import { useUserStore } from '@/store/useUserStore'
 import AddressList from '@/components/AddressList.vue'
 import AddressFormPage from '@/components/AddressFormPage.vue'
 import ShoppingDetailPage from '@/views/Shopping_detail.vue'
+import PaymentMethodList from '@/components/PaymentMethodList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -79,6 +80,7 @@ const router = createRouter({
         { path: 'user_info', name: 'mypage-info', component: UserInfo },
         { path: 'write_list', name: 'mypage-write', component: WriteList },
         { path: 'address_list', name: 'mypage-address', component: AddressList },
+        { path: 'payment_method', name: 'mypage-payment', component: PaymentMethodList },
       ],
       meta: { requiresAuth: true },
     },

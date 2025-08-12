@@ -93,8 +93,9 @@ a {
   display: flex;
   align-items: center;
   padding: 0 60px;
-  background-size: cover;
+  background-size: contain;
   background-position: center;
+  background-repeat: no-repeat;
 }
 
 .banner-slide.active {
@@ -454,10 +455,34 @@ a {
   color: #424242;
 }
 
+@media (max-width: 1024px) {
+  .section-title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 16px;
+  }
+}
+
 .section-more {
   color: var(--color-gray);
   text-decoration: none;
   font-size: 14px;
+}
+
+@media (max-width: 1024px) {
+  .section-more {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-more {
+    font-size: 12px;
+  }
 }
 
 .content-grid {
@@ -537,6 +562,12 @@ a {
   text-overflow: ellipsis;
 }
 
+/* @media (max-width: 1023px) {
+  .card-title {
+    font-size: 14px;
+  }
+} */
+
 .card-price {
   display: flex;
   gap: 5px;
@@ -593,6 +624,12 @@ a {
   padding: 75px 0 26px;
 }
 
+@media (max-width: 768px) {
+  .footer {
+    padding-top: 50px !important;
+  }
+}
+
 .footer-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -607,6 +644,13 @@ a {
   margin-bottom: 20px;
 }
 
+.footer-logo-mobile {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--color-primary-strong);
+  margin-bottom: 20px;
+}
+
 .footer-links {
   display: flex;
   justify-content: center;
@@ -614,10 +658,26 @@ a {
   margin-bottom: 20px;
 }
 
-.footer-links a {
+.footer-links-mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 14px;
+  margin-bottom: 45px;
+}
+
+@media (max-width: 1023px) {
+  .footer-links {
+    gap: 35px;
+  }
+}
+
+.footer-links a,
+.footer-links-mobile a {
   color: var(--color-gray);
   font-size: 13px;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .footer-links a:hover {
@@ -628,7 +688,12 @@ a {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  gap: 118px;
+}
+
+.footer-array-mobile {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
 }
 
 .footer-social {
@@ -652,6 +717,12 @@ a {
   color: var(--color-gray);
   font-size: 13px;
   margin-top: 51px;
+}
+
+@media (max-width: 768px) {
+  .footer-copyright {
+    margin-top: 40px !important;
+  }
 }
 
 /* 반응형 */
@@ -757,6 +828,7 @@ a {
   display: flex;
   gap: 8px;
   padding-top: 3px;
+  color: var(--color-gray);
 }
 
 .recipe-likes-count > img {

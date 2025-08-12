@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, onMounted, ref } from 'vue'
 import shoppingAPI from '@/api/shopping'
-import Item_card from '@/components/Item_card.vue'
+import ProductItemCard from '@/components/ProductItemCard.vue'
 
 const products = reactive({
   allProducts: [],
@@ -30,25 +30,45 @@ onMounted(async () => {
         <span class="shopping-category-1 c-hover-1">유기농 전용관</span>
         <span class="shopping-category-1 c-hover-1">비건 전용관</span>
         <span class="shopping-category-1 c-hover-1">다이어트 전용관</span>
-        
+
         <span class="shopping-category c-hover-2">
-          <img class="shopping-ingredient-item-image" src="/assets/icons/ic-ingredient-category-vegetable.png" alt="" />
+          <img
+            class="shopping-ingredient-item-image"
+            src="/assets/icons/ic-ingredient-category-vegetable.png"
+            alt=""
+          />
           <span class="padding">채소</span>
         </span>
         <span class="shopping-category c-hover-2">
-          <img class="shopping-ingredient-item-image" src="/assets/icons/ic-ingredient-category-meat.png" alt="" />
+          <img
+            class="shopping-ingredient-item-image"
+            src="/assets/icons/ic-ingredient-category-meat.png"
+            alt=""
+          />
           <span class="padding">육류</span>
         </span>
         <span class="shopping-category c-hover-2">
-          <img class="shopping-ingredient-item-image" src="/assets/icons/ic-ingredient-category-fish.png" alt="" />
+          <img
+            class="shopping-ingredient-item-image"
+            src="/assets/icons/ic-ingredient-category-fish.png"
+            alt=""
+          />
           <span class="padding">해산물</span>
         </span>
         <span class="shopping-category c-hover-2">
-          <img class="shopping-ingredient-item-image" src="/assets/icons/ic-ingredient-category-dessert.png" alt="" />
+          <img
+            class="shopping-ingredient-item-image"
+            src="/assets/icons/ic-ingredient-category-dessert.png"
+            alt=""
+          />
           <span class="padding">베이킹</span>
         </span>
         <span class="shopping-category c-hover-2">
-          <img class="shopping-ingredient-item-image" src="/assets/icons/ic-ingredient-category-milk.png" alt="" />
+          <img
+            class="shopping-ingredient-item-image"
+            src="/assets/icons/ic-ingredient-category-milk.png"
+            alt=""
+          />
           <span class="padding">유제품</span>
         </span>
       </div>
@@ -65,7 +85,11 @@ onMounted(async () => {
     </div>
     <div v-if="loading" class="loading">상품을 불러오는 중...</div>
     <div v-else class="content-grid">
-      <Item_card v-for="product in products.allProducts" :key="product.id" :product="product" />
+      <ProductItemCard
+        v-for="product in products.allProducts"
+        :key="product.id"
+        :product="product"
+      />
     </div>
   </div>
 </template>
@@ -94,6 +118,10 @@ onMounted(async () => {
   text-align: center;
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+.shopping-category-grid > span {
+  cursor: pointer;
 }
 
 .shopping-category {

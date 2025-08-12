@@ -7,10 +7,15 @@ defineProps({
   isSelected: Boolean, // 클릭되어 선택된 항목 (뱃지에만 사용)
 })
 
-const emit = defineEmits(['click'])
+const emit = defineEmits(['click', 'edit'])
 
 function handleClick() {
   emit('click')
+}
+
+function handleEditClick(event) {
+  event.stopPropagation()  // 부모 클릭 이벤트와 겹치지 않도록 막기
+  emit('edit')
 }
 </script>
 
@@ -35,7 +40,7 @@ function handleClick() {
       <div class="mypage-address-delete-and-edit-container">
         <p v-if="!isDefault">삭제</p>
         <p v-if="!isDefault">|</p>
-        <p>수정</p>
+        <p @click="handleEditClick">수정</p>
       </div>
     </div>
   </div>

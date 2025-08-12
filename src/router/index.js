@@ -21,6 +21,8 @@ import SignupTypeSelect from '@/views/SignupTypeSelect.vue'
 import Signup from '@/views/Signup.vue'
 import { useUserStore } from '@/store/useUserStore'
 import AddressList from '@/components/AddressList.vue'
+import AddressFormPage from '@/components/AddressFormPage.vue'
+import ShoppingDetailPage from '@/views/Shopping_detail.vue'
 import PaymentMethodList from '@/components/PaymentMethodList.vue'
 
 const router = createRouter({
@@ -109,6 +111,18 @@ const router = createRouter({
       path: '/signup/write',
       name: 'signup_write',
       component: Signup,
+      meta: { hideLayout: true },
+    },
+    {
+      path: '/mypage/address/new',
+      name: 'address_create',
+      component: AddressFormPage,
+      meta: { hideLayout: true },
+    },
+    {
+      path: '/mypage/address/edit/:id',
+      name: 'address_edit',
+      component: AddressFormPage,
       meta: { hideLayout: true },
     },
   ],

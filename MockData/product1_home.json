@@ -1,0 +1,107 @@
+{
+  "success": true,
+  "code": 200,
+  "message": "정상적으로 요청이 성공했습니당",
+  "results": [
+    {
+      "id": 1,
+      "title": "[오늘특가] 유기농 채소 모음전",
+      "image": "https://semie.cooking/image/contents/wn/cv/solcqifp/149437687iajp.jpg",
+      "images": [
+        "https://picsum.photos/300/200?random=50",
+        "https://picsum.photos/400/300?random=5001"
+      ],
+      "discount": 30,
+      "price": 15900,
+      "originalPrice": 22900,
+      "rating": 4.8,
+      "reviewCount": 1234,
+      "likes": 1987,
+      "salesCount": 1234,
+      "category": "bakingProducts",
+      "description": "달콤하고 부드러운 맛의 프리미엄 화이트 초콜릿입니다.",
+      "detailInfo": {
+        "brand": "초콜릿킹",
+        "origin": "수입산",
+        "weight": "200g",
+        "storage": "상온보관"
+      },
+      "tags": ["화이트초콜릿", "달콤", "프리미엄"]
+    },
+    {
+      "id": 2,
+      "title": "프리미엄 한우 정육 세트",
+      "image": "https://hanwooeats.com/web/product/big/202309/ada3197cfe28224be20528f73aca6bb9.jpg",
+      "images": [
+        "https://picsum.photos/300/200?random=50",
+        "https://picsum.photos/400/300?random=5001"
+      ],
+      "discount": 4,
+      "price": 21900,
+      "originalPrice": 22900,
+      "rating": 4.5,
+      "reviewCount": 1234,
+      "likes": 1987,
+      "salesCount": 334,
+      "category": "bakingProducts",
+      "description": "달콤하고 부드러운 맛의 프리미엄 화이트 초콜릿입니다.",
+      "detailInfo": {
+        "brand": "초콜릿킹",
+        "origin": "수입산",
+        "weight": "200g",
+        "storage": "상온보관"
+      },
+      "tags": ["화이트초콜릿", "달콤", "프리미엄"]
+    },
+    {
+      "id": 3,
+      "title": "산지직송 해산물 모듬",
+      "image": "https://img.siksinhot.com/place/1631603394086170.jpg?c=Y",
+      "images": [
+        "https://picsum.photos/300/200?random=50",
+        "https://picsum.photos/400/300?random=5001"
+      ],
+      "discount": 50,
+      "price": 15900,
+      "originalPrice": 21800,
+      "rating": 5,
+      "reviewCount": 2256,
+      "likes": 1987,
+      "salesCount": 1234,
+      "category": "bakingProducts",
+      "description": "달콤하고 부드러운 맛의 프리미엄 화이트 초콜릿입니다.",
+      "detailInfo": {
+        "brand": "초콜릿킹",
+        "origin": "수입산",
+        "weight": "200g",
+        "storage": "상온보관"
+      },
+      "tags": ["화이트초콜릿", "달콤", "프리미엄"]
+    },
+    {
+      "id": 4,
+      "title": "제철 과일 선물세트",
+      "image": "https://ecimg.cafe24img.com/pg1293b82084384039/allfresh777/web/product/medium/20250624/73fd1337dc3cb390836738cd565a4ee1.png",
+      "images": [
+        "https://picsum.photos/300/200?random=50",
+        "https://picsum.photos/400/300?random=5001"
+      ],
+      "discount": 68,
+      "price": 15900,
+      "originalPrice": 34900,
+      "rating": 3.7,
+      "reviewCount": 45556,
+      "likes": 1987,
+      "salesCount": 1234,
+      "category": "bakingProducts",
+      "description": "달콤하고 부드러운 맛의 프리미엄 화이트 초콜릿입니다.",
+      "detailInfo": {
+        "brand": "초콜릿킹",
+        "origin": "수입산",
+        "weight": "200g",
+        "storage": "상온보관"
+      },
+      "tags": ["화이트초콜릿", "달콤", "프리미엄"]
+    }
+  ]
+}

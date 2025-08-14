@@ -3,41 +3,47 @@ import api from '@/plugins/axiosinterceptor'
 const login = async (email, password) => {
   try {
     const response = await api.post('/login', { email, password })
+    
+    // BaseResponse 형식: { success: true, code: 20101, message: "...", results: UserDto.Response }
+    console.log('API 파일에서 응답 처리:', response.data) // 디버깅용
+    
     return { 
-      success: true, 
-      user: response.data,
-      message: '로그인 성공'
+      success: response.data.success, 
+      user: response.data.results, // 핵심: results
     }
   } catch (error) {
     console.error('로그인 실패:', error)
     
-    if (error.response?.status === 401) {
-      return { 
-        success: false, 
-        type: 'auth_failed', 
-        message: '이메일 또는 비밀번호가 올바르지 않습니다.' 
-      }
-    }
-    
+    const errorData = error.response?.data
     return { 
       success: false, 
-      type: 'server_error', 
-      message: '로그인 중 오류가 발생했습니다.' 
+      message: errorData?.message || '로그인 중 오류가 발생했습니다.'
     }
   }
 }
 
-// 사용자 정보 확인 API
+// 사용자 정보 확인 API - BaseResponse 형식으로 수정
 const getCurrentUser = async () => {
   try {
     const response = await api.get('/api/user/me')
-    return { success: true, user: response.data }
+    // BaseResponse: { success: true, code: 20000, message: "...", results: UserDto.Response }
+    return { 
+      success: response.data.success, 
+      user: response.data.results,
+      message: response.data.message
+    }
   } catch (error) {
     console.error('사용자 정보 조회 실패:', error)
-    return { success: false, message: '인증되지 않은 사용자입니다.' }
+    // 에러 응답도 BaseResponse 형식
+    const errorData = error.response?.data
+    return { 
+      success: false, 
+      message: errorData?.message || '인증되지 않은 사용자입니다.' 
+    }
   }
 }
 
+// 회원가입 API - BaseResponse 형식으로 수정
 const signup = async (signupData) => {
   try {
     const response = await api.post('/api/user/signup', {
@@ -45,26 +51,37 @@ const signup = async (signupData) => {
       nickname: signupData.nickname,
       password: signupData.password
     })
-    return { success: true, message: response.data }
+    // BaseResponse: { success: true, code: 20100, message: "회원가입이 완료되었습니다...", results: null }
+    return { 
+      success: response.data.success, 
+      message: response.data.message 
+    }
   } catch (error) {
     console.error('회원가입 실패:', error)
-    const errorMessage = error.response?.data || '회원가입 중 오류가 발생했습니다.'
-    return { success: false, message: errorMessage }
+    // 에러 응답도 BaseResponse 형식
+    const errorData = error.response?.data
+    return { 
+      success: false, 
+      message: errorData?.message || '회원가입 중 오류가 발생했습니다.' 
+    }
   }
 }
 
+// 이메일 중복체크 API - BaseResponse 형식으로 수정
 const checkEmailDuplicate = async (email) => {
   try {
     const response = await api.get(`/api/user/check-email?email=${email}`)
+    // BaseResponse: { success: true/false, message: "...", results: { available: true/false } }
     return {
-      success: true,
-      available: response.data.available,
+      success: response.data.success,
+      available: response.data.results.available,
       message: response.data.message
     }
   } catch (error) {
     console.error('이메일 중복 확인 실패:', error)
     return {
       success: false,
+      available: false,
       message: '이메일 중복 확인 중 오류가 발생했습니다.'
     }
   }

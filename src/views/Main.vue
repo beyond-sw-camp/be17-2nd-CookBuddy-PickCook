@@ -1,11 +1,14 @@
 <script setup>
 import { reactive, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import HomeBanner from '@/components/HomeBanner.vue'
 import RecipeCard from '@/components/RecipeCard.vue'
 import api from '@/api/main'
 import HomeCommunityCard from '@/components/HomeCommunityCard.vue'
 import ProductItemCard from '@/components/ProductItemCard.vue'
+
+const router = useRouter()
+const route = useRoute()
 
 const state = reactive({
   recipes: [],
@@ -42,7 +45,62 @@ const getHomeData = async () => {
   }
 }
 
+// 토스트 메시지 함수
+const showToast = (message) => {
+  const toast = document.createElement('div')
+  toast.innerHTML = message
+  toast.style.cssText = `
+    position: fixed;
+    top: 60px;
+    right: 60px;
+    background: #E14345;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  `
+  
+  document.body.appendChild(toast)
+  
+  // 애니메이션으로 나타나기
+  setTimeout(() => {
+    toast.style.transform = 'translateX(0)'
+  }, 100)
+  
+  // 2초 후 자동으로 사라지기
+  setTimeout(() => {
+    toast.style.transform = 'translateX(100%)'
+    setTimeout(() => {
+      document.body.removeChild(toast)
+    }, 300)
+  }, 2000)
+}
+
+// OAuth2 로그인 성공 처리 함수
+const handleOAuth2LoginSuccess = () => {
+  console.log('현재 URL 쿼리:', route.query)
+  
+  if (route.query.loginSuccess === 'true' && route.query.loginType === 'social') {
+    const nickname = route.query.nickname
+    
+    if (nickname) {
+      const decodedNickname = decodeURIComponent(nickname)
+      showToast(`🎉 ${decodedNickname}님, 환영합니다!`)
+    }
+    
+    router.replace({ query: {} })
+  }
+}
+
 onMounted(() => {
+  // OAuth2 로그인 성공 처리 먼저 실행
+  handleOAuth2LoginSuccess()
+  
+  // 그다음 홈 데이터 로드
   getHomeData()
 })
 </script>

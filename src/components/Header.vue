@@ -96,7 +96,7 @@ function openSearchSlide() {
       <!-- 로그인 안 했을 경우 -->
       <div v-else class="header-right">
         <RouterLink to="/login">로그인</RouterLink>
-        <RouterLink to="/signup">회원가입</RouterLink>
+        <RouterLink to="/user/signup">회원가입</RouterLink>
         <a href="#">고객센터</a>
         <RouterLink to="/community/write" class="write-btn">글쓰기 &nbsp;&nbsp;▼</RouterLink>
       </div>

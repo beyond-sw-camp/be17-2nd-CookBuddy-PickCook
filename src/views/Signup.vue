@@ -1,68 +1,99 @@
 <script setup>
 import { useUserStore } from '@/store/useUserStore'
-import { ref, computed } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const auth = useUserStore()
+const userStore = useUserStore()
 
-// 이메일
-const emailRef = ref('')
-const isEmailDisabled = ref(false)
-const isEmailVerified = ref(false)
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const isEmailValid = computed(() => emailRegex.test(emailRef.value))
+const form = reactive({
+  email: '',
+  nickname: '',
+  password: '',
+  passwordCheck: ''
+})
+
+const emailVerification = reactive({
+  isDisabled: false,
+  isVerified: false
+})
+
+const isEmailValid = computed(() => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  return emailRegex.test(form.email)
+})
 
 const certMessage = computed(() =>
-  isEmailVerified.value
-    ? '인증이 완료되었습니다.'
-    : '입력하신 이메일로 인증 요청 메일을 보냈습니다.',
+  emailVerification.isVerified
+    ? '사용 가능한 이메일입니다.'
+    : '이메일 중복 확인을 해주세요.',
 )
 
-const checkEmail = () => {
+const nicknameStatus = computed(() => {
+  if (form.nickname.length === 0) return 'empty'
+  if (form.nickname.length < 2) return 'tooShort'
+  return 'valid'
+})
+
+// 이메일
+const checkEmail = async () => {
   if (!isEmailValid.value) {
     alert('올바른 이메일 형식이 아닙니다.')
     return
   }
 
-  isEmailDisabled.value = true
+  emailVerification.isDisabled = true
 
-  setTimeout(() => {
-    isEmailVerified.value = true
-  }, 3000)
+  // 실제 이메일 중복 확인 API 호출
+  const result = await userStore.checkEmailDuplicate(form.email)
+  
+  if (result.success) {
+    if (result.available) {
+      emailVerification.isVerified = true
+      alert(result.message) // "사용 가능한 이메일입니다."
+    } else {
+      emailVerification.isVerified = false
+      emailVerification.isDisabled = false
+      alert(result.message) // "이미 사용 중인 이메일입니다."
+    }
+  } else {
+    emailVerification.isDisabled = false
+    alert(result.message)
+  }
 }
 
-// 비밀번호
-const passwordInputRef = ref('')
-const passwordCheckInputRef = ref('')
-
-const signup = () => {
-  const password = passwordInputRef.value
-  const passwordCheck = passwordCheckInputRef.value
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-
-  if (!passwordRegex.test(password)) {
-    alert('비밀번호는 영문자와 숫자를 포함해 8자 이상이어야 합니다.')
+const signup = async () => {
+  // 기본 검증
+  if (!form.email.trim() || !form.nickname.trim() || !form.password.trim()) {
+    alert('모든 필드를 입력해주세요.')
     return
   }
 
-  if (password !== passwordCheck) {
+  if (form.password !== form.passwordCheck) {
     alert('비밀번호가 일치하지 않습니다.')
     return
   }
 
-  auth.signup()
-  router.push('/')
+  if (!emailVerification.isVerified) {
+    alert('이메일 중복 확인을 먼저 해주세요.')
+    return
+  }
+
+  // 실제 백엔드 API 호출
+  const result = await userStore.signup({
+    email: form.email,
+    nickname: form.nickname,
+    password: form.password
+  })
+  console.log('회원가입 API 응답:', result)
+
+  if (result.success) {
+    alert('회원가입이 완료되었습니다. 이메일 인증을 완료한 후 로그인해주세요.')
+    router.push('/login')  // 바로 로그인 페이지로 이동
+  } else {
+    alert(result.message)
+  }
 }
-
-// 닉네임
-const nickname = ref('')
-
-const nicknameStatus = computed(() => {
-  if (nickname.value.length === 0) return 'empty'
-  if (nickname.value.length < 2) return 'tooShort'
-  return 'valid'
-})
 </script>
 
 <template>
@@ -77,8 +108,8 @@ const nicknameStatus = computed(() => {
           <label for="email">이메일</label>
           <span class="label-sup">아이디로 사용할 이메일을 입력해주세요.</span>
           <input
-            v-model="emailRef"
-            :disabled="isEmailDisabled"
+            v-model="form.email"
+            :disabled="emailVerification.isDisabled"
             class="login-and-signup-input"
             id="signup-email-input"
             type="email"
@@ -89,16 +120,16 @@ const nicknameStatus = computed(() => {
           <div
             id="email-cert-button"
             class="button-styles"
-            :class="[{ disabled: !isEmailValid || isEmailDisabled }, { verified: isEmailVerified }]"
-            @click="!isEmailDisabled && isEmailValid && checkEmail()"
+            :class="[{ disabled: !isEmailValid || emailVerification.isDisabled }, { verified: emailVerification.isVerified }]"
+            @click="!emailVerification.isDisabled && isEmailValid && checkEmail()"
           >
-            {{ isEmailVerified ? '인증 완료' : '이메일 인증하기' }}
+            {{ emailVerification.isVerified ? '사용할 수 있는 이메일 입니다.' : '이메일 중복확인' }}
           </div>
           <span
-            v-show="isEmailDisabled"
+            v-show="emailVerification.isDisabled"
             id="cert-guide-message"
             class="message-style"
-            :class="{ 'valid-message': isEmailVerified }"
+            :class="{ 'valid-message': emailVerification.isVerified }"
           >
             {{ certMessage }}
           </span>
@@ -109,7 +140,7 @@ const nicknameStatus = computed(() => {
           <label for="password">비밀번호</label>
           <span class="label-sup">영문, 숫자를 포함한 8자 이상의 비밀번호를 입력해주세요.</span>
           <input
-            v-model="passwordInputRef"
+            v-model="form.password"
             class="login-and-signup-input"
             type="password"
             name="password"
@@ -117,7 +148,7 @@ const nicknameStatus = computed(() => {
             required
           />
           <input
-            v-model="passwordCheckInputRef"
+            v-model="form.passwordCheck"
             class="login-and-signup-input"
             type="password"
             name="password-check"
@@ -131,7 +162,7 @@ const nicknameStatus = computed(() => {
           <label for="nickname">닉네임</label>
           <span class="label-sup">다른 유저와 겹치지 않도록 입력해주세요. (2~ 20자)</span>
           <input
-            v-model="nickname"
+            v-model="form.nickname"
             class="login-and-signup-input"
             type="text"
             name="nickname"
@@ -161,7 +192,7 @@ const nicknameStatus = computed(() => {
           <div id="category-list-box"></div>
         </div>
 
-        <button class="signup-button button-styles" @click="signup">회원가입</button>
+        <button type="button" class="signup-button button-styles" @click="signup">회원가입</button>
       </form>
 
       <div class="option-link">

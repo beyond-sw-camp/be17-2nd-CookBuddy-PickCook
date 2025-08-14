@@ -8,8 +8,8 @@ import HeaderSearchSlider from './components/HeaderSearchSlider.vue'
 import { ref } from 'vue'
 
 const router = useRouter()
-const auth = useUserStore()
-auth.restore()
+const userStore = useUserStore()
+userStore.restore()
 
 // 메뉴 열림 상태
 const isMenuOpen = ref(false)

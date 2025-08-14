@@ -1,38 +1,37 @@
 <script setup>
 import { useUserStore } from '@/store/useUserStore'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 
-const auth = useUserStore()
+const userStore = useUserStore()
 const router = useRouter()
 
-// 템플릿에서 참조할 ref들 정의
+const form = reactive({
+  email: '',
+  password: ''
+})
+
 const formRef = ref(null)
-const emailRef = ref(null)
-const passwordRef = ref(null)
 
-const login = () => {
-  const email = emailRef.value
-  const password = passwordRef.value
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-
-  console.log(email, password)
-  if (!emailRegex.test(email)) {
-    alert('올바른 이메일 형식을 입력해주세요.')
+const login = async () => {
+  // 프론트: 기본적인 빈 값 체크만
+  if (!form.email.trim()) {
+    alert('이메일을 입력해주세요.')
     return
   }
 
-  if (!passwordRegex.test(password)) {
-    alert('비밀번호는 영문자와 숫자를 포함해 8자 이상이어야 합니다.')
+  if (!form.password.trim()) {
+    alert('비밀번호를 입력해주세요.')
     return
   }
 
-  auth.checkLogin(email, password)
-  if (auth.isLogin) {
+  // 백엔드에서 상세한 검증 처리
+  const result = await userStore.login(form.email, form.password)
+  
+  if (result.success) {
     router.push('/')
   } else {
-    alert('아이디 또는 비밀번호가 일치하지 않습니다.')
+    alert(result.message)  // 백엔드에서 온 구체적인 오류 메시지
   }
 }
 </script>
@@ -46,7 +45,7 @@ const login = () => {
         <div class="form-items">
           <label for="email">이메일</label>
           <input
-            v-model="emailRef"
+            v-model="form.email"
             class="login-and-signup-input"
             type="email"
             name="email"
@@ -57,7 +56,7 @@ const login = () => {
         <div class="form-items">
           <label for="password">비밀번호</label>
           <input
-            v-model="passwordRef"
+            v-model="form.password"
             class="login-and-signup-input"
             type="password"
             name="password"
@@ -82,9 +81,7 @@ const login = () => {
         <div></div>
       </div>
       <div class="sns-icons">
-        <a href="#"><img src="/assets/icons/ic-google-login.png" alt="구글 로그인" /></a>
-        <a href="#"><img src="/assets/icons/ic-kakao-login.png" alt="카카오 로그인" /></a>
-        <a href="#"><img src="/assets/icons/ic-naver-login.png" alt="네이버 로그인" /></a>
+        <a href="http://localhost:8080/oauth2/authorization/kakao"><img src="/assets/icons/ic-kakao-login.png" alt="카카오 로그인" /></a>
       </div>
     </div>
   </div>

@@ -102,9 +102,9 @@ const router = createRouter({
       meta: { hideLayout: true },
     },
     {
-      path: '/signup',
-      name: 'signup',
-      component: SignupTypeSelect,
+      path: '/user/signup',
+      name: 'user_signup',
+      component: Signup,
       meta: { hideLayout: true },
     },
     {

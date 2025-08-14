@@ -1,40 +1,74 @@
 import api from '@/plugins/axiosinterceptor'
 
-const getUsers = async () => {
-  try {
-    // const response = await api.get('http://192.168.88.100/api/users.json')
-    const response = await api.get('/users.json')
-    return response.data
-  } catch (error) {
-    console.error('사용자 목록 조회 실패:', error)
-    throw error
-  }
-}
-
 const login = async (email, password) => {
   try {
-    const users = await getUsers()
-
-    // 이메일이 존재하는지 먼저 확인
-    const emailExists = users.find((u) => u.email === email)
-
-    if (!emailExists) {
-      // 이메일이 등록되지 않은 경우
-      return { success: false, type: 'email_not_found', message: '등록되지 않은 이메일입니다.' }
-    }
-
-    // 이메일은 있는데 비밀번호가 틀린 경우
-    const user = users.find((u) => u.email === email && u.password === password)
-
-    if (user) {
-      return { success: true, user }
-    } else {
-      return { success: false, type: 'wrong_password', message: '비밀번호가 올바르지 않습니다.' }
+    const response = await api.post('/login', { email, password })
+    return { 
+      success: true, 
+      user: response.data,
+      message: '로그인 성공'
     }
   } catch (error) {
-    console.error('로그인 요청 실패:', error)
-    throw error
+    console.error('로그인 실패:', error)
+    
+    if (error.response?.status === 401) {
+      return { 
+        success: false, 
+        type: 'auth_failed', 
+        message: '이메일 또는 비밀번호가 올바르지 않습니다.' 
+      }
+    }
+    
+    return { 
+      success: false, 
+      type: 'server_error', 
+      message: '로그인 중 오류가 발생했습니다.' 
+    }
   }
 }
 
-export default { getUsers, login }
+// 사용자 정보 확인 API
+const getCurrentUser = async () => {
+  try {
+    const response = await api.get('/api/user/me')
+    return { success: true, user: response.data }
+  } catch (error) {
+    console.error('사용자 정보 조회 실패:', error)
+    return { success: false, message: '인증되지 않은 사용자입니다.' }
+  }
+}
+
+const signup = async (signupData) => {
+  try {
+    const response = await api.post('/api/user/signup', {
+      email: signupData.email,
+      nickname: signupData.nickname,
+      password: signupData.password
+    })
+    return { success: true, message: response.data }
+  } catch (error) {
+    console.error('회원가입 실패:', error)
+    const errorMessage = error.response?.data || '회원가입 중 오류가 발생했습니다.'
+    return { success: false, message: errorMessage }
+  }
+}
+
+const checkEmailDuplicate = async (email) => {
+  try {
+    const response = await api.get(`/api/user/check-email?email=${email}`)
+    return {
+      success: true,
+      available: response.data.available,
+      message: response.data.message
+    }
+  } catch (error) {
+    console.error('이메일 중복 확인 실패:', error)
+    return {
+      success: false,
+      message: '이메일 중복 확인 중 오류가 발생했습니다.'
+    }
+  }
+}
+
+
+export default { login, getCurrentUser, signup, checkEmailDuplicate }

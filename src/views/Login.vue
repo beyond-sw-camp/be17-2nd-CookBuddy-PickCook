@@ -2,6 +2,7 @@
 import { useUserStore } from '@/store/useUserStore'
 import { reactive, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
+import api from '@/plugins/axiosinterceptor'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -14,7 +15,6 @@ const form = reactive({
 const formRef = ref(null)
 
 const login = async () => {
-  // 프론트: 기본적인 빈 값 체크만
   if (!form.email.trim()) {
     alert('이메일을 입력해주세요.')
     return
@@ -25,13 +25,25 @@ const login = async () => {
     return
   }
 
-  // 백엔드에서 상세한 검증 처리
+  // 서버 응답 확인
+  try {
+    const directResponse = await api.post('/login', { 
+      email: form.email, 
+      password: form.password 
+    })
+
+  } catch (error) {
+    console.log('API 에러:', error)
+  }
+
   const result = await userStore.login(form.email, form.password)
   
   if (result.success) {
-    router.push('/')
+    const nickname = result.user?.nickname || '사용자'
+    const encodedNickname = encodeURIComponent(nickname)
+    router.push(`/?loginSuccess=true&nickname=${encodedNickname}&loginType=normal`)
   } else {
-    alert(result.message)  // 백엔드에서 온 구체적인 오류 메시지
+    alert(result.message)
   }
 }
 </script>

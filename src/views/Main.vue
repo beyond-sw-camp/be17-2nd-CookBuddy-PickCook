@@ -81,26 +81,32 @@ const showToast = (message) => {
 }
 
 // OAuth2 로그인 성공 처리 함수
-const handleOAuth2LoginSuccess = () => {
+const handleLoginSuccess = () => {
   console.log('현재 URL 쿼리:', route.query)
   
-  if (route.query.loginSuccess === 'true' && route.query.loginType === 'social') {
+  if (route.query.loginSuccess === 'true') {
     const nickname = route.query.nickname
+    const loginType = route.query.loginType
     
     if (nickname) {
       const decodedNickname = decodeURIComponent(nickname)
-      showToast(`🎉 ${decodedNickname}님, 환영합니다!`)
+      
+      let message
+      if (loginType === 'social') {
+        message = `🎉 ${decodedNickname}님, 환영합니다!`
+      } else if (loginType === 'normal') {
+        message = `🎉 ${decodedNickname}님, 환영합니다!`
+      }
+      showToast(message)
     }
     
     router.replace({ query: {} })
   }
 }
-
 onMounted(() => {
-  // OAuth2 로그인 성공 처리 먼저 실행
-  handleOAuth2LoginSuccess()
+  // 함수명이 틀렸음: handleOAuth2LoginSuccess → handleLoginSuccess
+  handleLoginSuccess() // 수정
   
-  // 그다음 홈 데이터 로드
   getHomeData()
 })
 </script>

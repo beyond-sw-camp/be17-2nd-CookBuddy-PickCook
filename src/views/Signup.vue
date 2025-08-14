@@ -44,7 +44,7 @@ const checkEmail = async () => {
 
   emailVerification.isDisabled = true
 
-  // 실제 이메일 중복 확인 API 호출
+  // BaseResponse 형식으로 응답 받음
   const result = await userStore.checkEmailDuplicate(form.email)
   
   if (result.success) {
@@ -58,7 +58,15 @@ const checkEmail = async () => {
     }
   } else {
     emailVerification.isDisabled = false
-    alert(result.message)
+    alert(result.message) // 에러 메시지
+  }
+}
+
+// 이메일 변경 시 인증 상태 초기화
+const onEmailChange = () => {
+  if (emailVerification.isVerified || emailVerification.isDisabled) {
+    emailVerification.isVerified = false
+    emailVerification.isDisabled = false
   }
 }
 
@@ -79,19 +87,28 @@ const signup = async () => {
     return
   }
 
-  // 실제 백엔드 API 호출
+  // BaseResponse 형식으로 회원가입 API 호출
   const result = await userStore.signup({
     email: form.email,
     nickname: form.nickname,
     password: form.password
   })
+  
   console.log('회원가입 API 응답:', result)
 
   if (result.success) {
-    alert('회원가입이 완료되었습니다. 이메일 인증을 완료한 후 로그인해주세요.')
-    router.push('/login')  // 바로 로그인 페이지로 이동
-  } else {
+    // BaseResponse의 message 사용 ("회원가입이 완료되었습니다. 이메일을 확인해주세요.")
     alert(result.message)
+    router.push('/login')
+  } else {
+    // BaseResponse의 에러 message 사용 ("이미 사용 중인 이메일입니다." 등)
+    alert(result.message)
+    
+    // 중복 이메일 에러인 경우 이메일 인증 상태 초기화
+    if (result.message.includes('이메일')) {
+      emailVerification.isVerified = false
+      emailVerification.isDisabled = false
+    }
   }
 }
 </script>

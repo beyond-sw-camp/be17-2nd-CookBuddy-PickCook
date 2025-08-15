@@ -4,20 +4,34 @@ const login = async (email, password) => {
   try {
     const response = await api.post('/login', { email, password })
     
-    // BaseResponse 형식: { success: true, code: 20101, message: "...", results: UserDto.Response }
-    console.log('API 파일에서 응답 처리:', response.data) // 디버깅용
-    
     return { 
       success: response.data.success, 
       user: response.data.results, // 핵심: results
+      message: response.data.message
     }
   } catch (error) {
-    console.error('로그인 실패:', error)
-    
     const errorData = error.response?.data
     return { 
       success: false, 
       message: errorData?.message || '로그인 중 오류가 발생했습니다.'
+    }
+  }
+}
+
+// 로그아웃 API 함수 추가
+const logout = async () => {
+  try {
+    const response = await api.post('/api/user/logout')
+    // BaseResponse: { success: true, code: 20102, message: "로그아웃이 완료되었습니다.", results: null }
+    return {
+      success: response.data.success,
+      message: response.data.message
+    }
+  } catch (error) {
+    const errorData = error.response?.data
+    return {
+      success: false,
+      message: errorData?.message || '로그아웃 중 오류가 발생했습니다.'
     }
   }
 }
@@ -88,4 +102,4 @@ const checkEmailDuplicate = async (email) => {
 }
 
 
-export default { login, getCurrentUser, signup, checkEmailDuplicate }
+export default { logout, login, getCurrentUser, signup, checkEmailDuplicate }

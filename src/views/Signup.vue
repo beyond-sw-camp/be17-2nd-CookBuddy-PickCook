@@ -4,7 +4,7 @@ import { reactive, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const userStore = useUserStore()
+const auth = useUserStore()
 
 const form = reactive({
   email: '',
@@ -45,7 +45,7 @@ const checkEmail = async () => {
   emailVerification.isDisabled = true
 
   // BaseResponse 형식으로 응답 받음
-  const result = await userStore.checkEmailDuplicate(form.email)
+  const result = await auth.checkEmailDuplicate(form.email)
   
   if (result.success) {
     if (result.available) {
@@ -88,7 +88,7 @@ const signup = async () => {
   }
 
   // BaseResponse 형식으로 회원가입 API 호출
-  const result = await userStore.signup({
+  const result = await auth.signup({
     email: form.email,
     nickname: form.nickname,
     password: form.password

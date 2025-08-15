@@ -72,6 +72,7 @@ const router = createRouter({
       path: '/mypage',
       component: Mypage,
       children: [
+        { path: '', redirect: '/mypage/user_info' },
         { path: 'cart', name: 'mypage-cart', component: Cart },
         { path: 'order_list', name: 'mypage-order', component: OrderList },
         { path: 'scrap_list', name: 'mypage-scrap', component: ScrapList },
@@ -129,9 +130,19 @@ const router = createRouter({
 })
 
 // 전역 가드
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const auth = useUserStore()
-  const isLoggedIn = auth.isLogin
+
+  // 로그인 상태가 아니고, 사용자 정보도 없으면 복원 시도
+  if (!auth.state.isLogin && !auth.state.user) {
+    try {
+      await auth.restore() // useUserStore의 restore 함수 호출
+    } catch (error) {
+      console.log('사용자 정보 복원 실패:', error)
+    }
+  }
+
+  const isLoggedIn = auth.state.isLogin
 
   if (to.meta.requiresAuth && !isLoggedIn) {
     return next('/login')

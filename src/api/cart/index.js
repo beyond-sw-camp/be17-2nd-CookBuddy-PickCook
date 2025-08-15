@@ -15,4 +15,30 @@ const cartList = async () => {
   return data
 }
 
-export default { cartList }
+const updateQuantity = async (cartItemId, quantity) => {
+  try {
+    const response = await api.patch(`/api/cart/${cartItemId}`, { quantity })
+    return {
+      success: response.data.success,
+      message: response.data.message
+    }
+  } catch (error) {
+    console.error('수량 변경 실패:', error)
+    return { success: false, message: '수량 변경 중 오류가 발생했습니다.' }
+  }
+}
+
+const deleteItems = async (cartItemIds) => {
+  try {
+    const response = await api.post('/api/cart/delete', { ids: cartItemIds })
+    return {
+      success: response.data.success,
+      message: response.data.message
+    }
+  } catch (error) {
+    console.error('삭제 실패:', error)
+    return { success: false, message: '삭제 중 오류가 발생했습니다.' }
+  }
+}
+
+export default { cartList, updateQuantity, deleteItems }

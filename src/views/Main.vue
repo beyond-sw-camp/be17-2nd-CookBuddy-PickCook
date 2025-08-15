@@ -6,9 +6,11 @@ import RecipeCard from '@/components/RecipeCard.vue'
 import api from '@/api/main'
 import HomeCommunityCard from '@/components/HomeCommunityCard.vue'
 import ProductItemCard from '@/components/ProductItemCard.vue'
+import { useUserStore } from '@/store/useUserStore'
 
 const router = useRouter()
 const route = useRoute()
+const userStore = useUserStore()
 
 const state = reactive({
   recipes: [],
@@ -81,12 +83,20 @@ const showToast = (message) => {
 }
 
 // OAuth2 로그인 성공 처리 함수
-const handleLoginSuccess = () => {
+const handleLoginSuccess = async () => {
   console.log('현재 URL 쿼리:', route.query)
   
   if (route.query.loginSuccess === 'true') {
     const nickname = route.query.nickname
     const loginType = route.query.loginType
+
+    if (!userStore.state.user) {
+      try {
+        await userStore.restore()
+      } catch (error) {
+        console.error('사용자 정보 복원 실패:', error)
+      }
+    }
     
     if (nickname) {
       const decodedNickname = decodeURIComponent(nickname)
@@ -103,12 +113,12 @@ const handleLoginSuccess = () => {
     router.replace({ query: {} })
   }
 }
-onMounted(() => {
-  // 함수명이 틀렸음: handleOAuth2LoginSuccess → handleLoginSuccess
-  handleLoginSuccess() // 수정
-  
+
+onMounted(async () => {
+  await handleLoginSuccess() // async 추가
   getHomeData()
 })
+
 </script>
 
 <template>

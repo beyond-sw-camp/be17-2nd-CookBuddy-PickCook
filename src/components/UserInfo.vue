@@ -1,19 +1,50 @@
 <script setup>
-import { ref } from 'vue'
+import { reactive, onMounted, ref, computed } from 'vue'
+import { useUserStore } from '@/store/useUserStore' 
 
-// 프로필 이미지 관련
+const userStore = useUserStore()
+
+const userInfo = reactive({
+  email: '',
+  nickname: '',
+  name: '',
+  phone: '',
+  profileImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlaTCW_H-l1mSyOngrADrGNhk2nTIl-iDew&s'
+})
+
+const originalUserInfo = reactive({
+  nickname: ''
+})
+
 const fileInput = ref(null)
-const profileImage = ref(
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlaTCW_H-l1mSyOngrADrGNhk2nTIl-iDew&s', // 기본 이미지
-)
 
-// 사용자 정보 관련
-const email = ref('')
-const nickname = ref('')
-const name = ref('')
-const phone = ref('')
+// 추가: 소셜 로그인 사용자 판별 (이메일이 숫자로만 구성된 경우)
+const isSocialUser = computed(() => {
+  return userInfo.email && /^\d+$/.test(userInfo.email)
+})
 
-// 프로필 이미지 파일 선택
+onMounted(async () => {
+  await loadUserInfo()
+})
+
+const loadUserInfo = async () => {
+  const result = await userStore.getCurrentUser()
+  
+  if (result.success && result.user) {
+    Object.assign(userInfo, {
+      email: result.user.email || '',
+      nickname: result.user.nickname || '',
+      name: result.user.name || '',
+      phone: result.user.phone || '',
+      profileImage: result.user.profileImage || userInfo.profileImage
+    })
+    
+    originalUserInfo.nickname = result.user.nickname || ''
+  } else {
+    alert('사용자 정보를 불러올 수 없습니다.')
+  }
+}
+
 const triggerFileInput = () => {
   fileInput.value?.click()
 }
@@ -27,44 +58,63 @@ const handleFileChange = (event) => {
     return
   }
 
-  profileImage.value = URL.createObjectURL(file)
-
-  // 서버 업로드 시 사용 예:
-  // const formData = new FormData()
-  // formData.append('profileImage', file)
-  // await axios.post('/api/profile/upload', formData)
+  userInfo.profileImage = URL.createObjectURL(file)
 }
 
-// 이메일 유효성 검사
 const isValidEmail = (emailValue) => {
   const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return pattern.test(emailValue)
 }
 
-// 전화번호 자동 하이픈 처리
 const formatPhoneNumber = (value) => {
-  const digits = value.replace(/\D/g, '').slice(0, 11) // 숫자만 추출 (최대 11자리)
+  const digits = value.replace(/\D/g, '').slice(0, 11)
   if (digits.length < 4) return digits
   if (digits.length < 8) return `${digits.slice(0, 3)}-${digits.slice(3)}`
   return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7)}`
 }
 
 const onPhoneInput = (event) => {
-  phone.value = formatPhoneNumber(event.target.value)
+  userInfo.phone = formatPhoneNumber(event.target.value)
 }
 
-const onSubmit = () => {
-  if (!isValidEmail(email.value)) {
+const onSubmit = async () => {
+  // 수정: 소셜 로그인 사용자는 이메일 검증 제외
+  if (!isSocialUser.value && !isValidEmail(userInfo.email)) {
     alert('유효한 이메일 주소를 입력하세요.')
     return
   }
 
-  console.log('이메일:', email.value)
-  console.log('닉네임:', nickname.value)
-  console.log('이름:', name.value)
-  console.log('연락처:', phone.value)
+  // 닉네임이 변경되었을 때만 중복 체크
+  if (userInfo.nickname !== originalUserInfo.nickname && 
+      userInfo.nickname && 
+      userInfo.nickname.trim().length >= 2) {
+    
+    const nicknameResult = await userStore.checkNicknameDuplicate(userInfo.nickname)
+    
+    if (!nicknameResult.success) {
+      alert(`닉네임 확인 실패: ${nicknameResult.message}`)
+      return
+    }
+    
+    if (!nicknameResult.available) {
+      alert('이미 사용 중인 닉네임입니다. 다른 닉네임을 선택해주세요.')
+      return
+    }
+  }
 
-  // 실제 API 전송 가능
+  try {
+    const result = await userStore.updateProfile(userInfo)
+    
+    if (result.success) {
+      originalUserInfo.nickname = userInfo.nickname
+      await loadUserInfo() // 최신 데이터 다시 로드
+      alert('회원정보가 성공적으로 수정되었습니다!')
+    } else {
+      alert(`수정 실패: ${result.message}`)
+    }
+  } catch (error) {
+    alert('정보 수정 중 오류가 발생했습니다.')
+  }
 }
 </script>
 
@@ -74,12 +124,12 @@ const onSubmit = () => {
       <div class="mypage-header-box-title">
         회원 정보 관리
       </div>
-    </div>
+  </div>
 
-    <!-- 프로필 이미지 -->
-    <div class="mypage-my-profile-image-container">
+  <!-- 프로필 이미지 -->
+  <div class="mypage-my-profile-image-container">
       <div class="my-profile-image-box">
-        <img :src="profileImage" alt="프로필 사진" />
+        <img :src="userInfo.profileImage" alt="프로필 사진" />
         <div id="profile-image-edit-button" @click="triggerFileInput">
           <img src="/assets/icons/ic-edit.png" alt="프로필 이미지 수정 버튼" />
         </div>
@@ -93,29 +143,47 @@ const onSubmit = () => {
       </div>
     </div>
 
-    <!-- 사용자 정보 입력 -->
+  <!-- 사용자 정보 입력 -->
     <div class="mypage-my-profile-info-input-container">
       <div class="mypage-my-profile-info-input-el">
         <label>이메일</label>
-        <input type="email" v-model="email" placeholder="example@example.com" />
+        <input 
+          type="email" 
+          v-model="userInfo.email" 
+          placeholder="example@example.com" 
+          readonly 
+          style="background-color: #f5f5f5;"
+        />
       </div>
+      
       <div class="mypage-my-profile-info-input-el">
         <label>닉네임</label>
-        <input type="text" v-model="nickname" />
+        <input 
+          type="text" 
+          v-model="userInfo.nickname" 
+          placeholder="닉네임을 입력해주세요"
+        />
       </div>
+      
       <div class="mypage-my-profile-info-input-el">
         <label>이름</label>
-        <input type="text" v-model="name" />
+        <input 
+          type="text" 
+          v-model="userInfo.name" 
+          placeholder="실제 이름을 입력해주세요"
+        />
       </div>
+      
       <div class="mypage-my-profile-info-input-el">
         <label>연락처</label>
         <input
           type="text"
-          v-model="phone"
+          v-model="userInfo.phone"
           @input="onPhoneInput"
-          placeholder="000-0000-0000"
+          placeholder="010-0000-0000"
         />
       </div>
+      
       <div class="mypage-my-preofile-info-save">
         <button id="goob-bye-button">탈퇴하기</button>
         <button id="mypage-user-info-edit-button" @click="onSubmit">

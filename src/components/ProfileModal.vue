@@ -1,17 +1,29 @@
 <script setup>
 import { useUserStore } from '@/store/useUserStore'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
 const auth = useUserStore()
+const route = useRoute()
 
 const goToMypage = () => {
   router.push('/mypage')
 }
-const logout = () => {
-  router.push('/login')
-  auth.proceedLogout()
+
+const logout = async () => {
+  const result = await auth.logout() // ✅ logout으로 변경
+  
+  if (result.success) {
+    const isAuthRequired = route.meta?.requiresAuth
+    
+    if (isAuthRequired) {
+      router.push('/login')
+    } else {
+      console.log('현재 위치에서 로그아웃 완료')
+    }
+  }
 }
+  
 </script>
 
 <template>

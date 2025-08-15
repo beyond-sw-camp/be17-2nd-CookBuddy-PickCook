@@ -4,7 +4,7 @@ import { reactive, ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import api from '@/plugins/axiosinterceptor'
 
-const userStore = useUserStore()
+const auth = useUserStore()
 const router = useRouter()
 
 const form = reactive({
@@ -36,7 +36,7 @@ const login = async () => {
     console.log('API 에러:', error)
   }
 
-  const result = await userStore.login(form.email, form.password)
+  const result = await auth.login(form.email, form.password)
   
   if (result.success) {
     const nickname = result.user?.nickname || '사용자'

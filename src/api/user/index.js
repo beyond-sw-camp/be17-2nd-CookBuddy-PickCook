@@ -37,9 +37,22 @@ const logout = async () => {
 }
 
 // 사용자 정보 확인 API - BaseResponse 형식으로 수정
+// 사용자 정보 확인 API - 캐시 방지 개선
 const getCurrentUser = async () => {
   try {
-    const response = await api.get('/api/user/me')
+    // 캐시 방지를 위한 타임스탬프 추가
+    const timestamp = Date.now()
+    
+    const response = await api.get(`/api/user/me?_t=${timestamp}`, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
+    })
+    
+    console.log('서버 응답 (getCurrentUser):', response.data)
+    
     // BaseResponse: { success: true, code: 20000, message: "...", results: UserDto.Response }
     return { 
       success: response.data.success, 
@@ -101,5 +114,48 @@ const checkEmailDuplicate = async (email) => {
   }
 }
 
+const checkNicknameDuplicate = async (nickname) => {
+  try {
+    const response = await api.get(`/api/user/check-nickname?nickname=${nickname}`)
+    // BaseResponse: { success: true/false, message: "...", results: { available: true/false } }
+    return {
+      success: response.data.success,
+      available: response.data.results.available,
+      message: response.data.message
+    }
+  } catch (error) {
+    return {
+      success: false,
+      available: false,
+      message: '닉네임 중복 확인 중 오류가 발생했습니다.'
+    }
+  }
+}
 
-export default { logout, login, getCurrentUser, signup, checkEmailDuplicate }
+// 프로필 수정 API도 개선
+const updateProfile = async (profileData) => {
+  try {
+    console.log('프로필 수정 요청 데이터:', profileData)
+    
+    const response = await api.patch('/api/user/profile', profileData)
+    
+    console.log('프로필 수정 서버 응답:', response.data)
+    
+    // BaseResponse: { success: true, code: 20105, message: "...", results: UserDto.Response }
+    return {
+      success: response.data.success,
+      user: response.data.results,
+      message: response.data.message
+    }
+  } catch (error) {
+    console.error('프로필 수정 실패:', error)
+    const errorData = error.response?.data
+    return {
+      success: false,
+      message: errorData?.message || '프로필 수정 중 오류가 발생했습니다.'
+    }
+  }
+}
+
+
+export default { logout, login, getCurrentUser, signup, checkEmailDuplicate, updateProfile, checkNicknameDuplicate }

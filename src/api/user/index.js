@@ -73,11 +73,18 @@ const getCurrentUser = async () => {
 // 회원가입 API - BaseResponse 형식으로 수정
 const signup = async (signupData) => {
   try {
+    console.log('회원가입 요청 데이터:', signupData) // 🔧 디버깅 로그 추가
+
     const response = await api.post('/api/user/signup', {
       email: signupData.email,
       nickname: signupData.nickname,
-      password: signupData.password
+      password: signupData.password,
+      name: signupData.name,
+      phone: signupData.phone
     })
+
+    console.log('회원가입 서버 응답:', response.data)
+
     // BaseResponse: { success: true, code: 20100, message: "회원가입이 완료되었습니다...", results: null }
     return { 
       success: response.data.success, 
@@ -157,5 +164,78 @@ const updateProfile = async (profileData) => {
   }
 }
 
+const findEmail = async (name, phone) => {
+  try {
+    console.log('아이디 찾기 요청:', { name, phone })
+    
+    // 🔧 수정: 정확한 필드명으로 전송
+    const requestData = { name: name, phone: phone }
+    console.log('실제 전송 데이터:', requestData)
+    
+    const response = await api.post('/api/user/find-email', requestData)
+    
+    console.log('아이디 찾기 응답:', response.data)
+    
+    return {
+      success: response.data.success,
+      data: response.data.results,
+      message: response.data.message
+    }
+  } catch (error) {
+    console.error('아이디 찾기 실패:', error)
+    console.error('에러 상세:', error.response?.data)
+    const errorData = error.response?.data
+    return {
+      success: false,
+      message: errorData?.message || '아이디 찾기 중 오류가 발생했습니다.'
+    }
+  }
+}
 
-export default { logout, login, getCurrentUser, signup, checkEmailDuplicate, updateProfile, checkNicknameDuplicate }
+// 🔧 추가: 비밀번호 재설정 요청 API
+const requestPasswordReset = async (email) => {
+  try {
+    console.log('비밀번호 재설정 요청:', { email })
+    
+    const response = await api.post('/api/user/request-password-reset', { email })
+    
+    console.log('비밀번호 재설정 응답:', response.data)
+    
+    return {
+      success: response.data.success,
+      message: response.data.message
+    }
+  } catch (error) {
+    console.error('비밀번호 재설정 실패:', error)
+    const errorData = error.response?.data
+    return {
+      success: false,
+      message: errorData?.message || '비밀번호 재설정 요청 중 오류가 발생했습니다.'
+    }
+  }
+}
+
+// 회원탈퇴 API 함수 추가
+const withdrawUser = async (withdrawData) => {
+  try {
+    const response = await api.post('/api/user/withdraw', withdrawData)
+    // BaseResponse: { success: true, code: 20108, message: "...", results: WithdrawResponse }
+    return {
+      success: response.data.success,
+      data: response.data.results,
+      message: response.data.message
+    }
+  } catch (error) {
+    const errorData = error.response?.data
+    return {
+      success: false,
+      message: errorData?.message || '회원탈퇴 중 오류가 발생했습니다.'
+    }
+  }
+}
+
+
+export default {
+  logout, login, getCurrentUser, signup, checkEmailDuplicate, updateProfile,
+  checkNicknameDuplicate, findEmail, requestPasswordReset, withdrawUser
+}

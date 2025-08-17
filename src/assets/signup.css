@@ -93,6 +93,27 @@ form {
   color: white;
 }
 
+#nickname-cert-button {
+  border: 1px solid var(--color-light-gray);
+  background-color: var(--color-primary);
+  margin-top: 5px;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#nickname-cert-button.disabled {
+  background-color: #f7f8fa;
+  color: var(--color-light-gray);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+#nickname-cert-button.verified {
+  background-color: #8f8c90;
+  color: white;
+}
+
 .message-style {
   font-size: 12px;
   margin-top: 3px;

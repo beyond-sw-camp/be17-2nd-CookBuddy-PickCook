@@ -184,16 +184,28 @@ const changePassword = async () => {
   console.log('비밀번호 변경 버튼 클릭')
 
   try {
+    // 1. OAuth2 사용자인지 확인
+    if (isSocialUser.value) {
+      // OAuth2 사용자: 카카오 계정 관리 페이지로 리다이렉트
+      const response = await api.checkOAuthUser()
+      if (response.success) {
+        window.open(response.results.redirectUrl, '_blank')
+      } else {
+        alert('카카오 계정 관리 페이지로 이동할 수 없습니다.')
+      }
+      return
+    }
+
+    // 2. 일반 사용자: 내부 토큰 생성 후 Vue 페이지로 이동
     const result = await userStore.generatePasswordChangeToken()
 
     if (result.success) {
       const token = result.results.token
 
-      // ✅ 직접 브라우저에서 백엔드 URL 열기
-      const resetUrl = `http://localhost:8080/api/user/reset-password?token=${token}`
-      window.open(resetUrl, '_blank')
+      // ✅ Vue 페이지로 이동 (백엔드 HTML 대신)
+      router.push(`/reset-password?token=${token}&type=internal`)
 
-      console.log('비밀번호 재설정 페이지로 이동:', resetUrl)
+      console.log('비밀번호 재설정 페이지로 이동')
     } else {
       alert(`토큰 생성 실패: ${result.message}`)
     }
@@ -404,13 +416,19 @@ const onSubmit = async () => {
         회원정보 수정</button
       ><br />
       <button
-        style="width: 150px; border: 1px solid #e14345; color: #e14345"
+        style="width: 150px; font-weight: 500; border: 1px solid #e14345; color: #e14345"
         id=""
         @click="changePassword"
       >
         비밀번호 수정</button
       ><br />
-      <button style="width: 150px" id="goob-bye-button" @click="openWithdrawModal">탈퇴하기</button>
+      <button
+        style="width: 150px; font-weight: 500; border: 1px solid #e14345"
+        id="goob-bye-button"
+        @click="openWithdrawModal"
+      >
+        탈퇴하기
+      </button>
     </div>
 
     <!-- 🔧 추가: 회원탈퇴 모달 -->

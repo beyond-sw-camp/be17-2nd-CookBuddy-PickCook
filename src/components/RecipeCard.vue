@@ -9,30 +9,25 @@ const props = defineProps({
   },
 })
 
+console.log("뭘까요", props.recipe)
+
 const emit = defineEmits(['update:like', 'update:scrap'])
 
 // 로컬 상태
 const isLiked = ref(props.recipe.likedByUser)
 const likeCount = ref(props.recipe.likeCount)
 
-// const isScrapped = ref(props.recipe.scrappedByUser)
-// const scrapCount = ref(props.recipe.scrapCount)
-
-
+const isScrapped = ref(props.recipe.scrappedByUser)
+const scrapCount = ref(props.recipe.scrapCount)
 
 // 아이콘 경로
 const likeSrc = computed(() =>
-  isLiked.value
-    ? '/assets/icons/ic-full-like.png'
-    : '/assets/icons/ic-empty-like.png',
+  isLiked.value ? '/assets/icons/ic-full-like.png' : '/assets/icons/ic-empty-like.png',
 )
 
-// const scrapSrc = computed(() =>
-//   isScrapped.value
-//     ? '/assets/icons/ic-full-scrap.png'
-//     : '/assets/icons/ic-empty-scrap.png',
-// )
-
+const scrapSrc = computed(() =>
+  isScrapped.value ? '/assets/icons/ic-full-scrap.png' : '/assets/icons/ic-empty-scrap.png',
+)
 
 // 좋아요 토글
 const toggleLike = (event) => {
@@ -53,8 +48,6 @@ const toggleLike = (event) => {
   })
 }
 
-
-
 // 스크랩 토글
 const toggleScrap = (event) => {
   event.stopPropagation()
@@ -73,7 +66,6 @@ const toggleScrap = (event) => {
     count: scrapCount.value,
   })
 }
-
 </script>
 
 <template>

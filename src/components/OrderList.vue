@@ -160,6 +160,18 @@ const selectOption = (option) => {
   width: 100px;
 }
 
+@media (max-width: 1023px) {
+  .dropdown-toggle {
+    font-size: 14px;
+    width: 90px;
+  }
+
+  .arrow {
+    font-size: 12px;
+    margin-top: 1px;
+  }
+}
+
 .dropdown-menu {
   position: absolute;
   top: 110%;

@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import likeAPI from '@/api/like'
+import scrapAPI from '@/api/scrap'
 
 const props = defineProps({
   recipe: {
@@ -9,9 +11,8 @@ const props = defineProps({
   },
 })
 
-console.log("뭘까요", props.recipe)
-
-const emit = defineEmits(['update:like', 'update:scrap'])
+const likeAnimating = ref(false)
+const scrapAnimating = ref(false)
 
 // 로컬 상태
 const isLiked = ref(props.recipe.likedByUser)
@@ -30,46 +31,58 @@ const scrapSrc = computed(() =>
 )
 
 // 좋아요 토글
-const toggleLike = (event) => {
+const toggleLike = async (event) => {
   event.stopPropagation()
   event.preventDefault()
 
-  if (isLiked.value) {
-    likeCount.value--
-  } else {
-    likeCount.value++
-  }
+  // UI 업데이트
   isLiked.value = !isLiked.value
+  likeCount.value += isLiked.value ? 1 : -1
 
-  // 부모 컴포넌트로 이벤트 전달 (서버 동기화)
-  emit('update:like', {
-    liked: isLiked.value,
-    count: likeCount.value,
-  })
+  likeAnimating.value = true
+  setTimeout(() => {
+    likeAnimating.value = false
+  }, 300)
+
+  try {
+    await likeAPI.toggleLike('RECIPE', props.recipe.idx)
+    // 성공 → 그대로 유지
+  } catch (err) {
+    console.error('좋아요 실패', err)
+    // 실패 → 원래 상태로 롤백
+    isLiked.value = !isLiked.value
+    likeCount.value += isLiked.value ? 1 : -1
+  }
 }
 
 // 스크랩 토글
-const toggleScrap = (event) => {
+const toggleScrap = async (event) => {
   event.stopPropagation()
   event.preventDefault()
 
-  if (isScrapped.value) {
-    scrapCount.value--
-  } else {
-    scrapCount.value++
-  }
+  // UI 업데이트
   isScrapped.value = !isScrapped.value
+  scrapCount.value += isScrapped.value ? 1 : -1
 
-  // 부모 컴포넌트로 이벤트 전달
-  emit('update:scrap', {
-    scrapped: isScrapped.value,
-    count: scrapCount.value,
-  })
+  scrapAnimating.value = true
+  setTimeout(() => {
+    scrapAnimating.value = false
+  }, 300)
+
+  try {
+    await scrapAPI.toggleScrap('RECIPE', props.recipe.idx)
+    // 성공 → 그대로 유지
+  } catch (err) {
+    console.error('스크랩 실패', err)
+    // 실패 → 원래 상태로 롤백
+    isScrapped.value = !isScrapped.value
+    scrapCount.value += isScrapped.value ? 1 : -1
+  }
 }
 </script>
 
 <template>
-  <RouterLink :to="`/recipe/detail/${props.recipe.id}`" class="c-board-link">
+  <RouterLink :to="`/recipe/detail/${props.recipe.idx}`" class="c-board-link">
     <div class="recipe-card content-card">
       <div class="recipe-rep-image card-image">
         <img :src="props.recipe.image_large_url" :alt="props.recipe.title" />
@@ -86,7 +99,7 @@ const toggleScrap = (event) => {
         <div class="recipe-title-container">
           <h3 class="recipe-title card-title">{{ props.recipe.title }}</h3>
           <span class="recipe-likes-count" @click="toggleLike" style="cursor: pointer">
-            {{ props.recipe.likeCount }}
+            {{ likeCount }}
             <img
               class="like-js"
               :src="likeSrc"

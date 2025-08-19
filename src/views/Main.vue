@@ -112,6 +112,7 @@ const handleLoginSuccess = async () => {
   }
 }
 
+
 onMounted(async () => {
   await handleLoginSuccess() // async 추가
   getHomeData()

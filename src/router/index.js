@@ -112,7 +112,7 @@ const router = createRouter({
       path: '/find-password',
       name: 'FindPassword',
       component: () => import('@/components/FindPasswordCard.vue'),
-      meta: { hideLayout: true }  // 🔧 추가: 레이아웃 숨기기
+      meta: { hideLayout: true }
     },
     {
       path: '/address/search',
@@ -147,59 +147,42 @@ const router = createRouter({
   ],
 })
 
-// 🔧 수정: useUserStore의 initialize 메서드 사용하도록 변경
+// 인증 헬퍼 함수
+const ensureInitialized = async (auth) => {
+  if (!auth.state.initialized) {
+    await auth.initialize()
+  }
+}
+
+// 라우터 가드
 router.beforeEach(async (to, from, next) => {
-  console.log('🔄 라우터 가드 실행:', {
-    to: to.path,
-    requiresAuth: to.meta.requiresAuth,
-    fromPath: from.path
-  })
+  console.log('Router guard: checking route', to.path)
   
   const auth = useUserStore()
   
-  console.log('🔍 현재 인증 상태:', {
+  console.log('Authentication state:', {
     isLogin: auth.state.isLogin,
     hasUser: !!auth.state.user,
     userNickname: auth.state.user?.nickname,
-    initialized: auth.state.initialized // 🔧 추가: 초기화 상태 확인
+    initialized: auth.state.initialized
   })
 
-  // 🔧 수정: 초기화되지 않았으면 initialize 호출
-  if (!auth.state.initialized) {
-    console.log('❌ 아직 초기화되지 않음 - initialize 호출...')
-    
-    try {
-      const isLoggedIn = await auth.initialize()
-      console.log('🔄 초기화 결과:', isLoggedIn)
-      
-      // 인증이 필요한 페이지에서만 리다이렉트 처리
-      if (to.meta.requiresAuth && !isLoggedIn) {
-        console.log('❌ 인증 필요한 페이지인데 로그인 안됨 - 로그인 페이지로 이동')
-        return next('/login')
-      }
-    } catch (error) {
-      console.error('❌ 초기화 중 오류:', error)
-      if (to.meta.requiresAuth) {
-        return next('/login')
-      }
-    }
-  } else {
-    console.log('✅ 이미 초기화됨')
-    
-    // 인증이 필요한 페이지인데 로그인 안된 경우
-    if (to.meta.requiresAuth && !auth.state.isLogin) {
-      console.log('❌ 인증 필요한 페이지인데 로그인 안됨 - 로그인 페이지로 이동')
-      return next('/login')
-    }
+  // 사용자 상태 초기화 확인
+  await ensureInitialized(auth)
+  
+  // 인증이 필요한 페이지인데 로그인되지 않은 경우
+  if (to.meta.requiresAuth && !auth.state.isLogin) {
+    console.log('Authentication required but user not logged in, redirecting to login')
+    return next('/login')
   }
 
-  // 🔧 추가: 로그인 페이지인데 이미 로그인된 경우 메인으로 리다이렉트
+  // 이미 로그인된 상태에서 로그인 페이지 접근 시
   if (to.name === 'login' && auth.state.isLogin) {
-    console.log('🔄 이미 로그인됨 - 메인 페이지로 리다이렉트')
+    console.log('User already logged in, redirecting to main')
     return next('/')
   }
   
-  console.log('✅ 라우터 가드 통과 - 페이지 이동 허용')
+  console.log('Router guard passed, proceeding to route')
   next()
 })
 

@@ -154,13 +154,6 @@ const nicknameStatus = computed(() => {
           </span>
         </div>
 
-        <!-- 카테고리 -->
-        <div class="form-items">
-          <label for="nickname">관심 카테고리</label>
-          <span class="label-sup">관심있는 레시피 카테고리를 선택해주세요.</span>
-          <div id="category-list-box"></div>
-        </div>
-
         <button class="signup-button button-styles" @click="signup">회원가입</button>
       </form>
 

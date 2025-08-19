@@ -4,7 +4,7 @@ export function useBreakpoints() {
   const isMobile = ref(false)
   const isTablet = ref(false)
   const isDesktop = ref(false)
-  const isMobileOrTablet = ref(false) // 추가된 그룹
+  const isMobileOrTablet = ref(false) 
 
   const checkSize = () => {
     const width = window.innerWidth

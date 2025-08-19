@@ -9,6 +9,12 @@ const props = defineProps({
   },
 })
 
+if (!props.recipe) {
+  console.log('props.recipe 아직 없음')
+} else {
+  console.log('서버로부터 받은 레시피입니다:', props.recipe)
+}
+
 const isLiked = ref(false)
 const likeCount = ref(props.recipe.likes || 0)
 const likeAnimating = ref(false)
@@ -59,10 +65,10 @@ const toggleScrap = (event) => {
 </script>
 
 <template>
-  <RouterLink :to="`/recipe/detail/${props.recipe.id}`">
+  <RouterLink :to="`/recipe/detail/${props.recipe.id}`" class="c-board-link">
     <div class="recipe-card content-card">
       <div class="recipe-rep-image card-image">
-        <img :src="props.recipe.thumbnail" :alt="props.recipe.title" />
+        <img :src="props.recipe.image_large_url" :alt="props.recipe.title" />
         <img
           class="recipe-scrap-icon scrap-js"
           :src="scrapSrc"
@@ -97,7 +103,7 @@ const toggleScrap = (event) => {
           </span>
           <span class="recipe-stats-items">
             <img src="/assets/icons/ic-qnt.png" alt="인분" />
-            {{ props.recipe.servings }}
+            {{ props.recipe.serving_size }}
           </span>
         </div>
       </div>

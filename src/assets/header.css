@@ -138,7 +138,8 @@ a:hover {
   font-size: 14px;
 }
 
-.profile-modal-container div:hover {
+.profile-modal-container div:hover,
+.mypage-post-item:hover {
   background-color: #f3f3f3;
   color: var(--color-dark-strong);
 }

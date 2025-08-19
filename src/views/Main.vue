@@ -27,11 +27,8 @@ const getHomeData = async () => {
     api.productList2(),
   ])
 
-  console.log('레시피 데이터:', recipeData)
-
   if (recipeData.length) {
     state.recipes.push(...recipeData)
-    console.log('실행 왜 안돼', state.recipes)
   }
 
   if (communityData?.success && communityData.results) {
@@ -132,7 +129,7 @@ onMounted(async () => {
       <h2 class="section-title">🍳 냉장고 재료로 만들 수 있는 레시피</h2>
       <RouterLink to="/recipe" class="section-more">더보기 &gt;</RouterLink>
     </div>
-    <div class="content-grid" v-if="state.recipes.length">
+    <div class="content-grid">
       <RecipeCard
         v-for="(item, idx) in state.recipes.slice(0, 4)"
         :key="idx"

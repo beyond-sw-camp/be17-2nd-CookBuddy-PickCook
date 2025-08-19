@@ -1,3 +1,5 @@
+<!-- 레시피 페이지에서 상품 추천할 때 사용하는 상품 컴포넌트 -->
+
 <script setup>
 defineProps({
   name: String,

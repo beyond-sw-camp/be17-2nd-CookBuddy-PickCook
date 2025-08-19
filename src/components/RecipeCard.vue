@@ -9,23 +9,36 @@ const props = defineProps({
   },
 })
 
-if (!props.recipe) {
-  console.log('props.recipe 아직 없음')
-} else {
-  console.log('서버로부터 받은 레시피입니다:', props.recipe)
-}
+const emit = defineEmits(['update:like', 'update:scrap'])
 
-const isLiked = ref(false)
-const likeCount = ref(props.recipe.likes || 0)
-const likeAnimating = ref(false)
+// 로컬 상태
+const isLiked = ref(props.recipe.likedByUser)
+const likeCount = ref(props.recipe.likeCount)
 
+// const isScrapped = ref(props.recipe.scrappedByUser)
+// const scrapCount = ref(props.recipe.scrapCount)
+
+
+
+// 아이콘 경로
 const likeSrc = computed(() =>
-  isLiked.value ? '/assets/icons/ic-full-like.png' : '/assets/icons/ic-empty-like.png',
+  isLiked.value
+    ? '/assets/icons/ic-full-like.png'
+    : '/assets/icons/ic-empty-like.png',
 )
 
+// const scrapSrc = computed(() =>
+//   isScrapped.value
+//     ? '/assets/icons/ic-full-scrap.png'
+//     : '/assets/icons/ic-empty-scrap.png',
+// )
+
+
+// 좋아요 토글
 const toggleLike = (event) => {
   event.stopPropagation()
   event.preventDefault()
+
   if (isLiked.value) {
     likeCount.value--
   } else {
@@ -33,23 +46,20 @@ const toggleLike = (event) => {
   }
   isLiked.value = !isLiked.value
 
-  likeAnimating.value = true
-  setTimeout(() => {
-    likeAnimating.value = false
-  }, 300)
+  // 부모 컴포넌트로 이벤트 전달 (서버 동기화)
+  emit('update:like', {
+    liked: isLiked.value,
+    count: likeCount.value,
+  })
 }
 
-const isScrapped = ref(false)
-const scrapCount = ref(props.recipe.scrapCount || 0)
-const scrapAnimating = ref(false)
 
-const scrapSrc = computed(() =>
-  isScrapped.value ? '/assets/icons/ic-full-scrap.png' : '/assets/icons/ic-empty-scrap.png',
-)
 
+// 스크랩 토글
 const toggleScrap = (event) => {
   event.stopPropagation()
   event.preventDefault()
+
   if (isScrapped.value) {
     scrapCount.value--
   } else {
@@ -57,11 +67,13 @@ const toggleScrap = (event) => {
   }
   isScrapped.value = !isScrapped.value
 
-  scrapAnimating.value = true
-  setTimeout(() => {
-    scrapAnimating.value = false
-  }, 300)
+  // 부모 컴포넌트로 이벤트 전달
+  emit('update:scrap', {
+    scrapped: isScrapped.value,
+    count: scrapCount.value,
+  })
 }
+
 </script>
 
 <template>
@@ -82,7 +94,7 @@ const toggleScrap = (event) => {
         <div class="recipe-title-container">
           <h3 class="recipe-title card-title">{{ props.recipe.title }}</h3>
           <span class="recipe-likes-count" @click="toggleLike" style="cursor: pointer">
-            {{ likeCount }}
+            {{ props.recipe.likeCount }}
             <img
               class="like-js"
               :src="likeSrc"
@@ -95,11 +107,11 @@ const toggleScrap = (event) => {
         <div class="recipe-card-stats card-stats">
           <span class="recipe-stats-items">
             <img src="/assets/icons/ic-time.png" alt="조리시간" />
-            {{ props.recipe.time }}
+            {{ props.recipe.time_taken }}
           </span>
           <span class="recipe-stats-items">
             <img src="/assets/icons/ic-level.png" alt="난이도" />
-            {{ props.recipe.difficulty }}
+            {{ props.recipe.difficulty_level }}
           </span>
           <span class="recipe-stats-items">
             <img src="/assets/icons/ic-qnt.png" alt="인분" />

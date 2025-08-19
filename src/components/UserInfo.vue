@@ -266,178 +266,180 @@ const onSubmit = async () => {
   <div class="mypage-content-container">
     <div class="mypage-header-box">
       <div class="mypage-header-box-title">회원 정보 관리</div>
-    </div>
-  </div>
 
-  <!-- 프로필 이미지 -->
-  <div class="mypage-my-profile-image-container">
-    <div class="my-profile-image-box">
-      <img :src="userInfo.profileImage" alt="프로필 사진" />
-      <div id="profile-image-edit-button" @click="triggerFileInput">
-        <img src="/assets/icons/ic-edit.png" alt="프로필 이미지 수정 버튼" />
-      </div>
-      <input
-        type="file"
-        ref="fileInput"
-        accept="image/*"
-        style="display: none"
-        @change="handleFileChange"
-      />
-    </div>
-  </div>
-
-  <!-- 사용자 정보 입력 -->
-  <div class="mypage-my-profile-info-input-container">
-    <div class="mypage-my-profile-info-input-el">
-      <label>이메일</label>
-      <input
-        type="email"
-        v-model="userInfo.email"
-        placeholder="example@example.com"
-        readonly
-        style="background-color: #f5f5f5"
-      />
-    </div>
-
-    <div class="mypage-my-profile-info-input-el">
-      <label>닉네임</label>
-      <input type="text" v-model="userInfo.nickname" placeholder="닉네임을 입력해주세요" />
-    </div>
-
-    <div class="mypage-my-profile-info-input-el">
-      <label>이름</label>
-      <input type="text" v-model="userInfo.name" placeholder="실제 이름을 입력해주세요" />
-    </div>
-
-    <div class="mypage-my-profile-info-input-el">
-      <label>연락처</label>
-      <input
-        type="text"
-        v-model="userInfo.phone"
-        @input="onPhoneInput"
-        placeholder="010-0000-0000"
-      />
-    </div>
-
-    <!-- 🔧 추가: 주소 입력 섹션 -->
-    <div class="mypage-my-profile-info-input-el">
-      <label>주소</label>
-
-      <!-- 주소가 없을 때: 빈 input 창 + 검색 버튼 -->
-      <div v-if="!fullAddress">
-        <div
-          style="
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f8f9fa;
-            cursor: pointer;
-            width: 430px;
-            font-size: 14px;
-          "
-          @click="openAddressPopup"
-        >
-          <span style="flex: 1; color: #666; margin-right: 10px"> 여기를 클릭해주세요 </span>
+      <!-- 프로필 이미지 -->
+      <div class="mypage-my-profile-image-container">
+        <div class="my-profile-image-box">
+          <img :src="userInfo.profileImage" alt="프로필 사진" />
+          <div id="profile-image-edit-button" @click="triggerFileInput">
+            <img src="/assets/icons/ic-edit.png" alt="프로필 이미지 수정 버튼" />
+          </div>
+          <input
+            type="file"
+            ref="fileInput"
+            accept="image/*"
+            style="display: none"
+            @change="handleFileChange"
+          />
         </div>
       </div>
 
-      <!-- 주소가 있을 때: 주소 표시 + 수정 버튼 -->
-      <div v-if="fullAddress">
-        <div
-          style="
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f8f9fa;
-          "
-        >
-          <span
-            style="
-              flex: 1;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              margin-right: 10px;
-              width: 395px;
-              font-size: 14px;
-            "
-            @click="openAddressPopup"
-          >
-            {{ fullAddress }}
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <div class="mypage-my-preofile-info-save">
-      <button style="width: 150px" id="mypage-user-info-edit-button" @click="onSubmit">
-        회원정보 수정</button
-      ><br />
-      <button style="width: 150px" id="" @click="onSubmit">비밀번호 수정</button><br />
-      <button style="width: 150px" id="goob-bye-button" @click="openWithdrawModal">탈퇴하기</button>
-    </div>
-
-    <!-- 🔧 추가: 회원탈퇴 모달 -->
-    <div v-if="showWithdrawModal" class="withdraw-modal-overlay" @click="closeWithdrawModal">
-      <div class="withdraw-modal" @click.stop>
-        <div class="withdraw-modal-header">
-          <h3>회원탈퇴</h3>
-          <button @click="closeWithdrawModal">×</button>
+      <!-- 사용자 정보 입력 -->
+      <div class="mypage-my-profile-info-input-container">
+        <div class="mypage-my-profile-info-input-el">
+          <label>이메일</label>
+          <input
+            type="email"
+            v-model="userInfo.email"
+            placeholder="example@example.com"
+            readonly
+            style="background-color: #f5f5f5"
+          />
         </div>
 
-        <div class="withdraw-modal-body">
-          <div class="withdraw-warning">
-            <h4>⚠️ 탈퇴 전 확인사항</h4>
-            <ul>
-              <li>탈퇴 시 작성한 게시글, 댓글은 삭제되지 않습니다</li>
-              <li>개인정보는 관련 법령에 따라 일정 기간 보관됩니다</li>
-              <li>동일한 이메일로 재가입이 제한될 수 있습니다</li>
-            </ul>
+        <div class="mypage-my-profile-info-input-el">
+          <label>닉네임</label>
+          <input type="text" v-model="userInfo.nickname" placeholder="닉네임을 입력해주세요" />
+        </div>
+
+        <div class="mypage-my-profile-info-input-el">
+          <label>이름</label>
+          <input type="text" v-model="userInfo.name" placeholder="실제 이름을 입력해주세요" />
+        </div>
+
+        <div class="mypage-my-profile-info-input-el">
+          <label>연락처</label>
+          <input
+            type="text"
+            v-model="userInfo.phone"
+            @input="onPhoneInput"
+            placeholder="010-0000-0000"
+          />
+        </div>
+
+        <!-- 🔧 추가: 주소 입력 섹션 -->
+        <div class="mypage-my-profile-info-input-el">
+          <label>주소</label>
+
+          <!-- 주소가 없을 때: 빈 input 창 + 검색 버튼 -->
+          <div v-if="!fullAddress">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                background-color: #f8f9fa;
+                cursor: pointer;
+                width: 430px;
+                font-size: 14px;
+              "
+              @click="openAddressPopup"
+            >
+              <span style="flex: 1; color: #666; margin-right: 10px"> 여기를 클릭해주세요 </span>
+            </div>
           </div>
 
-          <!-- 일반 로그인 사용자만 비밀번호 입력 -->
-          <div v-if="!isSocialUser" class="form-group">
-            <label>현재 비밀번호</label>
-            <input
-              type="password"
-              v-model="withdrawForm.password"
-              placeholder="본인 확인을 위해 현재 비밀번호를 입력하세요"
-              required
-            />
-          </div>
-
-          <div class="form-group">
-            <label>탈퇴 사유 (선택사항)</label>
-            <textarea
-              v-model="withdrawForm.reason"
-              placeholder="탈퇴 사유를 입력해주세요 (선택사항)"
-              rows="3"
-            ></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="checkbox-label">
-              <input type="checkbox" v-model="withdrawForm.confirmWithdraw" />
-              위 내용을 모두 확인했으며, 회원탈퇴에 동의합니다.
-            </label>
+          <!-- 주소가 있을 때: 주소 표시 + 수정 버튼 -->
+          <div v-if="fullAddress">
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 12px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                background-color: #f8f9fa;
+              "
+            >
+              <span
+                style="
+                  flex: 1;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  margin-right: 10px;
+                  width: 395px;
+                  font-size: 14px;
+                "
+                @click="openAddressPopup"
+              >
+                {{ fullAddress }}
+              </span>
+            </div>
           </div>
         </div>
 
-        <div class="withdraw-modal-footer">
-          <button @click="closeWithdrawModal" class="cancel-btn">취소</button>
-          <button
-            @click="confirmWithdraw"
-            class="withdraw-btn"
-            :disabled="!withdrawForm.confirmWithdraw"
-          >
+        <div class="mypage-my-preofile-info-save">
+          <button style="width: 150px" id="mypage-user-info-edit-button" @click="onSubmit">
+            회원정보 수정</button
+          ><br />
+          <button style="width: 150px" id="" @click="onSubmit">비밀번호 수정</button><br />
+          <button style="width: 150px" id="goob-bye-button" @click="openWithdrawModal">
             탈퇴하기
           </button>
+        </div>
+
+        <!-- 🔧 추가: 회원탈퇴 모달 -->
+        <div v-if="showWithdrawModal" class="withdraw-modal-overlay" @click="closeWithdrawModal">
+          <div class="withdraw-modal" @click.stop>
+            <div class="withdraw-modal-header">
+              <h3>회원탈퇴</h3>
+              <button @click="closeWithdrawModal">×</button>
+            </div>
+
+            <div class="withdraw-modal-body">
+              <div class="withdraw-warning">
+                <h4>⚠️ 탈퇴 전 확인사항</h4>
+                <ul>
+                  <li>탈퇴 시 작성한 게시글, 댓글은 삭제되지 않습니다</li>
+                  <li>개인정보는 관련 법령에 따라 일정 기간 보관됩니다</li>
+                  <li>동일한 이메일로 재가입이 제한될 수 있습니다</li>
+                </ul>
+              </div>
+
+              <!-- 일반 로그인 사용자만 비밀번호 입력 -->
+              <div v-if="!isSocialUser" class="form-group">
+                <label>현재 비밀번호</label>
+                <input
+                  type="password"
+                  v-model="withdrawForm.password"
+                  placeholder="본인 확인을 위해 현재 비밀번호를 입력하세요"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label>탈퇴 사유 (선택사항)</label>
+                <textarea
+                  v-model="withdrawForm.reason"
+                  placeholder="탈퇴 사유를 입력해주세요 (선택사항)"
+                  rows="3"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" v-model="withdrawForm.confirmWithdraw" />
+                  위 내용을 모두 확인했으며, 회원탈퇴에 동의합니다.
+                </label>
+              </div>
+            </div>
+
+            <div class="withdraw-modal-footer">
+              <button @click="closeWithdrawModal" class="cancel-btn">취소</button>
+              <button
+                @click="confirmWithdraw"
+                class="withdraw-btn"
+                :disabled="!withdrawForm.confirmWithdraw"
+              >
+                탈퇴하기
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

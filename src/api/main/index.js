@@ -2,15 +2,15 @@ import api from '@/plugins/axiosinterceptor'
 
 const recipeList = async () => {
   let data = {}
-  let url = '/recipe.json'
+  let url = '/recipe'
 
   await api
     .get(url)
     .then((res) => {
-      data = res.data
+      data = res.data.results
     })
     .catch((error) => {
-      data = error.data
+      data = error.data.results
     })
 
   return data

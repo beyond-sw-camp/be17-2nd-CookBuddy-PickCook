@@ -8,8 +8,8 @@ import HeaderSearchSlider from './components/HeaderSearchSlider.vue'
 import { ref } from 'vue'
 
 const router = useRouter()
-const auth = useUserStore()
-auth.restore()
+
+// 🔧 수정: restore 로직 완전 제거, 라우터 가드에서만 처리
 
 // 메뉴 열림 상태
 const isMenuOpen = ref(false)

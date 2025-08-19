@@ -23,6 +23,7 @@ import { useUserStore } from '@/store/useUserStore'
 import AddressList from '@/components/AddressList.vue'
 import AddressFormPage from '@/components/AddressFormPage.vue'
 import ShoppingDetailPage from '@/views/Shopping_detail.vue'
+import PaymentMethodList from '@/components/PaymentMethodList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -71,6 +72,7 @@ const router = createRouter({
       path: '/mypage',
       component: Mypage,
       children: [
+        { path: '', redirect: '/mypage/user_info' },
         { path: 'cart', name: 'mypage-cart', component: Cart },
         { path: 'order_list', name: 'mypage-order', component: OrderList },
         { path: 'scrap_list', name: 'mypage-scrap', component: ScrapList },
@@ -79,6 +81,7 @@ const router = createRouter({
         { path: 'user_info', name: 'mypage-info', component: UserInfo },
         { path: 'write_list', name: 'mypage-write', component: WriteList },
         { path: 'address_list', name: 'mypage-address', component: AddressList },
+        { path: 'payment_method', name: 'mypage-payment', component: PaymentMethodList },
       ],
       meta: { requiresAuth: true },
     },
@@ -100,9 +103,27 @@ const router = createRouter({
       meta: { hideLayout: true },
     },
     {
-      path: '/signup',
-      name: 'signup',
-      component: SignupTypeSelect,
+      path: '/find-id',
+      name: 'FindId',
+      component: () => import('@/components/FindIdCard.vue'),
+      meta: { hideLayout: true }
+    },
+    {
+      path: '/find-password',
+      name: 'FindPassword',
+      component: () => import('@/components/FindPasswordCard.vue'),
+      meta: { hideLayout: true }
+    },
+    {
+      path: '/address/search',
+      name: 'AddressSearch',
+      component: () => import('@/components/AddressSearchCard.vue'),
+      meta: { hideLayout: true }
+    },
+    {
+      path: '/user/signup',
+      name: 'user_signup',
+      component: Signup,
       meta: { hideLayout: true },
     },
     {
@@ -126,14 +147,42 @@ const router = createRouter({
   ],
 })
 
-// 전역 가드
-router.beforeEach((to, from, next) => {
-  const auth = useUserStore()
-  const isLoggedIn = auth.isLogin
+// 인증 헬퍼 함수
+const ensureInitialized = async (auth) => {
+  if (!auth.state.initialized) {
+    await auth.initialize()
+  }
+}
 
-  if (to.meta.requiresAuth && !isLoggedIn) {
+// 라우터 가드
+router.beforeEach(async (to, from, next) => {
+  console.log('Router guard: checking route', to.path)
+  
+  const auth = useUserStore()
+  
+  console.log('Authentication state:', {
+    isLogin: auth.state.isLogin,
+    hasUser: !!auth.state.user,
+    userNickname: auth.state.user?.nickname,
+    initialized: auth.state.initialized
+  })
+
+  // 사용자 상태 초기화 확인
+  await ensureInitialized(auth)
+  
+  // 인증이 필요한 페이지인데 로그인되지 않은 경우
+  if (to.meta.requiresAuth && !auth.state.isLogin) {
+    console.log('Authentication required but user not logged in, redirecting to login')
     return next('/login')
   }
+
+  // 이미 로그인된 상태에서 로그인 페이지 접근 시
+  if (to.name === 'login' && auth.state.isLogin) {
+    console.log('User already logged in, redirecting to main')
+    return next('/')
+  }
+  
+  console.log('Router guard passed, proceeding to route')
   next()
 })
 

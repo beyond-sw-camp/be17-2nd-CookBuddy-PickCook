@@ -1,11 +1,16 @@
 <script setup>
 import { reactive, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import HomeBanner from '@/components/HomeBanner.vue'
 import RecipeCard from '@/components/RecipeCard.vue'
 import api from '@/api/main'
 import HomeCommunityCard from '@/components/HomeCommunityCard.vue'
 import ProductItemCard from '@/components/ProductItemCard.vue'
+import { useUserStore } from '@/store/useUserStore'
+
+const router = useRouter()
+const route = useRoute()
+const userStore = useUserStore()
 
 const state = reactive({
   recipes: [],
@@ -43,9 +48,78 @@ const getHomeData = async () => {
   }
 }
 
-onMounted(() => {
+// 토스트 메시지 함수
+const showToast = (message) => {
+  const toast = document.createElement('div')
+  toast.innerHTML = message
+  toast.style.cssText = `
+    position: fixed;
+    top: 60px;
+    right: 60px;
+    background: #E14345;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    font-weight: bold;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+  `
+  
+  document.body.appendChild(toast)
+  
+  // 애니메이션으로 나타나기
+  setTimeout(() => {
+    toast.style.transform = 'translateX(0)'
+  }, 100)
+  
+  // 2초 후 자동으로 사라지기
+  setTimeout(() => {
+    toast.style.transform = 'translateX(100%)'
+    setTimeout(() => {
+      document.body.removeChild(toast)
+    }, 300)
+  }, 2000)
+}
+
+// OAuth2 로그인 성공 처리 함수
+const handleLoginSuccess = async () => {
+  console.log('현재 URL 쿼리:', route.query)
+  
+  if (route.query.loginSuccess === 'true') {
+    const nickname = route.query.nickname
+    const loginType = route.query.loginType
+
+    if (!userStore.state.user) {
+      try {
+        await userStore.restore()
+      } catch (error) {
+        console.error('사용자 정보 복원 실패:', error)
+      }
+    }
+    
+    if (nickname) {
+      const decodedNickname = decodeURIComponent(nickname)
+      
+      let message
+      if (loginType === 'social') {
+        message = `🎉 ${decodedNickname}님, 환영합니다!`
+      } else if (loginType === 'normal') {
+        message = `🎉 ${decodedNickname}님, 환영합니다!`
+      }
+      showToast(message)
+    }
+    
+    router.replace({ query: {} })
+  }
+}
+
+onMounted(async () => {
+  await handleLoginSuccess() // async 추가
   getHomeData()
 })
+
 </script>
 
 <template>

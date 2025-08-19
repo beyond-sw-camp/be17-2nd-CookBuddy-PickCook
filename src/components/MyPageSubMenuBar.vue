@@ -1,9 +1,15 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useUserStore } from '@/store/useUserStore'
 
 const route = useRoute()
 const router = useRouter()
+const auth = useUserStore()
+
+watch(() => auth.state.user, (newUser) => {
+  console.log('사용자 정보 변경됨:', newUser)
+}, { immediate: true })
 
 const activePath = ref(route.path.split('/').pop())
 
@@ -27,8 +33,32 @@ watch(
     <!-- 인사말 -->
     <div class="mypage-sub-menu-each-container">
       <p id="mypage-sub-menu-bar-hello">
-        반가워요! <span id="mypage-sub-menu-bar-user">뇸뇸</span>님 :)
+        반가워요! 
+        <span id="mypage-sub-menu-bar-user">
+          {{ auth.state.user?.nickname || '사용자' }}
+        </span>님 :)
       </p>
+    </div>
+
+    <!-- 내 정보관리 메뉴 -->
+    <div class="mypage-sub-menu-each-container">
+      <span class="mypage-sub-menu-bar-items-category">내 정보관리</span>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'user_info' }"
+        @click="goTo('user_info')"
+      >
+        <img src="/public/assets/icons/ic-mypage-user.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">회원 정보 관리</p>
+      </div>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'address_list' }"
+        @click="goTo('address_list')"
+      >
+        <img src="/public/assets/icons/ic-mypage-delivery.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">배송지 관리</p>
+      </div>
     </div>
 
     <!-- 쇼핑 메뉴 -->
@@ -53,7 +83,7 @@ watch(
       <div
         class="mypage-sub-menu-bar-items"
         :class="{ active: activePath === 'payment-method' }"
-        @click="goTo('payment-method')"
+        @click="goTo('payment_method')"
       >
         <img src="/public/assets/icons/ic-mypage-credit_card.png" alt="메뉴이미지" />
         <p class="mypage-sub-menu-title">결제수단</p>
@@ -94,27 +124,6 @@ watch(
       >
         <img src="/public/assets/icons/ic-mypage-reply-list.png" alt="메뉴이미지" />
         <p class="mypage-sub-menu-title">댓글 단 게시글</p>
-      </div>
-    </div>
-
-    <!-- 내 정보관리 메뉴 -->
-    <div class="mypage-sub-menu-each-container">
-      <span class="mypage-sub-menu-bar-items-category">내 정보관리</span>
-      <div
-        class="mypage-sub-menu-bar-items"
-        :class="{ active: activePath === 'address_list' }"
-        @click="goTo('address_list')"
-      >
-        <img src="/public/assets/icons/ic-mypage-delivery.png" alt="메뉴이미지" />
-        <p class="mypage-sub-menu-title">배송지 관리</p>
-      </div>
-      <div
-        class="mypage-sub-menu-bar-items"
-        :class="{ active: activePath === 'user_info' }"
-        @click="goTo('user_info')"
-      >
-        <img src="/public/assets/icons/ic-mypage-user.png" alt="메뉴이미지" />
-        <p class="mypage-sub-menu-title">회원 정보 관리</p>
       </div>
     </div>
   </div>

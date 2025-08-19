@@ -1,34 +1,49 @@
 import axios from 'axios'
 
+// 환경 설정 및 상수
+const API_TIMEOUT = 5000
+
+// Axios 인스턴스 생성
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
-  timeout: 5000,
+  timeout: API_TIMEOUT,
   headers: {
     'Content-Type': 'application/json'
   },
   withCredentials: true 
 })
 
+// 요청 인터셉터
 api.interceptors.request.use(
   (config) => {
-    console.log('요청 보내기 전 실행')
+    console.log('API 요청:', config.method?.toUpperCase(), config.url)
     return config
   },
   (error) => {
-    console.log('요청할 때 에러 처리')
+    console.error('요청 에러:', error.message)
     return Promise.reject(error)
-  },
+  }
 )
 
+// 응답 인터셉터
 api.interceptors.response.use(
   (response) => {
-    console.log('응답을 받기 전 실행')
+    console.log('API 응답 성공:', response.config.url, response.status)
     return response
   },
   (error) => {
-    console.log('응답 받을 때 에러 처리')
+    const status = error.response?.status
+    const url = error.config?.url
+    const message = error.response?.data?.message || error.message
+    
+    console.error('API 응답 에러:', {
+      url,
+      status,
+      message
+    })
+    
     return Promise.reject(error)
-  },
+  }
 )
 
 export default api

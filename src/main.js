@@ -14,6 +14,7 @@ import './assets/style_optimized.css'
 import './assets/variables.css'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
+// import { createVuetify } from 'vuetify'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import { QuillEditor } from '@vueup/vue-quill'

@@ -173,10 +173,8 @@ const loadUserInfo = async () => {
 
     // 추가: 원본 닉네임 저장
     originalUserInfo.nickname = result.user.nickname || ''
-
-    console.log('사용자 정보 로드 성공:', userInfo)
   } else {
-    console.error('사용자 정보 로드 실패:', result.message)
+    console.error('❌ 사용자 정보 로드 실패:', result.message)
     alert('사용자 정보를 불러올 수 없습니다.')
   }
 }
@@ -378,8 +376,11 @@ const onSubmit = async () => {
     </div>
 
     <div class="mypage-my-preofile-info-save">
-      <button id="goob-bye-button" @click="openWithdrawModal">탈퇴하기</button>
-      <button id="mypage-user-info-edit-button" @click="onSubmit">회원정보수정</button>
+      <button style="width: 150px" id="mypage-user-info-edit-button" @click="onSubmit">
+        회원정보 수정</button
+      ><br />
+      <button style="width: 150px" id="" @click="onSubmit">비밀번호 수정</button><br />
+      <button style="width: 150px" id="goob-bye-button" @click="openWithdrawModal">탈퇴하기</button>
     </div>
 
     <!-- 🔧 추가: 회원탈퇴 모달 -->

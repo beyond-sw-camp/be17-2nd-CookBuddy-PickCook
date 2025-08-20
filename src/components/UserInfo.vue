@@ -2,6 +2,7 @@
 import { reactive, onMounted, ref, computed } from 'vue'
 import { useUserStore } from '@/store/useUserStore'
 import { useRouter } from 'vue-router'
+import api from '@/api/user/index.js'
 
 const userStore = useUserStore()
 const router = useRouter()

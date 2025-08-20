@@ -1,8 +1,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import MyWritePostItemCard from './MyPagePostItemCard.vue'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 
 const posts = ref([])
+const { isMobileOrTablet } = useBreakpoints()
 
 onMounted(() => {
   posts.value = [
@@ -86,7 +88,12 @@ const selectOption = (option) => {
 
     <div class="mypage-body-box">
       <div class="mypage-main-content-scroll">
-        <MyWritePostItemCard v-for="post in posts" :key="post.id" :post="post" />
+        <MyWritePostItemCard
+          v-for="post in posts"
+          :key="post.id"
+          :post="post"
+          :is-mobile-or-tablet="isMobileOrTablet"
+        />
       </div>
     </div>
   </div>

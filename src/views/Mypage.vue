@@ -2,9 +2,11 @@
 import { useRoute, useRouter } from 'vue-router'
 import { computed } from 'vue'
 import MyPageSubMenuBar from '@/components/MyPageSubMenuBar.vue'
+import { useBreakpoints } from '@/composables/useBreakpoints.js'
 
 const route = useRoute() // 현재 경로 확인해서 하위 라우터 제목에 알맞은 내용을 넣기 위해 사용
 const router = useRouter()
+const { isMobile, isTablet, isDesktop } = useBreakpoints()
 
 // 페이지 제목 매핑 (내 활동에서 갈 수 있는 경로들은 같이 노출돼서 따로 빼두었습니다.)
 const pageTitleMap = {
@@ -42,7 +44,7 @@ function goToActivity(path) {
 <div class="mypage-body">
     <div class="mypage-body-child">
       <!-- 서브바 들어갈 부분 -->
-      <MyPageSubMenuBar />
+      <MyPageSubMenuBar v-if="!isMobile"/>
 
       <!-- 내용 부분 -->
       <div class="mypage-main">

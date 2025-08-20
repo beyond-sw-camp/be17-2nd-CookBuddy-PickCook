@@ -27,10 +27,8 @@ const getHomeData = async () => {
     api.productList2(),
   ])
 
-  console.log('productData1:', productData1)
-
-  if (recipeData?.success && recipeData.results) {
-    state.recipes.push(...recipeData.results)
+  if (recipeData.length) {
+    state.recipes.push(...recipeData)
   }
 
   if (communityData?.success && communityData.results) {
@@ -114,6 +112,7 @@ const handleLoginSuccess = async () => {
   }
 }
 
+
 onMounted(async () => {
   await handleLoginSuccess() // async 추가
   getHomeData()
@@ -133,7 +132,7 @@ onMounted(async () => {
     </div>
     <div class="content-grid">
       <RecipeCard
-        v-for="(item, idx) in Array.isArray(state.recipes) ? state.recipes.slice(0, 4) : []"
+        v-for="(item, idx) in state.recipes.slice(0, 4)"
         :key="idx"
         :recipe="item"
       />

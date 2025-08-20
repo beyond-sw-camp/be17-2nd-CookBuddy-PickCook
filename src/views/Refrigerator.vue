@@ -22,17 +22,17 @@ function getItemIndex(item) {
   return items.value.findIndex((it) => it === item)
 }
 
-// 카테고리별 이미지 파일명
 const categoryImageMap = {
   유제품: 'ic-ingredient-category-milk',
-  육류: 'ic-ingredient-category-meat',
+  '정육·가공육·달걀': 'ic-ingredient-category-meat',
   채소: 'ic-ingredient-category-vegetable',
-  과일: 'ic-ingredient-category-fruit',
-  디저트: 'ic-ingredient-category-dessert',
+  '과일·견과·쌀': 'ic-ingredient-category-fruit',
+  베이커리: 'ic-ingredient-category-dessert',
   간편식: 'ic-ingredient-category-conveniencefood',
-  해산물: 'ic-ingredient-category-fish',
+  '수산·해산·건어물': 'ic-ingredient-category-fish',
   냉동식품: 'ic-ingredient-category-ice',
-  기타: 'ic-ingredient-category-etc',
+  '면·양념·오일': 'ic-sauce-category-etc',
+  기타 : 'ic-ingredient-category-etc'
 }
 
 // 재료 목록 불러오기

@@ -76,13 +76,14 @@ function submitForm() {
           <select v-model="form.category" class="ingredient-select">
             <option value="">선택</option>
             <option>채소</option>
-            <option>육류</option>
-            <option>해산물</option>
-            <option>과일</option>
+            <option>정육·가공육·달걀</option>
+            <option>수산·해산·건어물</option>
+            <option>과일·견과·쌀</option>
             <option>간편식</option>
             <option>냉동식품</option>
-            <option>디저트</option>
+            <option>베이커리</option>
             <option>유제품</option>
+            <option>면·양념·오일</option>
             <option>기타</option>
           </select>
         </div>

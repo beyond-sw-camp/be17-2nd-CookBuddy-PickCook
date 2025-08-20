@@ -179,6 +179,30 @@ const loadUserInfo = async () => {
   }
 }
 
+// 비밀번호 재설정
+const changePassword = async () => {
+  console.log('비밀번호 변경 버튼 클릭')
+
+  try {
+    const result = await userStore.generatePasswordChangeToken()
+
+    if (result.success) {
+      const token = result.results.token
+
+      // ✅ 직접 브라우저에서 백엔드 URL 열기
+      const resetUrl = `http://localhost:8080/api/user/reset-password?token=${token}`
+      window.open(resetUrl, '_blank')
+
+      console.log('비밀번호 재설정 페이지로 이동:', resetUrl)
+    } else {
+      alert(`토큰 생성 실패: ${result.message}`)
+    }
+  } catch (error) {
+    console.error('비밀번호 변경 토큰 생성 중 오류:', error)
+    alert('비밀번호 변경 중 오류가 발생했습니다. 다시 시도해주세요.')
+  }
+}
+
 // 프로필 이미지 파일 선택
 const triggerFileInput = () => {
   fileInput.value?.click()
@@ -377,7 +401,13 @@ const onSubmit = async () => {
           <button style="width: 150px" id="mypage-user-info-edit-button" @click="onSubmit">
             회원정보 수정</button
           ><br />
-          <button style="width: 150px" id="" @click="onSubmit">비밀번호 수정</button><br />
+          <button
+            style="width: 150px; border: 1px solid #e14345; color: #e14345"
+            id=""
+            @click="changePassword"
+          >
+            비밀번호 수정</button
+          ><br />
           <button style="width: 150px" id="goob-bye-button" @click="openWithdrawModal">
             탈퇴하기
           </button>

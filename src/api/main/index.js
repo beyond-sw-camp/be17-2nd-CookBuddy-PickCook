@@ -32,36 +32,20 @@ const communityList = async () => {
   return data
 }
 
-const productList1 = async () => {
+const productList = async () => {
   let data = {}
-  let url = '/products1_home.json'
+  let url = '/api/products/list'
 
   await api
     .get(url)
     .then((res) => {
-      data = res.data
+      data = res.data.results
     })
     .catch((error) => {
-      data = error.data
+      data = error.data.results
     })
 
   return data
 }
 
-const productList2 = async () => {
-  let data = {}
-  let url = '/products2_home.json'
-
-  await api
-    .get(url)
-    .then((res) => {
-      data = res.data
-    })
-    .catch((error) => {
-      data = error.data
-    })
-
-  return data
-}
-
-export default { recipeList, communityList, productList1, productList2 }
+export default { recipeList, communityList, productList }

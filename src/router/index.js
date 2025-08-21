@@ -152,6 +152,10 @@ const router = createRouter({
       meta: { hideLayout: true },
     },
   ],
+  scrollBehavior(to, from, savedPosition) {
+    // 항상 맨 위로 스크롤
+    return { top: 0 }
+  },
 })
 
 // 인증 헬퍼 함수

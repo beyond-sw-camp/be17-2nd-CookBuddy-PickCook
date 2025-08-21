@@ -24,10 +24,17 @@ import AddressList from '@/components/AddressList.vue'
 import AddressFormPage from '@/components/AddressFormPage.vue'
 import ShoppingDetailPage from '@/views/Shopping_detail.vue'
 import PaymentMethodList from '@/components/PaymentMethodList.vue'
+import Payment from '@/views/Payment.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/payment',
+      name: 'payment',
+      component: Payment,
+      meta: { requiresAuth: true },
+    },
     {
       path: '/recipe',
       name: 'recipe',
@@ -106,19 +113,19 @@ const router = createRouter({
       path: '/find-id',
       name: 'FindId',
       component: () => import('@/components/FindIdCard.vue'),
-      meta: { hideLayout: true }
+      meta: { hideLayout: true },
     },
     {
       path: '/find-password',
       name: 'FindPassword',
       component: () => import('@/components/FindPasswordCard.vue'),
-      meta: { hideLayout: true }
+      meta: { hideLayout: true },
     },
     {
       path: '/address/search',
       name: 'AddressSearch',
       component: () => import('@/components/AddressSearchCard.vue'),
-      meta: { hideLayout: true }
+      meta: { hideLayout: true },
     },
     {
       path: '/user/signup',
@@ -157,19 +164,19 @@ const ensureInitialized = async (auth) => {
 // 라우터 가드
 router.beforeEach(async (to, from, next) => {
   console.log('Router guard: checking route', to.path)
-  
+
   const auth = useUserStore()
-  
+
   console.log('Authentication state:', {
     isLogin: auth.state.isLogin,
     hasUser: !!auth.state.user,
     userNickname: auth.state.user?.nickname,
-    initialized: auth.state.initialized
+    initialized: auth.state.initialized,
   })
 
   // 사용자 상태 초기화 확인
   await ensureInitialized(auth)
-  
+
   // 인증이 필요한 페이지인데 로그인되지 않은 경우
   if (to.meta.requiresAuth && !auth.state.isLogin) {
     console.log('Authentication required but user not logged in, redirecting to login')
@@ -181,7 +188,7 @@ router.beforeEach(async (to, from, next) => {
     console.log('User already logged in, redirecting to main')
     return next('/')
   }
-  
+
   console.log('Router guard passed, proceeding to route')
   next()
 })

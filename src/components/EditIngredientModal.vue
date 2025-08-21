@@ -21,13 +21,14 @@ const form = reactive({
 
 const categoryImageMap = {
   유제품: 'ic-ingredient-category-milk',
-  육류: 'ic-ingredient-category-meat',
+  '정육·가공육·달걀': 'ic-ingredient-category-meat',
   채소: 'ic-ingredient-category-vegetable',
-  과일: 'ic-ingredient-category-fruit',
-  디저트: 'ic-ingredient-category-dessert',
+  '과일·견과·쌀': 'ic-ingredient-category-fruit',
+  베이커리: 'ic-ingredient-category-dessert',
   간편식: 'ic-ingredient-category-conveniencefood',
-  해산물: 'ic-ingredient-category-fish',
+  '수산·해산·건어물': 'ic-ingredient-category-fish',
   냉동식품: 'ic-ingredient-category-ice',
+  '면·양념·오일': 'ic-sauce-category-etc',
   기타: 'ic-ingredient-category-etc',
 }
 
@@ -95,13 +96,14 @@ function submitForm() {
           <select v-model="form.category" class="ingredient-select">
             <option value="">선택</option>
             <option>채소</option>
-            <option>육류</option>
-            <option>해산물</option>
-            <option>과일</option>
+            <option>정육·가공육·달걀</option>
+            <option>수산·해산·건어물</option>
+            <option>과일·견과·쌀</option>
             <option>간편식</option>
             <option>냉동식품</option>
-            <option>디저트</option>
+            <option>베이커리</option>
             <option>유제품</option>
+            <option>면·양념·오일</option>
             <option>기타</option>
           </select>
         </div>

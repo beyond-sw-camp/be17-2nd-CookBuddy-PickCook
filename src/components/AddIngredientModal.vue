@@ -163,6 +163,7 @@ onMounted(() => {
           <label class="ingredient-label">카테고리</label>
           <select v-model="form.categoryId" class="ingredient-select" :disabled="loading">
             <option value="">선택</option>
+
             <option v-for="category in categories" :key="category.id" :value="category.id">
               {{ category.name }}
             </option>

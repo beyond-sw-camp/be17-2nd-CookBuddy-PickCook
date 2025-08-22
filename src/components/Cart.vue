@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import api from '@/api/cart'
 import CartItemCard from './CartItemCard.vue'
 
@@ -11,37 +12,11 @@ const checkedItems = ref({})
 
 // 서버에서 장바구니 데이터를 가져온다고 가정
 onMounted(async () => {
-  // 테스트용 가짜 데이터
-  // const data = [
-  //   {
-  //     id: 1,
-  //     image:
-  //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT27Los4nLM2-D2RPgfiSLhyaOzVhpZWSE6UQ&s',
-  //     title: '냠냠냠냠 맛있는 초코 쿠키',
-  //     description: '촉촉한 초코칩 쿠키 / 5개입',
-  //     beforePrice: 30000,
-  //     price: 20000,
-  //     qty: 2,
-  //   },
-  //   {
-  //     id: 2,
-  //     image:
-  //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcfXxJjrXtm6banruS10jA-rl1SMgxjxWoxg&s',
-  //     title: '내가 직접 만들어 더 맛있는 수제 쿠키',
-  //     description: '초코맛 / 4인분',
-  //     beforePrice: 50000,
-  //     price: 40000,
-  //     qty: 1,
-  //   },
-  // ]
   try {
     const data = await api.cartList()
     cartItems.value = data
 
-    // 체크박스 초기 상태 설정 (모두 false)
-    // Object.fromEntries() : 배열 -> 객체
-    // Object.entries() : 객체 -> 배열
-    checkedItems.value = Object.fromEntries(data.map((item) => [item.cart_item_id, false]))
+    checkedItems.value = Object.fromEntries(data.map((item) => [item.idx, false]))
   } catch (e) {
     console.error('장바구니 불러오기 중 오류 발생: ', e)
   }
@@ -49,7 +24,7 @@ onMounted(async () => {
 
 // 개별 수량 변경 핸들러 + 서버에 반영
 const handleQtyChange = async (id, newQty) => {
-  const item = cartItems.value.find((i) => i.cart_item_id === id)
+  const item = cartItems.value.find((i) => i.idx === id)
   if (!item) return
 
   item.quantity = newQty
@@ -62,8 +37,8 @@ const handleQtyChange = async (id, newQty) => {
 }
 
 // 체크 상태 변경 핸들러
-const handleCheck = (id, checked) => {
-  checkedItems.value[id] = checked
+const handleCheck = ({ checked, idx, product_id }) => {
+  checkedItems.value[idx] = checked
 }
 
 // 장바구니 아이템 전체 선택하기
@@ -71,14 +46,13 @@ const isAllSelected = computed({
   get() {
     // 모든 장바구니 아이템이 체크된 상태라면 전체선택 체크박스도 체크됨
     return (
-      cartItems.value.length > 0 &&
-      cartItems.value.every((item) => checkedItems.value[item.cart_item_id])
+      cartItems.value.length > 0 && cartItems.value.every((item) => checkedItems.value[item.idx])
     )
   },
   set(val) {
     // 전체선택 체크박스를 클릭했을 때 -> 모든 항목을 체크/해제
     cartItems.value.forEach((item) => {
-      checkedItems.value[item.cart_item_id] = val
+      checkedItems.value[item.idx] = val
     })
   },
 })
@@ -88,28 +62,82 @@ const selectedCount = computed(() => Object.values(checkedItems.value).filter(Bo
 
 // 선택된 장바구니 아이템 삭제
 const deleteSelected = async () => {
-  const selectedIds = Object.entries(checkedItems.value)
+  // 체크된 idx 목록
+  const selectedIdxs = Object.entries(checkedItems.value)
     .filter(([_, checked]) => checked)
-    .map(([id]) => parseInt(id))
+    .map(([idx]) => Number(idx))
+
+  // idx -> product_id 변환
+  const selectedProductIds = selectedIdxs
+    .map((idx) => {
+      const item = cartItems.value.find((i) => i.idx === idx)
+      return item?.product_id
+    })
+    .filter(Boolean) // 혹시 null/undefined 제거
 
   try {
-    await axios.post('/api/cart/delete', { ids: selectedIds })
+    // product_id 배열을 API에 전송
+    await api.toggleInCart(selectedProductIds)
 
     // 삭제 후 프론트에서도 제거
-    cartItems.value = cartItems.value.filter((item) => !selectedIds.includes(item.cart_item_id))
+    cartItems.value = cartItems.value.filter(
+      (item) => !selectedProductIds.includes(item.product_id),
+    )
 
     // 체크 상태도 정리
-    for (const id of selectedIds) {
-      delete checkedItems.value[id]
+    for (const idx of selectedIdxs) {
+      delete checkedItems.value[idx]
     }
   } catch (e) {
     console.error('삭제 실패: ', e)
   }
 }
+
+// 개별 아이템 삭제
+const deleteItem = async ({ productId, idx }) => {
+  try {
+    await api.toggleInCart([productId])
+
+    // 프론트에서도 제거
+    cartItems.value = cartItems.value.filter((item) => item.idx !== idx)
+
+    // 체크박스 상태도 같이 제거
+    delete checkedItems.value[idx]
+  } catch (e) {
+    console.error('삭제 실패: ', e)
+  }
+}
+
+// 선택된 장바구니 아이템 총 가격
+const totalPrice = computed(() => {
+  return cartItems.value.reduce((sum, item) => {
+    // 체크되지 않은 상품은 제외
+    if (!checkedItems.value[item.idx]) {
+      return sum
+    }
+
+    // 할인된 가격 계산
+    const discounted = Math.round((item.original_price * (100 - item.discount_rate)) / 100)
+    // 수량까지 곱하기
+    return sum + discounted * item.quantity
+  }, 0)
+})
+
+const router = useRouter()
+
+// 결제 페이지로 이동
+const goToPayment = () => {
+  router.push('/payment')
+}
+
+// 쇼핑 페이지로 이동
+const goToShopping = () => {
+  router.push('/shopping')
+}
 </script>
 
 <template>
-  <div class="mypage-my-cart-items-list-container">
+  <div class="mypage-my-cart-items-list-container" v-if="cartItems.length > 0">
     <!-- 전체 선택 체크박스 -->
     <div class="mypage-header-box">
       <div class="mypage-header-box-child">
@@ -133,15 +161,49 @@ const deleteSelected = async () => {
       <div class="mypage-main-content-scroll">
         <CartItemCard
           v-for="item in cartItems"
-          :key="item.cart_item_id"
+          :key="item.idx"
+          :productId="item.product_id"
           :item="item"
-          :is-checked="checkedItems[item.cart_item_id]"
-          @update:quantity="(newQty) => handleQtyChange(item.cart_item_id, newQty)"
-          @toggle-check="(checked) => handleCheck(item.cart_item_id, checked)"
+          :is-checked="checkedItems[item.idx]"
+          @update:quantity="(newQty) => handleQtyChange(item.idx, newQty)"
+          @toggle-check="handleCheck"
+          @delete-item="deleteItem"
         />
       </div>
+
+      <div class="mypage-cart-in-items-total-price-container">
+        <p>상품 {{ totalPrice.toLocaleString() }}원 + 배송비 무료</p>
+        <span>{{ totalPrice.toLocaleString() }}원</span>
+      </div>
     </div>
+
+    <button @click="goToPayment" class="cart-in-products-order-go">주문하러 가기</button>
   </div>
+  <div v-else class="empty-cart-message">
+    장바구니에 담긴 상품이 없습니다.
+    <button @click="goToShopping">상품 담으러 가기</button>
+    </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.mypage-cart-in-items-total-price-container {
+  background-color: #f8f8f8;
+  margin: 30px 15px 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.mypage-cart-in-items-total-price-container > p {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-gray);
+}
+
+.mypage-cart-in-items-total-price-container > span {
+  font-size: 18px;
+  font-weight: bold;
+}
+</style>

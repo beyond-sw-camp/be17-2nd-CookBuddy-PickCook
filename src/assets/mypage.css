@@ -8,6 +8,8 @@
 .mypage-body-child {
   display: flex;
   gap: 15px;
+  width: 100%;
+  max-width: 1270px;
 }
 
 /* 마이페이지 서브 메뉴바 관련 스타일 */
@@ -59,6 +61,9 @@
 }
 
 /* 마이페이지 내용 부분 스타일  */
+.mypage-main {
+  width: 100%;  
+}
 
 .mypage-main-header {
   display: flex;
@@ -206,116 +211,6 @@
 
 .my-cart-all-select-box-container-right:hover {
   color: var(--color-primary);
-}
-
-.my-cart-items-container {
-  display: flex;
-  justify-content: space-between;
-  padding: 25px 15px;
-  background-color: white;
-  border-radius: 8px;
-  margin-bottom: 15px;
-}
-
-.my-cart-items-container-left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.my-cart-items-content-box {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.my-cart-items-content-box > h3 {
-  font-size: 16px;
-}
-
-.my-cart-items-content-box > p {
-  font-size: 14px;
-  color: var(--color-dark-strong);
-}
-
-.my-cart-items-content-box > h3,
-.my-cart-items-content-box > p {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 720px;
-  display: block;
-}
-
-.my-cart-items-prices-info {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.my-cart-items-prices-info > p {
-  font-size: 15px;
-  font-weight: 500;
-}
-
-.discount-bf-price {
-  color: var(--color-gray);
-  font-size: 12px;
-  text-decoration: line-through;
-  text-decoration-color: var(--color-gray);
-}
-
-.my-cart-items-product-info-container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.my-cart-items-product-info-container > img {
-  width: 85px;
-  height: 85px;
-  object-fit: cover;
-  border-radius: 3px;
-}
-
-.my-cart-items-container-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.my-cart-items-container-right > button {
-  border-radius: 100%;
-  width: 30px;
-  height: 30px;
-  border: 0.5 solid var(--color-light-gray);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* 장바구니 상품 항목 개수 up/down 활성화 버튼 */
-.deactivate-button {
-  background-color: #ececec;
-  color: var(--color-gray);
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* 장바구니 상품 항목 개수 up/down 활성화 버튼 */
-.activate-button {
-  background-color: white;
-  color: var(--color-dark-strong);
-  cursor: pointer;
-}
-
-.cart-items-sub-button > span {
-  font-size: 20px;
-}
-
-.cart-items-add-button > span {
-  font-size: 17px;
 }
 
 /* ///
@@ -518,6 +413,22 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.cart-in-products-order-go {
+  width: 100%;
+  padding: 13px;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cart-in-products-order-go:hover {
+  background-color: var(--color-primary-dark);
 }
 
 .mypage-my-order-boards-el-left {
@@ -880,6 +791,31 @@
     width: 500px;
     gap: 8px;
   }
+}
+
+.empty-cart-message {
+  max-width: 927px;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 723px;
+  background-color: white;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.empty-cart-message > button {
+  border: none;
+  border-radius: 5px;
+  background-color: var(--color-primary);
+  padding: 12px 22px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 .mypage-header-box-child {

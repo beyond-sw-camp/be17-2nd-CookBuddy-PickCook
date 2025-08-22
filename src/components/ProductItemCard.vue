@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
+import api from '@/api/cart'
 
 const props = defineProps({
   product: {
@@ -37,7 +38,7 @@ const toggleCart = async (event) => {
   }, 300)
 
   try {
-    await InCartAPI.toggleCart(props.product.id)
+    await api.toggleInCart([props.product.id])
     // 성공 → 그대로 유지
   } catch (err) {
     console.error('장바구니 담기 실패', err)

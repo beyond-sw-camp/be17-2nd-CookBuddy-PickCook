@@ -2,15 +2,16 @@ import api from '@/plugins/axiosinterceptor'
 
 const cartList = async () => {
   let data = {}
-  let url = '/cart_list.json'
+  let url = '/cart'
 
-  try {
-    const res = await api.get(url)
-    data = res.data.data.cart_items
-  } catch (e) {
-    console.error('장바구니 불러오기 실패: ', e)
-    data = []
-  }
+  await api
+    .get(url)
+    .then((res) => {
+      data = res.data.results
+    })
+    .catch((error) => {
+      data = error.data.results
+    })
 
   return data
 }
@@ -28,9 +29,9 @@ const updateQuantity = async (cartItemId, quantity) => {
   }
 }
 
-const deleteItems = async (cartItemIds) => {
+const toggleInCart = async (cartItemIds) => {
   try {
-    const response = await api.post('/api/cart/delete', { ids: cartItemIds })
+    const response = await api.post('/cart/register', { product_ids: cartItemIds })
     return {
       success: response.data.success,
       message: response.data.message
@@ -41,4 +42,4 @@ const deleteItems = async (cartItemIds) => {
   }
 }
 
-export default { cartList, updateQuantity, deleteItems }
+export default { cartList, updateQuantity, toggleInCart }

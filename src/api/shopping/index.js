@@ -1,12 +1,12 @@
 import api from '@/plugins/axiosinterceptor'
 
 const getAllProducts = async () => {
-  const response = await api.get('/allProducts.json')
-  return response.data
+  const response = await api.get('/api/products/list')
+  return response.data.results
 }
 
 const getProductDetail = async (productId) => {
-  const response = await api.get('/allProducts.json')
+  const response = await api.get(`/${productId}`)
   const product = response.data.find((item) => item.id == productId)
 
   if (!product) {

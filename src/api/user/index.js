@@ -163,6 +163,27 @@ const generatePasswordChangeToken = async () => {
   )
 }
 
+const validateResetToken = async (token) => {
+  return apiCall(
+    () => api.get(`/api/user/validate-reset-token?token=${token}`),
+    '토큰 검증 중 오류가 발생했습니다.'
+  )
+}
+
+const resetPassword = async (resetData) => {
+  return apiCall(
+    () => api.post('/api/user/reset-password', resetData),
+    '비밀번호 재설정 중 오류가 발생했습니다.'
+  )
+}
+
+const checkOAuthUser = async () => {
+  return apiCall(
+    () => api.get('/api/user/oauth-password-redirect'),
+    'OAuth 사용자 확인 중 오류가 발생했습니다.'
+  )
+}
+
 export default {
   login,
   logout,
@@ -174,5 +195,8 @@ export default {
   findEmail,
   requestPasswordReset,
   withdrawUser,
-  generatePasswordChangeToken
+  generatePasswordChangeToken,
+  validateResetToken,      
+  resetPassword,          
+  checkOAuthUser          
 }

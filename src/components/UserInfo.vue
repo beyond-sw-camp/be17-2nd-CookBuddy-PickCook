@@ -2,6 +2,7 @@
 import { reactive, onMounted, ref, computed } from 'vue'
 import { useUserStore } from '@/store/useUserStore'
 import { useRouter } from 'vue-router'
+import api from '@/api/user/index.js'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -184,16 +185,28 @@ const changePassword = async () => {
   console.log('비밀번호 변경 버튼 클릭')
 
   try {
+    // 1. OAuth2 사용자인지 확인
+    if (isSocialUser.value) {
+      // OAuth2 사용자: 카카오 계정 관리 페이지로 리다이렉트
+      const response = await api.checkOAuthUser()
+      if (response.success) {
+        window.open(response.results.redirectUrl, '_blank')
+      } else {
+        alert('카카오 계정 관리 페이지로 이동할 수 없습니다.')
+      }
+      return
+    }
+
+    // 2. 일반 사용자: 내부 토큰 생성 후 Vue 페이지로 이동
     const result = await userStore.generatePasswordChangeToken()
 
     if (result.success) {
       const token = result.results.token
 
-      // ✅ 직접 브라우저에서 백엔드 URL 열기
-      const resetUrl = `http://localhost:8080/api/user/reset-password?token=${token}`
-      window.open(resetUrl, '_blank')
+      // ✅ Vue 페이지로 이동 (백엔드 HTML 대신)
+      router.push(`/reset-password?token=${token}&type=internal`)
 
-      console.log('비밀번호 재설정 페이지로 이동:', resetUrl)
+      console.log('비밀번호 재설정 페이지로 이동')
     } else {
       alert(`토큰 생성 실패: ${result.message}`)
     }

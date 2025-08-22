@@ -94,18 +94,11 @@ const login = async () => {
   loading.value = true
 
   try {
-    console.log('🔐 로그인 시작...')
     const result = await auth.login(form.email, form.password)
-    console.log('🔐 로그인 결과:', result)
 
     if (result.success) {
-      console.log('✅ 로그인 성공 - getCurrentUser 호출 전')
-      console.log('로그인 직후 user:', result.user)
-
       // ✅ 추가: 로그인 후 즉시 최신 사용자 정보 조회
       const currentUserResult = await auth.getCurrentUser()
-      console.log('📥 getCurrentUser 결과:', currentUserResult)
-
       const nickname = result.user?.nickname || '사용자'
       const encodedNickname = encodeURIComponent(nickname)
       router.push(`/?loginSuccess=true&nickname=${encodedNickname}&loginType=normal`)

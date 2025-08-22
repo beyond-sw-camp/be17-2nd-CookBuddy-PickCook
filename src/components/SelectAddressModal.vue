@@ -27,6 +27,19 @@ function onEditAddress(address) {
     }
   }, 500)
 }
+
+function openPopup(relativePath) {
+  const width = 500
+  const height = 650
+  const left = window.screenX + (window.outerWidth - width) / 2
+  const top = window.screenY + (window.outerHeight - height) / 2
+
+  return window.open(
+    `${window.location.origin}${relativePath}`,
+    '배송지팝업',
+    `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=yes`,
+  )
+}
 </script>
 
 <template>
@@ -50,7 +63,7 @@ function onEditAddress(address) {
 
       <div class="select-address-button-container">
         <button @click="close">완료</button>
-        <button>새 배송지 추가</button>
+        <button @click="() => openPopup('/mypage/address/new')">새 배송지 추가</button>
       </div>
     </div>
   </div>
@@ -90,6 +103,7 @@ function onEditAddress(address) {
 .select-address-item-list {
   max-height: 500px;
   overflow-y: auto;
+  padding: 0 15px;
 }
 
 .select-address-button-container {
@@ -131,6 +145,6 @@ function onEditAddress(address) {
 }
 
 #small-padding {
-    height: 10px;
+  height: 10px;
 }
 </style>

@@ -520,6 +520,22 @@
   align-items: center;
 }
 
+.cart-in-products-order-go {
+  width: 100%;
+  padding: 13px;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.cart-in-products-order-go:hover {
+  background-color: var(--color-primary-dark);
+}
+
 .mypage-my-order-boards-el-left {
   display: flex;
   gap: 20px;

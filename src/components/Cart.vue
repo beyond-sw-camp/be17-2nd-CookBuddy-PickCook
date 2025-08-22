@@ -141,6 +141,8 @@ const deleteSelected = async () => {
         />
       </div>
     </div>
+
+    <button class="cart-in-products-order-go">주문하러 가기</button>
   </div>
 </template>
 

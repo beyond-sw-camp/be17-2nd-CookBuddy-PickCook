@@ -208,29 +208,6 @@
   color: var(--color-primary);
 }
 
-/* 장바구니 상품 항목 개수 up/down 활성화 버튼 */
-.deactivate-button {
-  background-color: #ececec;
-  color: var(--color-gray);
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-/* 장바구니 상품 항목 개수 up/down 활성화 버튼 */
-.activate-button {
-  background-color: white;
-  color: var(--color-dark-strong);
-  cursor: pointer;
-}
-
-.cart-items-sub-button > span {
-  font-size: 20px;
-}
-
-.cart-items-add-button > span {
-  font-size: 17px;
-}
-
 /* ///
 ////// */
 .mypage-my-activity-board-more-menu-button {

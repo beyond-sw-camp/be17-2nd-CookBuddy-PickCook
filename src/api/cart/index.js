@@ -29,9 +29,9 @@ const updateQuantity = async (cartItemId, quantity) => {
   }
 }
 
-const deleteItems = async (cartItemIds) => {
+const toggleInCart = async (cartItemIds) => {
   try {
-    const response = await api.post('/api/cart/delete', { ids: cartItemIds })
+    const response = await api.post('/cart/register', { product_id: cartItemIds })
     return {
       success: response.data.success,
       message: response.data.message
@@ -42,4 +42,4 @@ const deleteItems = async (cartItemIds) => {
   }
 }
 
-export default { cartList, updateQuantity, deleteItems }
+export default { cartList, updateQuantity, toggleInCart }

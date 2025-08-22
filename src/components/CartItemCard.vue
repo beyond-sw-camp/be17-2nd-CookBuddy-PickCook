@@ -1,13 +1,13 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 
-// 부모로부터 받아올 정보
 const props = defineProps({
   item: Object,
   isChecked: Boolean,
 })
 
-const emit = defineEmits(['update:quantity', 'toggle-check']) // 부모로 수량/체크박스 상태 변경 알림
+// 부모에게 알릴 요소들
+const emit = defineEmits(['update:quantity', 'toggle-check', 'delete-item']) 
 
 // 아이템 수량 로컬 상태
 const qty = ref(props.item.quantity) // 내부에서 변경할 수 있도록 복사
@@ -26,7 +26,7 @@ watch(
   },
 )
 
-// 체크 상태가 변경되면 부모 컴포넌트에게 알림 (개별선택 시 필요한 코드)
+// 체크 상태가 변경되면 부모 컴포넌트에게 알림
 watch(isChecked, (val) => {
   emit('toggle-check', val)
 })
@@ -43,10 +43,27 @@ const decreaseQty = () => {
   }
 }
 
+// 원래 가격과 할인율
+const originalPrice = ref(props.item.original_price)
+const discountRate = ref(props.item.discount_rate)
+
+// 할인된 가격 계산
+const discountedPrice = computed(() => {
+  return Math.round((originalPrice.value * (100 - discountRate.value)) / 100)
+})
+
 // 체크박스 변경 시 부모에게 알림
 watch(isChecked, (val) => {
   emit('toggle-check', val)
 })
+
+// 장바구니 아이템 삭제 클릭 시 부모에게 알림
+const handleDelete = () => {
+  emit('delete-item', {
+    productId: props.item.product_id,
+    idx: props.item.idx,
+  }) 
+}
 </script>
 
 <template>
@@ -56,45 +73,30 @@ watch(isChecked, (val) => {
         <input type="checkbox" v-model="isChecked" />
         <span class="checkmark"></span>
       </label>
-      <span>[조선호텔] 떡갈비 345g</span>
+      <span>{{props.item.name}}</span>
       <div class="bubble"></div>
-      <img src="/assets/icons/ic-delete.png" alt="삭제" />
+      <img src="/assets/icons/ic-delete.png" alt="삭제" @click="handleDelete"/>
     </div>
 
     <div class="my-cart-item-card-bottom">
-      <img src="https://cdn.iconsumer.or.kr/news/photo/202311/25849_31838_241.jpg" alt="상품 이미지" />
+      <img
+        :src="props.item.main_image_url"
+        alt="상품 이미지"
+      />
       <div class="my-cart-in-item-product-info">
         <div class="my-cart-product-cost-info">
-          <h4>9,306원</h4>
-          <span>9,900원</span>
+          <h4>{{ discountedPrice.toLocaleString() }}</h4>
+          <span>{{ props.item.original_price.toLocaleString() }}</span>
         </div>
 
         <div class="my-cart-item-card-quantity-edit-button">
-          <img src="/assets/icons/ic-black-sub.png" alt="빼기" />
-          <span>1</span>
-          <img src="/assets/icons/ic-black-plus.png" alt="추가" />
-        </div>  
+          <img @click="decreaseQty" src="/assets/icons/ic-black-sub.png" alt="빼기" />
+          <span>{{ qty }}</span>
+          <img @click="increaseQty" src="/assets/icons/ic-black-plus.png" alt="추가" />
+        </div>
       </div>
     </div>
   </div>
-  <!-- 체크박스 -->
-  <!-- <label class="custom-checkbox">
-        <input type="checkbox" v-model="isChecked" />
-        <span class="checkmark"></span>
-      </label>
-
-      <button
-        class="cart-items-sub-button"
-        :class="qty > 1 ? 'activate-button' : 'deactivate-button'"
-        @click="decreaseQty"
-        :disabled="qty <= 1"
-      >
-        <span>-</span>
-      </button>
-      <span class="cart-items-qnt">{{ qty }}</span>
-      <button class="cart-items-add-button activate-button" @click="increaseQty">
-        <span>+</span>
-      </button> -->
 </template>
 
 <style scoped>

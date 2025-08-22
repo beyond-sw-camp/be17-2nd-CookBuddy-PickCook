@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import api from '@/api/cart'
 import CartItemCard from './CartItemCard.vue'
 
@@ -15,7 +16,7 @@ onMounted(async () => {
     const data = await api.cartList()
     cartItems.value = data
 
-    checkedItems.value = Object.fromEntries(data.map((item) => [item.cart_item_id, false]))
+    checkedItems.value = Object.fromEntries(data.map((item) => [item.idx, false]))
   } catch (e) {
     console.error('장바구니 불러오기 중 오류 발생: ', e)
   }
@@ -23,7 +24,7 @@ onMounted(async () => {
 
 // 개별 수량 변경 핸들러 + 서버에 반영
 const handleQtyChange = async (id, newQty) => {
-  const item = cartItems.value.find((i) => i.cart_item_id === id)
+  const item = cartItems.value.find((i) => i.idx === id)
   if (!item) return
 
   item.quantity = newQty
@@ -46,13 +47,13 @@ const isAllSelected = computed({
     // 모든 장바구니 아이템이 체크된 상태라면 전체선택 체크박스도 체크됨
     return (
       cartItems.value.length > 0 &&
-      cartItems.value.every((item) => checkedItems.value[item.cart_item_id])
+      cartItems.value.every((item) => checkedItems.value[item.idx])
     )
   },
   set(val) {
     // 전체선택 체크박스를 클릭했을 때 -> 모든 항목을 체크/해제
     cartItems.value.forEach((item) => {
-      checkedItems.value[item.cart_item_id] = val
+      checkedItems.value[item.idx] = val
     })
   },
 })
@@ -67,10 +68,10 @@ const deleteSelected = async () => {
     .map(([id]) => parseInt(id))
 
   try {
-    await axios.post('/api/cart/delete', { ids: selectedIds })
+    await api.toggleInCart(selectedIds)
 
     // 삭제 후 프론트에서도 제거
-    cartItems.value = cartItems.value.filter((item) => !selectedIds.includes(item.cart_item_id))
+    cartItems.value = cartItems.value.filter((item) => !selectedIds.includes(item.idx))
 
     // 체크 상태도 정리
     for (const id of selectedIds) {
@@ -79,6 +80,44 @@ const deleteSelected = async () => {
   } catch (e) {
     console.error('삭제 실패: ', e)
   }
+}
+
+// 개별 아이템 삭제
+const deleteItem = async ({productId, idx}) => {
+  try {
+    await api.toggleInCart(productId)
+
+    // 프론트에서도 제거
+    cartItems.value = cartItems.value.filter((item) => item.idx !== idx)
+
+    // 체크박스 상태도 같이 제거
+    delete checkedItems.value[idx]
+  } catch (e) {
+    console.error('삭제 실패: ', e)
+  }
+}
+
+// 선택된 장바구니 아이템 총 가격
+const totalPrice = computed(() => {
+  return cartItems.value.reduce((sum, item) => {
+    // 체크되지 않은 상품은 제외
+    if (!checkedItems.value[item.idx]) {
+      return sum
+    }
+
+    // 할인된 가격 계산
+    const discounted = Math.round(
+      (item.original_price * (100 - item.discount_rate)) / 100
+    )
+    // 수량까지 곱하기
+    return sum + discounted * item.quantity
+  }, 0)
+})
+
+const router = useRouter()
+
+const goToPayment = () => {
+  router.push('/payment')
 }
 </script>
 
@@ -111,18 +150,19 @@ const deleteSelected = async () => {
           :productId="item.product_id"
           :item="item"
           :is-checked="checkedItems[item.idx]"
-          @update:quantity="(newQty) => handleQtyChange(item.cart_item_id, newQty)"
-          @toggle-check="(checked) => handleCheck(item.cart_item_id, checked)"
+          @update:quantity="(newQty) => handleQtyChange(item.idx, newQty)"
+          @toggle-check="(checked) => handleCheck(item.idx, checked)"
+          @delete-item="deleteItem"
         />
       </div>
 
       <div class="mypage-cart-in-items-total-price-container">
-        <p>상품 16,206원 + 배송비 무료</p>
-        <span>16,206원</span>
+        <p>상품 {{totalPrice.toLocaleString() }}원 + 배송비 무료</p>
+        <span>{{totalPrice.toLocaleString() }}원</span>
       </div>
     </div>
 
-    <button class="cart-in-products-order-go">주문하러 가기</button>
+    <button @click="goToPayment" class="cart-in-products-order-go">주문하러 가기</button>
   </div>
 </template>
 

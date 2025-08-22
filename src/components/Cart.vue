@@ -11,36 +11,10 @@ const checkedItems = ref({})
 
 // 서버에서 장바구니 데이터를 가져온다고 가정
 onMounted(async () => {
-  // 테스트용 가짜 데이터
-  // const data = [
-  //   {
-  //     id: 1,
-  //     image:
-  //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT27Los4nLM2-D2RPgfiSLhyaOzVhpZWSE6UQ&s',
-  //     title: '냠냠냠냠 맛있는 초코 쿠키',
-  //     description: '촉촉한 초코칩 쿠키 / 5개입',
-  //     beforePrice: 30000,
-  //     price: 20000,
-  //     qty: 2,
-  //   },
-  //   {
-  //     id: 2,
-  //     image:
-  //       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcfXxJjrXtm6banruS10jA-rl1SMgxjxWoxg&s',
-  //     title: '내가 직접 만들어 더 맛있는 수제 쿠키',
-  //     description: '초코맛 / 4인분',
-  //     beforePrice: 50000,
-  //     price: 40000,
-  //     qty: 1,
-  //   },
-  // ]
   try {
     const data = await api.cartList()
     cartItems.value = data
 
-    // 체크박스 초기 상태 설정 (모두 false)
-    // Object.fromEntries() : 배열 -> 객체
-    // Object.entries() : 객체 -> 배열
     checkedItems.value = Object.fromEntries(data.map((item) => [item.cart_item_id, false]))
   } catch (e) {
     console.error('장바구니 불러오기 중 오류 발생: ', e)
@@ -133,12 +107,18 @@ const deleteSelected = async () => {
       <div class="mypage-main-content-scroll">
         <CartItemCard
           v-for="item in cartItems"
-          :key="item.cart_item_id"
+          :key="item.idx"
+          :productId="item.product_id"
           :item="item"
-          :is-checked="checkedItems[item.cart_item_id]"
+          :is-checked="checkedItems[item.idx]"
           @update:quantity="(newQty) => handleQtyChange(item.cart_item_id, newQty)"
           @toggle-check="(checked) => handleCheck(item.cart_item_id, checked)"
         />
+      </div>
+
+      <div class="mypage-cart-in-items-total-price-container">
+        <p>상품 16,206원 + 배송비 무료</p>
+        <span>16,206원</span>
       </div>
     </div>
 
@@ -146,4 +126,25 @@ const deleteSelected = async () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.mypage-cart-in-items-total-price-container {
+  background-color: #F8F8F8;
+  margin: 30px 15px 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.mypage-cart-in-items-total-price-container > p {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-gray);
+}
+
+.mypage-cart-in-items-total-price-container > span {
+  font-size: 18px;
+  font-weight: bold;
+}
+</style>

@@ -2,8 +2,8 @@
 defineProps({
   post: {
     type: Object,
-    required: true
-  }
+    required: true,
+  },
 })
 </script>
 <template>
@@ -21,9 +21,9 @@ defineProps({
             <span>{{ post.content }}</span>
           </div>
           <div class="c-board-info">
-            <span class="c-board-nickname">{{ post.nickname }}</span>
+            <span class="c-board-nickname">{{ post.authorName }}</span>
             <span class="c-board-dot"></span>
-            <span class="c-board-createdat">{{ post.createdAt }}</span>
+            <span class="c-board-createdat">{{ post.createdAgo }}</span>
             <span class="c-board-dot"></span>
             <span class="c-board-comments">댓글 {{ post.comments }}</span>
             <span class="c-board-dot"></span>
@@ -39,6 +39,4 @@ defineProps({
   </RouterLink>
 </template>
 
-<style lang="">
-    
-</style>
+<style lang=""></style>

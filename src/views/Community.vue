@@ -1,23 +1,23 @@
 <script setup>
-import api from '@/api/community';
-import { onMounted, reactive } from 'vue';
-import CommunityCard from '@/components/CommunityCard.vue';
+import api from '@/api/community'
+import { onMounted, reactive } from 'vue'
+import CommunityCard from '@/components/CommunityCard.vue'
 
-const communityList = reactive([]);
+const communityList = reactive([])
 
-const getCommunityList = async () => {
-  const data = await api.communityList();
+const getPostList = async () => {
+  const data = await api.getPostList()
   if (data && data.success && data.results) {
-    console.log(data);
-    communityList.push(...data.results);
+    console.log(data)
+    communityList.push(...data.results)
   } else {
-    communityList.splice(0);
+    communityList.splice(0)
   }
-};
+}
 
 onMounted(() => {
-  getCommunityList();
-});
+  getPostList()
+})
 </script>
 
 <template>

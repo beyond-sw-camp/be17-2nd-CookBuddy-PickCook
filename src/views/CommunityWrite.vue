@@ -1,89 +1,139 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import api from '@/api/community'
 
-const title = ref('')
-const content = ref('')
+const editorRef = ref(null)
 
-// 제목 글자 수 카운트 (computed로 처리)
-const titleLength = computed(() => title.value.length);
+const boardForm = reactive({
+  title: '',
+  content: '',
+  imageList: [],
+})
 
+const titleLength = computed(() => boardForm.title.length)
+
+const showImageUI = () => {
+  const input = document.createElement('input')
+  input.setAttribute('type', 'file')
+  input.setAttribute('accept', 'image/*')
+  input.click()
+
+  input.onchange = async () => {
+    const file = input.files?.[0]
+    if (!file) return
+
+    try {
+      const data = await api.getPresignedUrl(file)
+      if (data.success) {
+        const presignedUrl = data.results
+        console.log(presignedUrl)
+        await api.uploadImage(presignedUrl, file)
+
+        const imagePath = presignedUrl.split('?')[0]
+        const quill = editorRef.value?.getQuill()
+
+        quill.insertEmbed(quill.getSelection()?.index ?? 0, 'image', imagePath)
+        boardForm.imageList.push(imagePath)
+      } else {
+        console.error('Presigned URL 발급 실패')
+      }
+    } catch (err) {
+      console.error('이미지 업로드 실패:', err)
+    }
+  }
+}
+
+const handleSubmit = async () => {
+  const payload = {
+    title: boardForm.title,
+    content: boardForm.content,
+    imageList: boardForm.imageList,
+  }
+  const response = await api.postUpload(payload)
+  console.log('업로드 결과:', response)
+}
+
+onMounted(() => {
+  const quill = editorRef.value?.getQuill()
+  if (quill) {
+    quill.getModule('toolbar').addHandler('image', showImageUI)
+  }
+})
 </script>
 
 <template>
-    <!-- 컨텐츠 섹션 -->
-    <div class="content-section">
-        <div class="c-content-container">
-            <!-- 커버 사진 업로드 -->
-            <div class="cover-upload">
-                <p>
-                    <strong>드래그 앤 드롭이나 추가하기 버튼으로<br>커버 사진을 업로드해주세요.</strong>
-                </p>
-                <button class="upload-btn">커버 사진 추가하기</button>
-            </div>
+  <div class="content-section">
+    <div class="c-content-container">
+      <div class="title-input">
+        <input
+          type="text"
+          v-model="boardForm.title"
+          placeholder="제목을 입력해주세요."
+          maxlength="80"
+        />
+        <span class="char-count">{{ titleLength }}/80</span>
+      </div>
 
-            <!-- 제목 입력 -->
-            <div class="title-input">
-                <input type="text" v-model="title" placeholder="제목을 입력해주세요." maxlength="80" />
-                <span class="char-count">{{ titleLength }}/80</span>
-            </div>
+      <QuillEditor
+        ref="editorRef"
+        v-model:content="boardForm.content"
+        contentType="html"
+        class="quill-editor"
+        :toolbar="[
+          [{ header: [1, 2, 3, false] }],
+          ['bold', 'italic', 'underline', 'strike'],
+          ['blockquote', 'code-block'],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          ['link', 'image'],
+          ['clean'],
+        ]"
+      />
 
-            <!-- 에디터 -->
-            <QuillEditor
-                :toolbar="[{ header: [1, 2, 3, false] }, 'bold', 'italic', 'underline', 'link', { list: 'ordered' }, { list: 'bullet' }, 'strike', 'image']"
-                v-model="content" class="quill-editor" :modules="modules" />
-        </div>
+      <button @click="handleSubmit">작성 완료</button>
     </div>
-
+  </div>
 </template>
 
 <style scoped>
-.cover-upload {
-    border-radius: 8px;
-    text-align: center;
-    padding: 80px 20px;
-}
-
-.upload-btn {
-    margin-top: 20px;
-    background-color: #333;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+.content-section {
+  padding: 20px;
 }
 
 .title-input {
-    margin-top: 40px;
-    margin-bottom: 20px;
-    position: relative;
+  margin-bottom: 20px;
+  position: relative;
 }
 
 .title-input input {
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #ccc;
-    font-size: 16px;
-    padding: 10px 0;
-    padding-right: 50px;
-    /* 오른쪽 여백 확보 */
-    box-sizing: border-box;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  font-size: 16px;
+  padding: 10px 0;
+  padding-right: 50px;
+  box-sizing: border-box;
 }
 
 .char-count {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    font-size: 12px;
-    color: #888;
-    pointer-events: none;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 12px;
+  color: #888;
+  pointer-events: none;
 }
 
 .quill-editor {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 
+/* 에디터 내부 입력 공간에 높이 적용 */
 ::v-deep(.ql-editor) {
-    min-height: 300px;
+  min-height: 300px;
+  padding: 12px;
+  font-size: 16px;
+  line-height: 1.6;
 }
 </style>

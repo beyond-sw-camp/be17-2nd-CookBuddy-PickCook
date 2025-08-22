@@ -1,5 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const goToPayment = () => {
+  router.push('/payment')
+}
 
 // ✅ 테스트용 이미지 18개 (3슬라이드)
 const images = ref([
@@ -133,7 +140,7 @@ function next() {
 
           <div class="product-buy-decide-button-or-cart-push">
             <button id="shopping-cart-push">장바구니 담기</button>
-            <button id="shopping-product-right-now-buy">바로 구매</button>
+            <button id="shopping-product-right-now-buy" @click="goToPayment">바로 구매</button>
           </div>
         </div>
       </div>

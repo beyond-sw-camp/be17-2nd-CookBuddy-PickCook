@@ -50,7 +50,7 @@ function openSearchSlide() {
     <div v-if="isMobileOrTablet" class="header-mobile-and-tablet">
       <img src="/assets/icons/ic-header-more-button.png" alt="더보기" @click="openMenu" />
       <RouterLink to="/" class="logo">PickCook</RouterLink>
-      <img src="/assets/icons/ic-search-header.png" alt="검색" @click="openSearchSlide"/>
+      <img src="/assets/icons/ic-search-header.png" alt="검색" @click="openSearchSlide" />
     </div>
     <div v-else class="header-top">
       <RouterLink to="/" class="logo">PickCook</RouterLink>
@@ -79,7 +79,7 @@ function openSearchSlide() {
         <RouterLink to="#">
           <img class="header-icon" src="/assets/icons/ic-notification-header.png" />
         </RouterLink>
-        <RouterLink to="/mypage/order_list">
+        <RouterLink to="/mypage/cart">
           <img class="header-icon" src="/assets/icons/ic-cart-header.png" />
         </RouterLink>
         <div id="header-profile-img-container">

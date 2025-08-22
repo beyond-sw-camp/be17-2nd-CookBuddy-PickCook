@@ -173,8 +173,9 @@ const ensureInitialized = async (auth) => {
 
 // 라우터 가드
 router.beforeEach(async (to, from, next) => {
+
   console.log('Router guard: checking route', to.path)
-  
+
   const auth = useUserStore()
 
   console.log('Authentication state:', {

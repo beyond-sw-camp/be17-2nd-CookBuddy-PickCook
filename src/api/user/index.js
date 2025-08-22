@@ -104,18 +104,6 @@ const signup = async (signupData) => {
     address: signupData.address || '',
     detailAddress: signupData.detailAddress || ''
   }
-
-  // 🔧 강화된 디버깅: API 계층에서 데이터 확인
-  console.log('🚀 API 계층 - 회원가입 요청 데이터:')
-  console.log('받은 데이터:', signupData)
-  console.log('전송할 데이터:', requestData)
-  console.log('필드별 상세:')
-  console.log('  - email    :', requestData.email)
-  console.log('  - nickname :', requestData.nickname, '(닉네임)')
-  console.log('  - name     :', requestData.name, '(실명)')
-  console.log('  - phone    :', requestData.phone)
-  console.log('  - address  :', requestData.address)
-  console.log('=' .repeat(60))
   
   return apiCall(
     () => api.post('/api/user/signup', requestData),
@@ -168,6 +156,34 @@ const withdrawUser = async (withdrawData) => {
   )
 }
 
+const generatePasswordChangeToken = async () => {
+  return apiCall(
+    () => api.post('/api/user/generate-password-change-token'),
+    '비밀번호 변경 토큰 생성 중 오류가 발생했습니다.'
+  )
+}
+
+const validateResetToken = async (token) => {
+  return apiCall(
+    () => api.get(`/api/user/validate-reset-token?token=${token}`),
+    '토큰 검증 중 오류가 발생했습니다.'
+  )
+}
+
+const resetPassword = async (resetData) => {
+  return apiCall(
+    () => api.post('/api/user/reset-password', resetData),
+    '비밀번호 재설정 중 오류가 발생했습니다.'
+  )
+}
+
+const checkOAuthUser = async () => {
+  return apiCall(
+    () => api.get('/api/user/oauth-password-redirect'),
+    'OAuth 사용자 확인 중 오류가 발생했습니다.'
+  )
+}
+
 export default {
   login,
   logout,
@@ -178,5 +194,9 @@ export default {
   updateProfile,
   findEmail,
   requestPasswordReset,
-  withdrawUser
+  withdrawUser,
+  generatePasswordChangeToken,
+  validateResetToken,      
+  resetPassword,          
+  checkOAuthUser          
 }

@@ -15,35 +15,26 @@ const userStore = useUserStore()
 const state = reactive({
   recipes: [],
   communities: [],
-  products1: [],
-  products2: [],
+  products: [],
 })
 
 const getHomeData = async () => {
-  const [recipeData, communityData, productData1, productData2] = await Promise.all([
+  const [recipeData, communityData, productData] = await Promise.all([
     api.recipeList(),
     api.communityList(),
-    api.productList1(),
-    api.productList2(),
+    api.productList(),
   ])
 
-  console.log('productData1:', productData1)
-
-  if (recipeData?.success && recipeData.results) {
-    state.recipes.push(...recipeData.results)
+  if (recipeData.length) {
+    state.recipes.push(...recipeData)
   }
 
   if (communityData?.success && communityData.results) {
     state.communities.push(...communityData.results)
   }
 
-  if (productData1?.success && productData1.results) {
-    state.products1 = productData1.results
-    console.log(state.products1)
-  }
-
-  if (productData2?.success && productData2.results) {
-    state.products2 = productData2.results
+  if (productData.length) {
+    state.products.push(...productData)
   }
 }
 
@@ -114,6 +105,7 @@ const handleLoginSuccess = async () => {
   }
 }
 
+
 onMounted(async () => {
   await handleLoginSuccess() // async 추가
   getHomeData()
@@ -133,7 +125,7 @@ onMounted(async () => {
     </div>
     <div class="content-grid">
       <RecipeCard
-        v-for="(item, idx) in Array.isArray(state.recipes) ? state.recipes.slice(0, 4) : []"
+        v-for="(item, idx) in state.recipes.slice(0, 4)"
         :key="idx"
         :recipe="item"
       />
@@ -162,7 +154,7 @@ onMounted(async () => {
       <RouterLink to="/shopping" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">
-      <ProductItemCard v-for="(item, idx) in state.products1" :key="idx" :product="item" />
+      <ProductItemCard v-for="(item, idx) in state.products" :key="idx" :product="item" />
     </div>
   </div>
 
@@ -173,11 +165,7 @@ onMounted(async () => {
       <RouterLink to="/shopping" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">
-      <ProductItemCard
-        v-for="(item, idx) in Array.isArray(state.products2) ? state.products2.slice(0, 4) : []"
-        :key="idx"
-        :product="item"
-      />
+        <ProductItemCard v-for="(item, idx) in state.products" :key="idx" :product="item" />
     </div>
   </div>
 </template>

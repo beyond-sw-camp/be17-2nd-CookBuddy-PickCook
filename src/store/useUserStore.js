@@ -138,6 +138,12 @@ export const useUserStore = defineStore('auth', () => {
     })
   }
 
+  const generatePasswordChangeToken = async () => {
+  return withLoading(async () => {
+    return await api.generatePasswordChangeToken()
+  })
+}
+
   return {
     state,
     initialize,
@@ -148,6 +154,7 @@ export const useUserStore = defineStore('auth', () => {
     updateProfile,
     withdrawUser,
     checkEmailDuplicate,
-    checkNicknameDuplicate
+    checkNicknameDuplicate,
+    generatePasswordChangeToken
   }
 })

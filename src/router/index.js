@@ -24,6 +24,7 @@ import AddressList from '@/components/AddressList.vue'
 import AddressFormPage from '@/components/AddressFormPage.vue'
 import ShoppingDetailPage from '@/views/Shopping_detail.vue'
 import PaymentMethodList from '@/components/PaymentMethodList.vue'
+import RecipeWrite from '@/views/RecipeWrite.vue'
 import Payment from '@/views/Payment.vue'
 
 const router = createRouter({
@@ -39,6 +40,12 @@ const router = createRouter({
       path: '/recipe',
       name: 'recipe',
       component: Recipe,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/recipe/write',
+      name: 'recipeWrite',
+      component: RecipeWrite,
       meta: { requiresAuth: true },
     },
     {

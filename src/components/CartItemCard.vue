@@ -54,7 +54,11 @@ const discountedPrice = computed(() => {
 
 // 체크박스 변경 시 부모에게 알림
 watch(isChecked, (val) => {
-  emit('toggle-check', val)
+  emit('toggle-check', {
+    checked: val,
+    idx: props.item.idx,
+    product_id: props.item.product_id,
+  })
 })
 
 // 장바구니 아이템 삭제 클릭 시 부모에게 알림

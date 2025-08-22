@@ -31,7 +31,7 @@ const updateQuantity = async (cartItemId, quantity) => {
 
 const toggleInCart = async (cartItemIds) => {
   try {
-    const response = await api.post('/cart/register', { product_id: cartItemIds })
+    const response = await api.post('/cart/register', { product_ids: cartItemIds })
     return {
       success: response.data.success,
       message: response.data.message

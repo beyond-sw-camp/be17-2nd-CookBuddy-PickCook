@@ -124,12 +124,7 @@ const totalPrice = computed(() => {
 // 선택된 상품들을 결제 페이지로 이동
 const goToPayment = () => {
   // 체크된 항목만 가져오기
-  const selectedItems = cartItems.value.filter(item => checkedItems.value[item.idx])
-
-  if (selectedItems.length === 0) {
-    alert('결제할 상품을 선택해주세요!')
-    return
-  }
+  const selectedItems = cartItems.value.filter((item) => checkedItems.value[item.idx])
 
   // state로 넘기기
   router.push({
@@ -189,7 +184,7 @@ const goToShopping = () => {
     </div>
 
     <button @click="goToPayment" :disabled="selectedCount === 0" class="cart-in-products-order-go">
-      주문하러 가기
+      결제하러 가기
     </button>
   </div>
   <div v-else class="empty-cart-message">
@@ -218,5 +213,10 @@ const goToShopping = () => {
 .mypage-cart-in-items-total-price-container > span {
   font-size: 18px;
   font-weight: bold;
+}
+
+.cart-in-products-order-go:disabled {
+  background-color: #ccc; /* 비활성화 상태 색 */
+  cursor: default;
 }
 </style>

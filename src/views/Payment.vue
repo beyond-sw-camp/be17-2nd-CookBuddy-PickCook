@@ -1,24 +1,24 @@
 <script setup>
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import PortOne from '@portone/browser-sdk/v2'
-import productApi from '@/api/shopping'
+import orderApi from '@/api/payment'
 import PaymentLayout from '@/components/PaymentLayout.vue'
 import SelectAddressModal from '@/components/SelectAddressModal.vue'
 import ShippingRequestModal from '@/components/ShippingRequestModal.vue'
 import PrivacyUsageConsentModal from '@/components/PrivacyUsageConsentModal.vue'
 import PrivacyThirdPartyConsentModal from '@/components/PrivacyThirdPartyConsentModal.vue'
 
-
 const route = useRoute()
 const router = useRouter()
-const selectedItems = ref([])
+const selectedItems = ref([]) // 결제할 상품 목록
 
 const isSelectShippingRegionModalOpen = ref(false) // 배송지 변경 모달
 const isShippingRequestModalOpen = ref(false) // 배송요청 입력 모달
 const isPrivacyUsageConsentModalOpen = ref(false) // 개인정보 수집/이용 및 처리 동의 모달
 const isPrivacyThirdPartyConsentModalOpen = ref(false) // 개인정보 제 3자 제공 동의 모달
 
+// 사용되는 모달들
 const openSelectShippingRegionModal = () => {
   isSelectShippingRegionModalOpen.value = true
 }
@@ -44,67 +44,24 @@ const closePrivacyThirdPartyConsentModal = () => {
   isPrivacyThirdPartyConsentModalOpen.value = false
 }
 
-// 랜덤 paymentId 생성
-const randomId = () => {
-  return [...crypto.getRandomValues(new Uint32Array(2))]
-    .map((word) => word.toString(16).padStart(8, '0'))
-    .join('')
-}
-
-// 상품명 요약
-const orderNameSummary = () => {
-  const names = productList.map((p) => p.name)
-  if (names.length === 0) return ''
-  if (names.length === 1) return names[0]
-  return `${names[0]} 외 ${names.length - 1}개`
-}
-
-// 상품 idx 배열
-const idxArray = () => productList.map((p) => p.idx)
-
-// 결제 요청
-const onSubmitPayment = async () => {
-  const paymentId = randomId()
-  const totalPrice = productList.reduce((sum, product) => sum + product.price, 0)
-  const orderName = orderNameSummary()
-  const idxs = idxArray()
-
-  try {
-    const payment = await PortOne.requestPayment({
-      storeId: 'store-018bff32-3d9e-4918-9f0a-add338f287cd',
-      channelKey: 'channel-key-3ab0c7d6-f2af-48ab-b56e-fac3ff323759',
-      paymentId,
-      orderName,
-      totalAmount: totalPrice,
-      currency: 'KRW',
-      payMethod: 'CARD',
-      customData: { items: idxs },
-    })
-
-    if (payment && payment.paymentId) {
-      // 결제 검증
-      const url = 'http://localhost:8080/web02/order/validation'
-      const data = { paymentId: payment.paymentId }
-      await axios.post(url, data)
-      alert('결제가 완료되었습니다!')
-    }
-  } catch (err) {
-    console.error(err)
-    alert('결제 실패')
-  }
-}
-
-// 할인 적용 후 가격 계산
+// 할인 적용 후 단일 상품 가격 계산
 const discountedPrice = (item) => {
-  return Math.round(item.original_price * (100 - item.discount_rate) / 100)
+  return Math.round((item.original_price * (100 - item.discount_rate)) / 100)
 }
 
-// 총 결제 금액 계산 (할인 적용)
-const totalPrice = () => {
+// 총 결제 금액 계산 (할인 적용 + 수량)
+const totalPrice = computed(() => {
   return selectedItems.value.reduce((sum, item) => {
     return sum + discountedPrice(item) * item.quantity
   }, 0)
-}
+})
+
+// 상품명 요약
+const orderNameSummary = computed(() => {
+  if (selectedItems.value.length === 0) return ''
+  if (selectedItems.value.length === 1) return selectedItems.value[0].name
+  return `${selectedItems.value[0].name} 외 ${selectedItems.value.length - 1}개`
+})
 
 onMounted(() => {
   // router state에서 결제할 상품 정보 받아오기
@@ -124,6 +81,49 @@ onMounted(() => {
     }
   }
 })
+
+// 결제 요청
+
+const onSubmitPayment = async () => {
+  try {
+    // 백엔드에서 uuid(payment_id) 생성 요청
+    const { payment_id } = await orderApi.startPayment(totalPrice.value, selectedItems.value)
+    const idxs = selectedItems.value.map((item) => item.idx)
+    console.log(payment_id)
+
+    const payment = await PortOne.requestPayment({
+      storeId: 'store-018bff32-3d9e-4918-9f0a-add338f287cd',
+      channelKey: 'channel-key-3ab0c7d6-f2af-48ab-b56e-fac3ff323759',
+      paymentId: payment_id,
+      orderName: orderNameSummary.value,
+      totalAmount: totalPrice.value,
+      currency: 'KRW',
+      payMethod: 'CARD',
+      customData: { items: idxs },
+      mode: 'redirect',
+      redirectUrl: `${window.location.origin}/payment/complete`,
+    })
+
+    if (payment?.paymentId) {
+      // ✅ 결제 검증 요청
+      const { data } = await api.post('/order/validation', {
+        paymentId: payment.paymentId,
+      })
+
+      if (data.success) {
+        alert('결제가 완료되었습니다!')
+        router.push('/order/success') // 성공 페이지 이동
+      } else {
+        alert('결제 검증 실패: ' + data.message)
+        router.push('/payment') // 결제 페이지로 돌아가기
+      }
+    }
+  } catch (err) {
+    console.error(err)
+    alert('결제 중 오류가 발생했습니다.')
+    router.push('/payment')
+  }
+}
 </script>
 
 <template>
@@ -137,17 +137,18 @@ onMounted(() => {
           <div class="payment-order-items-shipping-info">샛별 배송</div>
           <div class="payment-order-items-list">
             <div v-for="item in selectedItems" :key="item.idx" class="payment-order-item-card">
-              <img
-                :src="item.main_image_url"
-                alt="상품 이미지"
-              />
+              <img :src="item.main_image_url" alt="상품 이미지" />
               <div>
                 <span class="payment-order-item-name">{{ item.name }}</span>
                 <div class="payment-order-item-price-info-container">
-                  <span class="payment-order-item-price">{{ discountedPrice(item).toLocaleString() }}</span>
-                  <span class="payment-order-item-original-price">{{ item.original_price.toLocaleString() }}</span>
+                  <span class="payment-order-item-price">{{
+                    discountedPrice(item).toLocaleString()
+                  }}</span>
+                  <span class="payment-order-item-original-price">{{
+                    item.original_price.toLocaleString()
+                  }}</span>
                   <span>|</span>
-                  <span class="payment-order-item-quantity">{{item.quantity}} 개</span>
+                  <span class="payment-order-item-quantity">{{ item.quantity }} 개</span>
                 </div>
               </div>
             </div>
@@ -212,7 +213,7 @@ onMounted(() => {
 
         <div class="payment-agree-checkbox-container">
           <label class="custom-checkbox">
-            <input type="checkbox" v-model="isAllSelected" />
+            <input type="checkbox" />
             <span class="checkmark"></span>
           </label>
           <p>위 내용을 확인 하였으며 결제에 동의합니다.</p>
@@ -319,9 +320,9 @@ onMounted(() => {
 }
 
 .payment-order-item-card > div {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .payment-order-item-name {

@@ -9,16 +9,10 @@ const props = defineProps({
 // 부모에게 알릴 요소들
 const emit = defineEmits(['update:quantity', 'toggle-check', 'delete-item']) 
 
-// 아이템 수량 로컬 상태
-const qty = ref(props.item.quantity) // 내부에서 변경할 수 있도록 복사
-watch(qty, (newVal) => {
-  emit('update:quantity', newVal)
-})
-
 //체크 여부 로컬 상태
 const isChecked = ref(props.isChecked)
 
-// 외부 prop이 변경되면 동기화 (전체선택 시 필요한 코드)
+// 외부 prop이 변경되면 동기화 
 watch(
   () => props.isChecked,
   (val) => {
@@ -26,30 +20,25 @@ watch(
   },
 )
 
-// 체크 상태가 변경되면 부모 컴포넌트에게 알림
-watch(isChecked, (val) => {
-  emit('toggle-check', val)
-})
-
-// 수량 증가 함수
-const increaseQty = () => {
-  qty.value++
-}
-
-// 수량 감소 함수
 const decreaseQty = () => {
-  if (qty.value > 1) {
-    qty.value--
-  }
+  if (!canDecrease.value) return
+  emit('update:quantity', {
+    idx: props.item.idx,
+    quantity: quantity.value - 1
+  })
 }
 
-// 원래 가격과 할인율
-const originalPrice = ref(props.item.original_price)
-const discountRate = ref(props.item.discount_rate)
+const increaseQty = () => {
+  if (!canIncrease.value) return
+  emit('update:quantity', {
+    idx: props.item.idx,
+    quantity: quantity.value + 1
+  })
+}
 
 // 할인된 가격 계산
 const discountedPrice = computed(() => {
-  return Math.round((originalPrice.value * (100 - discountRate.value)) / 100)
+  return Math.round((props.item.original_price * (100 - props.item.discount_rate)) / 100)
 })
 
 // 체크박스 변경 시 부모에게 알림
@@ -68,6 +57,17 @@ const handleDelete = () => {
     idx: props.item.idx,
   }) 
 }
+
+// 현재 수량
+const quantity = computed(() => props.item.quantity)
+
+// 최소/최대 제한
+const minQty = 1
+const maxQty = 10
+
+// 버튼 활성화 상태
+const canDecrease = computed(() => quantity.value > minQty)
+const canIncrease = computed(() => quantity.value < maxQty)
 </script>
 
 <template>
@@ -89,14 +89,24 @@ const handleDelete = () => {
       />
       <div class="my-cart-in-item-product-info">
         <div class="my-cart-product-cost-info">
-          <h4>{{ discountedPrice.toLocaleString() }}</h4>
-          <span>{{ props.item.original_price.toLocaleString() }}</span>
+          <h4>{{ (discountedPrice * quantity).toLocaleString() }}</h4>
+          <span>{{ (props.item.original_price * quantity).toLocaleString() }}</span>
         </div>
 
         <div class="my-cart-item-card-quantity-edit-button">
-          <img @click="decreaseQty" src="/assets/icons/ic-black-sub.png" alt="빼기" />
-          <span>{{ qty }}</span>
-          <img @click="increaseQty" src="/assets/icons/ic-black-plus.png" alt="추가" />
+          <img 
+    @click="decreaseQty" 
+    :src="canDecrease ? '/assets/icons/ic-black-sub.png' : '/assets/icons/ic-gray-sub.png'" 
+    :style="{ cursor: canDecrease ? 'pointer' : 'default' }" 
+    alt="빼기" 
+  />
+          <span>{{ quantity }}</span>
+          <img 
+    @click="increaseQty" 
+    :src="canIncrease ? '/assets/icons/ic-black-plus.png' : '/assets/icons/ic-gray-plus.png'" 
+    :style="{ cursor: canIncrease ? 'pointer' : 'default' }" 
+    alt="추가" 
+  />
         </div>
       </div>
     </div>

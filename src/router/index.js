@@ -26,10 +26,17 @@ import ShoppingDetailPage from '@/views/Shopping_detail.vue'
 import PaymentMethodList from '@/components/PaymentMethodList.vue'
 import RecipeWrite from '@/views/RecipeWrite.vue'
 import Payment from '@/views/Payment.vue'
+import PaymentComplete from '@/views/PaymentComplete.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/payment/complete',
+      name: 'payment-complete',
+      component: PaymentComplete,
+      meta: { requiresAuth: true },
+    },
     {
       path: '/payment',
       name: 'payment',
@@ -130,9 +137,9 @@ const router = createRouter({
     },
     {
       path: '/reset-password',
-      name: 'PasswordReset', 
+      name: 'PasswordReset',
       component: () => import('@/views/PasswordReset.vue'),
-      meta: { hideLayout: true, requiresAuth: false }
+      meta: { hideLayout: true, requiresAuth: false },
     },
     {
       path: '/address/search',

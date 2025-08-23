@@ -4,18 +4,15 @@ import { useRouter } from 'vue-router'
 import api from '@/api/cart'
 import CartItemCard from './CartItemCard.vue'
 
-// 장바구니 항목 데이터
-const cartItems = ref([])
+const cartItems = ref([]) // 장바구니 항목 데이터
+const checkedItems = ref({}) // 체크 상태를 별도로 관리: { [item.id]: true/false }
+const router = useRouter()
 
-// 체크 상태를 별도로 관리: { [item.id]: true/false }
-const checkedItems = ref({})
-
-// 서버에서 장바구니 데이터를 가져온다고 가정
+// 서버에서 장바구니 데이터 가져오기
 onMounted(async () => {
   try {
     const data = await api.cartList()
     cartItems.value = data
-
     checkedItems.value = Object.fromEntries(data.map((item) => [item.idx, false]))
   } catch (e) {
     console.error('장바구니 불러오기 중 오류 발생: ', e)
@@ -27,12 +24,15 @@ const handleQtyChange = async (id, newQty) => {
   const item = cartItems.value.find((i) => i.idx === id)
   if (!item) return
 
-  item.quantity = newQty
+  const oldQty = item.quantity // 이전 값 저장
+  item.quantity = newQty // 화면에 즉시 반영
 
   try {
     await axios.patch(`/api/cart/${id}`, { quantity: newQty })
   } catch (e) {
     console.error('수량 변경 실패: ', e)
+    item.quantity = oldQty
+    alert('수량 변경에 실패하였습니다.')
   }
 }
 
@@ -112,9 +112,7 @@ const deleteItem = async ({ productId, idx }) => {
 const totalPrice = computed(() => {
   return cartItems.value.reduce((sum, item) => {
     // 체크되지 않은 상품은 제외
-    if (!checkedItems.value[item.idx]) {
-      return sum
-    }
+    if (!checkedItems.value[item.idx]) return sum
 
     // 할인된 가격 계산
     const discounted = Math.round((item.original_price * (100 - item.discount_rate)) / 100)
@@ -123,11 +121,19 @@ const totalPrice = computed(() => {
   }, 0)
 })
 
-const router = useRouter()
-
-// 결제 페이지로 이동
+// 선택된 상품들을 결제 페이지로 이동
 const goToPayment = () => {
-  router.push('/payment')
+  // 체크된 항목만 가져오기
+  const selectedItems = cartItems.value.filter((item) => checkedItems.value[item.idx])
+
+  // state로 넘기기
+  router.push({
+    path: '/payment',
+    state: { items: selectedItems },
+  })
+
+  // localStorage에도 저장 (state가 새로고침하면 지워져서 그 상황을 대비)
+  localStorage.setItem('checkoutItems', JSON.stringify(selectedItems))
 }
 
 // 쇼핑 페이지로 이동
@@ -177,12 +183,14 @@ const goToShopping = () => {
       </div>
     </div>
 
-    <button @click="goToPayment" class="cart-in-products-order-go">주문하러 가기</button>
+    <button @click="goToPayment" :disabled="selectedCount === 0" class="cart-in-products-order-go">
+      결제하러 가기
+    </button>
   </div>
   <div v-else class="empty-cart-message">
     장바구니에 담긴 상품이 없습니다.
     <button @click="goToShopping">상품 담으러 가기</button>
-    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -205,5 +213,10 @@ const goToShopping = () => {
 .mypage-cart-in-items-total-price-container > span {
   font-size: 18px;
   font-weight: bold;
+}
+
+.cart-in-products-order-go:disabled {
+  background-color: #ccc; /* 비활성화 상태 색 */
+  cursor: default;
 }
 </style>

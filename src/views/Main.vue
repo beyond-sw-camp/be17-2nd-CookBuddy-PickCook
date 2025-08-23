@@ -154,7 +154,7 @@ onMounted(async () => {
       <RouterLink to="/shopping" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">
-      <ProductItemCard v-for="(item, idx) in state.products" :key="idx" :product="item" />
+      <ProductItemCard v-for="(item, idx) in state.products.slice(0, 4)" :key="idx" :product="item" />
     </div>
   </div>
 
@@ -165,7 +165,7 @@ onMounted(async () => {
       <RouterLink to="/shopping" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">
-        <ProductItemCard v-for="(item, idx) in state.products" :key="idx" :product="item" />
+        <ProductItemCard v-for="(item, idx) in state.products.slice(0, 4)" :key="idx" :product="item" />
     </div>
   </div>
 </template>

@@ -1,6 +1,5 @@
 import './assets/main.css'
 import './assets/community.css'
-import './assets/community_detail.css'
 import './assets/find-id.css'
 import './assets/find-password.css'
 import './assets/header.css'

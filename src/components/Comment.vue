@@ -10,6 +10,17 @@ const { comment, replyId } = defineProps({
 const emit = defineEmits(['toggle-reply', 'refresh-comments'])
 
 const replyText = ref('')
+const hasLiked = ref(comment.hasLiked)
+
+const toggleLike = async () => {
+  const data = await api.like({
+    targetType: 'COMMENT',
+    targetId: comment.id,
+  })
+  if (data.success && data.results) {
+    hasLiked.value = !hasLiked.value
+  }
+}
 
 const toggleReply = () => {
   emit('toggle-reply', replyId === comment.id ? null : comment.id)
@@ -38,7 +49,10 @@ const submitReply = async () => {
       <div class="cd-comment-info">
         <div class="cd-comment-author">{{ comment.userName }}</div>
         <div class="cd-comment-action">
-          <img src="/public/assets/icons/ic-like.png" />
+          <img
+            :src="hasLiked ? '/assets/icons/ic-full-like.png' : '/assets/icons/ic-empty-like.png'"
+            @click="toggleLike"
+          />
           <img
             v-if="comment.parentCommentId == null"
             src="/public/assets/icons/ic-comment.png"

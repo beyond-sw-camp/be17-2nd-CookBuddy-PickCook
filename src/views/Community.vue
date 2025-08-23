@@ -1,17 +1,16 @@
 <script setup>
 import api from '@/api/community'
 import { onMounted, reactive } from 'vue'
-import CommunityCard from '@/components/CommunityCard.vue'
+import PostListCard from '@/components/PostListCard.vue'
 
-const communityList = reactive([])
+const posts = reactive([])
 
 const getPostList = async () => {
   const data = await api.getPostList()
   if (data && data.success && data.results) {
-    console.log(data)
-    communityList.push(...data.results)
+    posts.push(...data.results)
   } else {
-    communityList.splice(0)
+    posts.splice(0)
   }
 }
 
@@ -32,7 +31,8 @@ onMounted(() => {
   <!-- 컨텐츠 섹션 -->
   <div class="content-section">
     <div class="c-content-container">
-      <CommunityCard v-for="post in communityList" :key="post.id" :post="post" />
+      <p class="c-posts-count">전체 {{ posts.length }}개</p>
+      <PostListCard v-for="post in posts" :key="post.id" :post="post" />
     </div>
   </div>
 </template>

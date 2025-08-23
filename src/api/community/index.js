@@ -63,7 +63,7 @@ const getComments = async (postId) => {
   return data
 }
 
-const likePost = async (payload) => {
+const like = async (payload) => {
   let data = {}
   let url = '/like'
 
@@ -79,7 +79,7 @@ const likePost = async (payload) => {
   return data
 }
 
-const scrapPost = async (payload) => {
+const scrap = async (payload) => {
   let data = {}
   let url = '/scrap'
 
@@ -151,8 +151,8 @@ export default {
   getPostDetail,
   addComment,
   getComments,
-  likePost,
-  scrapPost,
+  like,
+  scrap,
   getPresignedUrl,
   uploadImage,
   postUpload,

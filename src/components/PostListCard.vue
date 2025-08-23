@@ -10,7 +10,7 @@ defineProps({
   <RouterLink :to="`/community/${post.id}`" class="c-board-link">
     <div class="c-board">
       <div class="c-board-type">
-        <span class="c-board-type-text">{{ post.type }}</span>
+        <span class="c-board-type-text">일반</span>
       </div>
       <div class="c-board-flexbox">
         <div class="c-board-details">
@@ -18,7 +18,7 @@ defineProps({
             <span>{{ post.title }}</span>
           </div>
           <div class="c-board-content">
-            <span>{{ post.content }}</span>
+            <span>{{ post.contentPreview }}</span>
           </div>
           <div class="c-board-info">
             <span class="c-board-nickname">{{ post.authorName }}</span>
@@ -29,9 +29,6 @@ defineProps({
             <span class="c-board-dot"></span>
             <span class="c-board-likes">좋아요 {{ post.likes }}</span>
           </div>
-        </div>
-        <div class="c-board-image-container">
-          <img class="c-board-image" :src="post.imageUrl" />
         </div>
       </div>
     </div>

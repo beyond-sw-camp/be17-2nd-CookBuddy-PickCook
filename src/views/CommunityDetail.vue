@@ -67,7 +67,7 @@ const submitComment = async () => {
 }
 
 const toggleLike = async () => {
-  const data = await api.likePost({
+  const data = await api.like({
     targetType: 'POST',
     targetId: post.id,
   })
@@ -78,7 +78,7 @@ const toggleLike = async () => {
 }
 
 const toggleScrap = async () => {
-  const data = await api.scrapPost({
+  const data = await api.scrap({
     targetType: 'POST',
     targetId: post.id,
   })
@@ -130,8 +130,8 @@ onMounted(() => {
     </div>
 
     <!-- 태그 -->
-    <div class="cd-tags">
-      <p v-if="post.tags">관련 태그</p>
+    <div v-if="post.tags" class="cd-tags">
+      <p>관련 태그</p>
       <a v-for="(tag, i) in post.tags" :key="i" href="#" class="tag">#{{ tag }}</a>
     </div>
 
@@ -232,8 +232,8 @@ onMounted(() => {
 .cd-tags {
   display: flex;
   flex-wrap: wrap;
+  padding: 10px;
   gap: 8px;
-  margin-bottom: 40px;
 }
 
 .tag {
@@ -253,13 +253,15 @@ onMounted(() => {
 .cd-comment-section {
   border-top: 10px solid #f2f2f2;
   padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .cd-comment-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
 }
 
 .cd-comment-sort {

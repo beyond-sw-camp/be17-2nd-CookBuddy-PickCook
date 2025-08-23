@@ -1,5 +1,6 @@
 <script setup>
 import { reactive, watch, defineEmits, defineProps } from 'vue'
+import refrigeratorApi from '@/api/refrigerator'
 
 const emit = defineEmits(['close', 'submit', 'delete'])
 
@@ -36,10 +37,10 @@ watch(
   () => props.ingredient,
   (newIngredient) => {
     if (newIngredient) {
-      form.name = newIngredient.name || ''
-      form.qnt = newIngredient.qnt || ''
-      form.rawDate = newIngredient.rawDate || ''
-      form.category = newIngredient.category || ''
+      form.name = newIngredient.ingredientName || ''
+      form.qnt = newIngredient.quantity?.toString() || '' // ✅ 스트링 처리
+      form.rawDate = newIngredient.expirationDate || ''
+      form.category = newIngredient.category?.name || ''
       form.location = newIngredient.location || ''
     }
   },
@@ -50,16 +51,48 @@ function closeModal() {
   emit('close')
 }
 
-function submitForm() {
+async function submitForm() {
+  // 유효성 검증
   if (!form.name || !form.qnt || !form.rawDate || !form.category || !form.location) {
     alert('모든 항목을 입력해주세요.')
     return
   }
-  const imageUrl = `/assets/icons/${categoryImageMap[form.category] || 'etc'}.png`
-  console.log('이미지 경로:', imageUrl)
 
-  emit('submit', { ...form, imageUrl })
-  closeModal()
+  // 백엔드 형식으로 데이터 변환
+  const submitData = {
+    ingredientName: form.name.trim(),
+    quantity: parseInt(form.qnt.replace(/[^0-9]/g, '')) || 1, // 스트링에서 숫자 추출
+    expirationDate: form.rawDate,
+    categoryId: getCategoryIdByName(form.category), // 카테고리명 → ID 변환
+    location: form.location,
+  }
+
+  try {
+    // API 호출로 실제 수정
+    const result = await refrigeratorApi.updateIngredient(props.ingredient.id, submitData)
+    emit('submit', result) // 성공 시 부모에게 알림
+    closeModal()
+  } catch (error) {
+    console.error('식재료 수정 실패:', error)
+    alert('수정에 실패했습니다. 다시 시도해주세요.')
+  }
+}
+
+// 카테고리명으로 ID 찾기 (임시 매핑)
+function getCategoryIdByName(categoryName) {
+  const categoryMap = {
+    채소: 1,
+    '정육·가공육·달걀': 2,
+    '수산·해산·건어물': 3,
+    '과일·견과·쌀': 4,
+    간편식: 5,
+    냉동식품: 6,
+    베이커리: 7,
+    유제품: 8,
+    '면·양념·오일': 9,
+    기타: 10,
+  }
+  return categoryMap[categoryName] || 10
 }
 </script>
 

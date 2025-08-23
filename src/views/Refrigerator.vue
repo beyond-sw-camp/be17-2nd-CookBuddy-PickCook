@@ -1,6 +1,6 @@
 <script setup>
 import refrigeratorApi from '@/api/refrigerator'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, reactive, onUnmounted } from 'vue'
 import IngredientCard from '@/components/IngredientCard.vue'
 import AddIngredientModal from '@/components/AddIngredientModal.vue'
 import EditIngredientModal from '@/components/EditIngredientModal.vue'
@@ -24,6 +24,45 @@ const showEditModal = ref(false)
 const items = ref([])
 const loading = ref(false)
 const categories = ref([])
+
+const filters = reactive({
+  keyword: null,
+  categoryId: null,
+  expirationStatus: null,
+  sortType: 'EXPIRATION_DATE',
+  sortDirection: 'ASC',
+})
+
+// 드롭다운 상태 (열림/닫힘)
+const dropdownStates = reactive({
+  sort: false,
+  category: false,
+  expiration: false,
+})
+
+// =================================================================
+// 필터 옵션 정의
+// =================================================================
+
+const sortOptions = [
+  { label: '유통기한 빠른순', sortType: 'EXPIRATION_DATE', sortDirection: 'ASC' },
+  { label: '유통기한 늦은순', sortType: 'EXPIRATION_DATE', sortDirection: 'DESC' },
+  { label: '등록일 최신순', sortType: 'CREATED_DATE', sortDirection: 'DESC' },
+  { label: '등록일 오래된순', sortType: 'CREATED_DATE', sortDirection: 'ASC' },
+]
+
+const categoryOptions = computed(() => [
+  { label: '전체', id: null },
+  ...categories.value.map((cat) => ({ label: cat.name, id: cat.id })),
+])
+
+const expirationOptions = [
+  { label: '전체', status: null },
+  { label: '신선함', status: 'FRESH' },
+  { label: '임박(2-3일)', status: 'EXPIRING_SOON' },
+  { label: '긴급(1일이내)', status: 'URGENT' },
+  { label: '만료됨', status: 'EXPIRED' },
+]
 
 // =================================================================
 // 카테고리별 이미지 매핑
@@ -56,6 +95,9 @@ const categoryImageMap = {
  * 백엔드 응답을 프론트엔드 형식으로 변환
  */
 const transformBackendData = (backendItem) => {
+  console.log('백엔드 데이터:', backendItem) // ✅ 임시 추가
+  console.log('expirationStatus:', backendItem.expirationStatus) // ✅ 임시 추가
+
   const imageFileName = categoryImageMap[backendItem.category?.name] || 'ic-ingredient-category-etc'
 
   return {
@@ -67,6 +109,7 @@ const transformBackendData = (backendItem) => {
     category: backendItem.category?.name || '기타',
     imageUrl: `/assets/icons/${imageFileName}.png`,
     location: backendItem.location,
+    expirationStatus: backendItem.expirationStatus,
 
     // 원본 데이터 보존 (수정 시 필요)
     originalData: backendItem,
@@ -147,6 +190,22 @@ const onInput = (event) => {
   searchQuery.value = event.target.value
   updateSearch()
 }
+
+// =================================================================
+// 계산된 속성들 (필터 관련)
+// =================================================================
+
+const selectedLabels = computed(() => ({
+  sort:
+    sortOptions.find(
+      (opt) => opt.sortType === filters.sortType && opt.sortDirection === filters.sortDirection,
+    )?.label || '정렬',
+
+  category: categoryOptions.value.find((opt) => opt.id === filters.categoryId)?.label || '카테고리',
+
+  expiration:
+    expirationOptions.find((opt) => opt.status === filters.expirationStatus)?.label || '유통기한',
+}))
 
 // =================================================================
 // 한글 초성 검색 (기존 코드 유지)
@@ -240,6 +299,73 @@ const filteredItems = computed(() => {
   if (!keyword) return items.value
   return items.value.filter((item) => hangulMatch(item.name.toLowerCase(), keyword))
 })
+
+// =================================================================
+// 필터링 관련 함수들
+// =================================================================
+
+/**
+ * 외부 클릭 시 드롭다운 닫기 (먼저 정의)
+ */
+const closeAllDropdowns = () => {
+  Object.keys(dropdownStates).forEach((key) => {
+    dropdownStates[key] = false
+  })
+}
+
+/**
+ * 드롭다운 토글
+ */
+const toggleDropdown = (type) => {
+  Object.keys(dropdownStates).forEach((key) => {
+    dropdownStates[key] = key === type ? !dropdownStates[type] : false
+  })
+}
+
+/**
+ * 정렬 옵션 선택
+ */
+const selectSortOption = (option) => {
+  filters.sortType = option.sortType
+  filters.sortDirection = option.sortDirection
+  dropdownStates.sort = false
+  applyFilters()
+}
+
+/**
+ * 카테고리 선택
+ */
+const selectCategory = (option) => {
+  filters.categoryId = option.id
+  dropdownStates.category = false
+  applyFilters()
+}
+
+/**
+ * 유통기한 상태 선택
+ */
+const selectExpirationStatus = (option) => {
+  filters.expirationStatus = option.status
+  dropdownStates.expiration = false
+  applyFilters()
+}
+
+/**
+ * 필터 적용 (API 호출)
+ */
+const applyFilters = async () => {
+  loading.value = true
+
+  try {
+    const result = await refrigeratorApi.filterIngredients(filters)
+    items.value = result.map(transformBackendData)
+  } catch (error) {
+    console.error('필터링 실패:', error)
+    alert('필터링 중 오류가 발생했습니다.')
+  } finally {
+    loading.value = false
+  }
+}
 
 // =================================================================
 // CRUD 작업
@@ -366,17 +492,65 @@ function getItemIndex(item) {
 
 onMounted(async () => {
   await Promise.all([getIngredients(), loadCategories()])
+
+  // 외부 클릭 시 드롭다운 닫기
+  document.addEventListener('click', closeAllDropdowns)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', closeAllDropdowns)
 })
 </script>
 
 <template>
   <!-- 검색 필터 영역 -->
-  <div class="refrigerator-search-help-section-container filter-section">
+  <div class="filter-section">
     <div class="refrigerator-search-help-section">
       <div class="refrigerator-filter-container">
-        <span class="refrigerator-filter-items">정렬 &nbsp;▼</span>
-        <span class="refrigerator-filter-items">카테고리 &nbsp;▼</span>
-        <span class="refrigerator-filter-items">재고위치 &nbsp;▼</span>
+        <!-- 정렬 드롭다운 -->
+        <div class="dropdown" @click.stop="toggleDropdown('sort')">
+          <span class="refrigerator-filter-items"> {{ selectedLabels.sort }} &nbsp;▼ </span>
+          <div v-if="dropdownStates.sort" class="dropdown-menu">
+            <div
+              v-for="option in sortOptions"
+              :key="`${option.sortType}-${option.sortDirection}`"
+              class="dropdown-item"
+              @click.stop="selectSortOption(option)"
+            >
+              {{ option.label }}
+            </div>
+          </div>
+        </div>
+
+        <!-- 카테고리 드롭다운 -->
+        <div class="dropdown" @click.stop="toggleDropdown('category')">
+          <span class="refrigerator-filter-items"> {{ selectedLabels.category }} &nbsp;▼ </span>
+          <div v-if="dropdownStates.category" class="dropdown-menu">
+            <div
+              v-for="option in categoryOptions"
+              :key="option.id || 'all'"
+              class="dropdown-item"
+              @click.stop="selectCategory(option)"
+            >
+              {{ option.label }}
+            </div>
+          </div>
+        </div>
+
+        <!-- 유통기한 상태 드롭다운 -->
+        <div class="dropdown" @click.stop="toggleDropdown('expiration')">
+          <span class="refrigerator-filter-items"> {{ selectedLabels.expiration }} &nbsp;▼ </span>
+          <div v-if="dropdownStates.expiration" class="dropdown-menu">
+            <div
+              v-for="option in expirationOptions"
+              :key="option.status || 'all'"
+              class="dropdown-item"
+              @click.stop="selectExpirationStatus(option)"
+            >
+              {{ option.label }}
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="search-bar-container">
@@ -430,6 +604,7 @@ onMounted(async () => {
             :category="item.category"
             :image-url="item.imageUrl"
             :location="item.location"
+            :expiration-status="item.expirationStatus"
             @click="openEditModal(filteredItems.indexOf(item))"
           />
         </div>
@@ -450,6 +625,7 @@ onMounted(async () => {
             :category="item.category"
             :image-url="item.imageUrl"
             :location="item.location"
+            :expiration-status="item.expirationStatus"
             @click="openEditModal(filteredItems.indexOf(item))"
           />
         </div>
@@ -470,6 +646,7 @@ onMounted(async () => {
             :category="item.category"
             :image-url="item.imageUrl"
             :location="item.location"
+            :expiration-status="item.expirationStatus"
             @click="openEditModal(filteredItems.indexOf(item))"
           />
         </div>
@@ -506,178 +683,47 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-  color: #666;
-}
+/* 기존 CSS는 모두 유지하고, 아래 내용만 추가 */
 
-.filter-section {
-  padding: 16px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.refrigerator-search-help-section {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.refrigerator-filter-container {
-  display: flex;
-  gap: 16px;
-}
-
-.refrigerator-filter-items {
-  padding: 8px 16px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.refrigerator-filter-items:hover {
-  background: #f0f0f0;
-}
-
-.search-bar-container {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.search-input-wrapper {
+/* 드롭다운 관련 스타일 */
+.dropdown {
   position: relative;
-  flex: 1;
+  display: inline-block;
 }
 
-.search-input-wrapper input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 16px;
-}
-
-.input-clear-btn {
+.dropdown-menu {
   position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  font-size: 18px;
-  color: #999;
-  cursor: pointer;
-}
-
-#refrigerator-item-search-button {
-  background: #007bff;
-  padding: 12px;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #dadce0;
   border-radius: 8px;
-  cursor: pointer;
-}
-
-#refrigerator-item-search-button img {
-  width: 20px;
-  height: 20px;
-}
-
-.user-search-keyword {
-  padding: 16px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e9ecef;
-  font-weight: 500;
-}
-
-.refrigerator-section-container {
-  padding: 20px;
-}
-
-.refrigerator-sections {
-  margin-bottom: 32px;
-}
-
-.refrigerator-section-name {
-  display: block;
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #333;
-}
-
-.refrigerator-item-save-boxes {
-  background: #f8f9fa;
-  border-radius: 12px;
-  padding: 16px;
-  min-height: 120px;
-}
-
-.refrigerator-item-save-scroll-boxes {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.add-refrigerator-items-button {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  width: 56px;
-  height: 56px;
-  background: #007bff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-  transition: all 0.2s;
-}
-
-.add-refrigerator-items-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 123, 255, 0.4);
-}
-
-.add-refrigerator-items-button img {
-  width: 24px;
-  height: 24px;
-  filter: brightness(0) invert(1);
-}
-
-#snackbar {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #333;
-  color: white;
-  padding: 16px 24px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  min-width: 150px;
+  margin-top: 4px;
 }
 
-#undoDeleteBtn {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
+.dropdown-item {
+  padding: 8px 14px;
   cursor: pointer;
-  font-weight: 500;
+  font-size: 13px;
+  border-bottom: 1px solid #f5f5f5;
 }
 
-#undoDeleteBtn:hover {
-  background: #0056b3;
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+}
+
+.dropdown-item:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.dropdown-item:last-child {
+  border-radius: 0 0 8px 8px;
 }
 </style>

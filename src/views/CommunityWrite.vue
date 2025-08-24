@@ -24,8 +24,11 @@ const showImageUI = () => {
     const file = input.files?.[0]
     if (!file) return
 
+    const formData = new FormData()
+    formData.append('file', file)
+
     try {
-      const data = await api.getPresignedUrl(file)
+      const data = await api.getPresignedUrl(formData)
       if (data.success) {
         const presignedUrl = data.results
         console.log(presignedUrl)

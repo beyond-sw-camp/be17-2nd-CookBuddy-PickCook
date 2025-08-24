@@ -95,13 +95,14 @@ const scrap = async (payload) => {
   return data
 }
 
-const getPresignedUrl = async (file) => {
+const getPresignedUrl = async (formData) => {
   let data = {}
-  let url = `/board/presigned-url`
+  let url = '/image-upload'
   await api
-    .post(url, {
-      fileName: file.name,
-      fileType: file.type,
+    .post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
     })
     .then((res) => {
       data = res.data
@@ -133,7 +134,7 @@ const uploadImage = async (presigedUrl, file) => {
 
 const postUpload = async (payload) => {
   let data = {}
-  let url = `/board/create`
+  let url = `/posts`
   await api
     .post(url, payload)
     .then((res) => {

@@ -105,9 +105,7 @@ onMounted(() => {
     </div>
 
     <!-- 이미지 + 텍스트 섹션 -->
-    <div class="cd-post-content">
-      <p>{{ post.content }}</p>
-    </div>
+    <div v-html="post.content" class="cd-post-content"></div>
 
     <!-- 액션 바 -->
     <div class="cd-action-bar">

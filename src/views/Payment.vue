@@ -87,12 +87,12 @@ onMounted(() => {
 const onSubmitPayment = async () => {
   try {
     // 백엔드에서 uuid(payment_id) 생성 요청
-    const {paymentId} = await orderApi.startPayment(totalPrice.value, selectedItems.value)
-      const idxs = selectedItems.value.map((item) => item.idx)
+    const { paymentId } = await orderApi.startPayment(totalPrice.value, selectedItems.value)
+    const idxs = selectedItems.value.map((item) => item.idx)
 
     const payment = await PortOne.requestPayment({
-      storeId: 'store-018bff32-3d9e-4918-9f0a-add338f287cd',
-      channelKey: 'channel-key-45375092-9269-49b6-9c5e-3ba2d872f7b4',
+      storeId: import.meta.env.VITE_PORTONE_STOREID,
+      channelKey: import.meta.env.VITE_PORTONE_CHANNEL_KEY,
       paymentId: paymentId,
       orderName: orderNameSummary.value,
       totalAmount: totalPrice.value,
@@ -103,7 +103,7 @@ const onSubmitPayment = async () => {
       redirectUrl: `${window.location.origin}/payment/complete`,
     })
 
-      if (payment?.paymentId) {
+    if (payment?.paymentId) {
       const result = await orderApi.validatePayment(payment.paymentId)
 
       if (result?.status === 'PAID') {

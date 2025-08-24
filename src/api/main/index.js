@@ -2,7 +2,7 @@ import api from '@/plugins/axiosinterceptor'
 
 const recipeList = async () => {
   let data = {}
-  let url = '/recipe'
+  let url = 'api/recipe'
 
   await api
     .get(url)

@@ -2,7 +2,7 @@ import api from '@/plugins/axiosinterceptor'
 
 const cartList = async () => {
   let data = {}
-  let url = '/cart'
+  let url = 'api/cart'
 
   await api
     .get(url)
@@ -18,10 +18,10 @@ const cartList = async () => {
 
 const updateQuantity = async (cartItemId, quantity) => {
   try {
-    const response = await api.patch(`/api/cart/${cartItemId}`, { quantity })
+    const response = await api.patch(`api/cart/${cartItemId}`, { quantity })
     return {
       success: response.data.success,
-      message: response.data.message
+      message: response.data.message,
     }
   } catch (error) {
     console.error('수량 변경 실패:', error)
@@ -31,10 +31,10 @@ const updateQuantity = async (cartItemId, quantity) => {
 
 const toggleInCart = async (cartItemIds) => {
   try {
-    const response = await api.post('/cart/register', { product_ids: cartItemIds })
+    const response = await api.post('api/cart/register', { product_ids: cartItemIds })
     return {
       success: response.data.success,
-      message: response.data.message
+      message: response.data.message,
     }
   } catch (error) {
     console.error('삭제 실패:', error)

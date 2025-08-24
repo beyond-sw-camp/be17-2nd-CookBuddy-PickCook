@@ -87,14 +87,13 @@ onMounted(() => {
 const onSubmitPayment = async () => {
   try {
     // 백엔드에서 uuid(payment_id) 생성 요청
-    const { payment_id } = await orderApi.startPayment(totalPrice.value, selectedItems.value)
-    const idxs = selectedItems.value.map((item) => item.idx)
-    console.log(payment_id)
+    const {paymentId} = await orderApi.startPayment(totalPrice.value, selectedItems.value)
+      const idxs = selectedItems.value.map((item) => item.idx)
 
     const payment = await PortOne.requestPayment({
       storeId: 'store-018bff32-3d9e-4918-9f0a-add338f287cd',
-      channelKey: 'channel-key-3ab0c7d6-f2af-48ab-b56e-fac3ff323759',
-      paymentId: payment_id,
+      channelKey: 'channel-key-45375092-9269-49b6-9c5e-3ba2d872f7b4',
+      paymentId: paymentId,
       orderName: orderNameSummary.value,
       totalAmount: totalPrice.value,
       currency: 'KRW',
@@ -104,18 +103,15 @@ const onSubmitPayment = async () => {
       redirectUrl: `${window.location.origin}/payment/complete`,
     })
 
-    if (payment?.paymentId) {
-      // ✅ 결제 검증 요청
-      const { data } = await api.post('/order/validation', {
-        paymentId: payment.paymentId,
-      })
+      if (payment?.paymentId) {
+      const result = await orderApi.validatePayment(payment.paymentId)
 
-      if (data.success) {
+      if (result?.status === 'PAID') {
         alert('결제가 완료되었습니다!')
-        router.push('/order/success') // 성공 페이지 이동
+        router.push('/payment/complete')
       } else {
-        alert('결제 검증 실패: ' + data.message)
-        router.push('/payment') // 결제 페이지로 돌아가기
+        alert(`결제 검증 실패: ${result?.status}`)
+        router.push('/payment')
       }
     }
   } catch (err) {

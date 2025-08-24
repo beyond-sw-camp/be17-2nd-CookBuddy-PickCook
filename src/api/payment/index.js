@@ -10,7 +10,6 @@ const startPayment = async (totalPrice, orderItems) => {
       total_price: totalPrice,
       orderItems: orderItems.map((item) => ({
         product_id: item.product_id,
-        cart_id: item.idx,
         product_name: item.name,
         product_price: Math.round(item.original_price * (100 - item.discount_rate) / 100), // 할인 적용 가격
         quantity: item.quantity,

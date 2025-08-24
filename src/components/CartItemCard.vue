@@ -189,6 +189,7 @@ const canIncrease = computed(() => quantity.value < maxQty)
   align-items: center;
   justify-content: space-evenly;
   padding: 9px 0;
+  width: 111px;
 }
 
 .my-cart-item-card-quantity-edit-button > img {

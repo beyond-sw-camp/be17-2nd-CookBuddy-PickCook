@@ -138,10 +138,10 @@ const onSubmitPayment = async () => {
                 <span class="payment-order-item-name">{{ item.name }}</span>
                 <div class="payment-order-item-price-info-container">
                   <span class="payment-order-item-price">{{
-                    discountedPrice(item).toLocaleString()
+                    (discountedPrice(item) * item.quantity).toLocaleString()
                   }}</span>
                   <span class="payment-order-item-original-price">{{
-                    item.original_price.toLocaleString()
+                    (item.original_price * item.quantity).toLocaleString()
                   }}</span>
                   <span>|</span>
                   <span class="payment-order-item-quantity">{{ item.quantity }} 개</span>

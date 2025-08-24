@@ -25,12 +25,6 @@ onMounted(async () => {
   <div class="content-section">
     <div class="shopping-category-section">
       <div class="shopping-category-grid">
-        <span class="shopping-category-1 c-hover-1">오늘의 특가</span>
-        <span class="shopping-category-1 c-hover-1">새벽배송</span>
-        <span class="shopping-category-1 c-hover-1">유기농 전용관</span>
-        <span class="shopping-category-1 c-hover-1">비건 전용관</span>
-        <span class="shopping-category-1 c-hover-1">다이어트 전용관</span>
-
         <span class="shopping-category c-hover-2">
           <img
             class="shopping-ingredient-item-image"

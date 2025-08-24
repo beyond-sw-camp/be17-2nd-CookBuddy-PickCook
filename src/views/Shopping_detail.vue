@@ -1,12 +1,53 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, reactive, onMounted, onUnmounted, nextTick } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import shoppingAPI from '@/api/shopping'
+
+// =================================================================
+// 라우터 및 기본 설정
+// =================================================================
 
 const router = useRouter()
+const route = useRoute()
+const productId = computed(() => route.params.id)
 
 const goToPayment = () => {
   router.push('/payment')
 }
+
+// =================================================================
+// 상품 데이터 상태 관리 (reactive)
+// =================================================================
+
+// reactive 상태 객체들
+const productState = reactive({
+  data: null,
+  loading: true,
+  error: null,
+  quantity: 1,
+})
+
+// 계산된 속성들
+const discountedPrice = computed(() => {
+  if (!productState.data) return 0
+  const original = productState.data.original_price
+  const discount = productState.data.discount_rate || 0
+  return Math.floor((original * (100 - discount)) / 100)
+})
+
+const categoryName = computed(() => {
+  return productState.data?.category || '카테고리 없음'
+})
+
+// 🆕 총 상품 금액 계산
+const totalPrice = computed(() => {
+  if (!productState.data) return 0
+  return discountedPrice.value * productState.quantity
+})
+
+// =================================================================
+// 리뷰 슬라이더 상태 관리
+// =================================================================
 
 // ✅ 테스트용 이미지 18개 (3슬라이드)
 const images = ref([
@@ -49,32 +90,321 @@ function prev() {
 function next() {
   if (currentIndex.value < groupedSlides.value.length - 1) currentIndex.value++
 }
+
+// =================================================================
+// 상품 데이터 관련 메서드
+// =================================================================
+
+/**
+ * 상품 데이터 로딩
+ */
+const loadProduct = async () => {
+  try {
+    productState.loading = true
+    productState.error = null
+
+    const productData = await shoppingAPI.getProductDetail(productId.value)
+    productState.data = productData
+
+    console.log('상품 데이터 로딩 완료:', productData)
+  } catch (err) {
+    console.error('상품 로딩 실패:', err)
+    productState.error = err.message || '상품 정보를 불러오는데 실패했습니다.'
+  } finally {
+    productState.loading = false
+  }
+}
+
+/**
+ * 수량 증가
+ */
+const increaseQuantity = () => {
+  productState.quantity++
+}
+
+/**
+ * 수량 감소
+ */
+const decreaseQuantity = () => {
+  if (productState.quantity > 1) {
+    productState.quantity--
+  }
+}
+
+/**
+ * 수량 직접 입력 처리
+ */
+const handleQuantityInput = (event) => {
+  const value = parseInt(event.target.value) || 1
+  productState.quantity = value > 0 ? value : 1
+}
+
+/**
+ * 장바구니에 담기 (단순한 방식)
+ */
+const addToCart = async () => {
+  try {
+    if (!productState.data) {
+      alert('상품 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.')
+      return
+    }
+
+    // 버튼 비활성화
+    const button = document.getElementById('shopping-cart-push')
+    if (button) {
+      button.disabled = true
+      button.textContent = '담는 중...'
+    }
+
+    // 🔧 기존 방식으로 단순하게 호출
+    const cartAPI = await import('@/api/cart')
+    const response = await cartAPI.default.toggleInCart([productState.data.id])
+
+    if (response.success) {
+      alert(
+        `${productState.data.title}이(가) 장바구니에 담겼습니다!\n장바구니에서 수량을 조절할 수 있습니다.`,
+      )
+    } else {
+      throw new Error(response.message || '장바구니 담기에 실패했습니다.')
+    }
+  } catch (error) {
+    console.error('장바구니 추가 실패:', error)
+    alert('장바구니에 담는 중 오류가 발생했습니다.')
+  } finally {
+    // 버튼 다시 활성화
+    const button = document.getElementById('shopping-cart-push')
+    if (button) {
+      button.disabled = false
+      button.textContent = '장바구니 담기'
+    }
+  }
+}
+
+// =================================================================
+// 탭 네비게이션 관련 메서드 (CodePen 방식)
+// =================================================================
+
+// 1. 네비게이션 메뉴들을 querySelectorAll을 통해 변수에 담는다.
+const gnbItems = ref([])
+// 2. 섹션들을 전부 querySelectorAll을 통해 변수에 담는다.
+const sections = ref([])
+
+const isTabSticky = ref(false)
+const originalTabBarTop = ref(0)
+
+const activeTabIndex = ref(0) // 현재 활성화된 탭 인덱스
+const sectionOffsets = ref([]) // 각 섹션의 offset 값들
+
+/**
+ * 탭 네비게이션 초기화 (기존 코드 + 초기 활성화 추가)
+ */
+const initTabNavigation = () => {
+  // 기존 코드 모두 유지...
+  gnbItems.value = document.querySelectorAll('.shopping-product-mid-content-menu-items')
+
+  sections.value = [
+    document.querySelector('.required-notation-info'),
+    document.querySelector('.shipping-information-container'),
+    document.querySelector('.review-section'),
+  ].filter((section) => section !== null)
+
+  console.log('섹션 찾기 결과:', sections.value)
+
+  gnbItems.value.forEach((gnbItem, index) => {
+    gnbItem.addEventListener('click', (e) => {
+      e.preventDefault()
+      if (sections.value[index]) {
+        const sectionTop = sections.value[index].offsetTop - 250
+        window.scroll({
+          top: sectionTop,
+          behavior: 'smooth',
+        })
+        updateActiveTabState(index)
+        activeTabIndex.value = index
+      }
+    })
+  })
+
+  if (sections.value.length > 0) {
+    calculateSectionOffsets()
+    detectCurrentSection()
+
+    // 🆕 초기 로딩 시 첫 번째 탭 강제 활성화
+    if (window.scrollY < 100) {
+      activeTabIndex.value = 0
+      updateActiveTabState(0)
+      console.log('초기 로딩: 첫 번째 탭 활성화')
+    }
+  }
+}
+
+/**
+ * 활성 탭 업데이트
+ */
+const updateActiveTabState = (activeIndex) => {
+  gnbItems.value.forEach((item, index) => {
+    if (index === activeIndex) {
+      item.classList.add('active')
+    } else {
+      item.classList.remove('active')
+    }
+  })
+}
+
+/**
+ * 스티키 상태 업데이트
+ */
+const updateStickyState = () => {
+  if (originalTabBarTop.value > 0) {
+    const headerHeight = 200
+    const scrollY = window.scrollY
+
+    const shouldBeSticky = scrollY >= originalTabBarTop.value - headerHeight
+
+    if (isTabSticky.value !== shouldBeSticky) {
+      isTabSticky.value = shouldBeSticky
+    }
+  }
+}
+
+/**
+ * 현재 스크롤 위치에서 어떤 섹션이 화면에 보이는지 감지 (수정된 버전)
+ */
+const detectCurrentSection = () => {
+  if (sections.value.length === 0) {
+    console.log('섹션이 아직 로드되지 않음')
+    return
+  }
+
+  const headerHeight = 50
+  const tabBarHeight = 50
+  const scrollY = window.scrollY + headerHeight + tabBarHeight + 100
+
+  console.log('현재 스크롤 위치:', scrollY)
+
+  let currentSection = 0
+
+  // 🆕 페이지 최상단에 있을 때는 무조건 첫 번째 탭
+  if (window.scrollY < 200) {
+    currentSection = 0
+    console.log('페이지 최상단: 첫 번째 탭 활성화')
+  } else {
+    // 기존 로직
+    for (let i = sections.value.length - 1; i >= 0; i--) {
+      const section = sections.value[i]
+      if (section && scrollY >= section.offsetTop - 150) {
+        currentSection = i
+        console.log('감지된 섹션:', i, section.className)
+        break
+      }
+    }
+  }
+
+  // 활성 탭이 변경되었을 때만 업데이트
+  if (activeTabIndex.value !== currentSection) {
+    activeTabIndex.value = currentSection
+    updateActiveTabState(currentSection)
+    console.log('탭 활성화:', currentSection)
+  }
+}
+
+/**
+ * 스크롤 이벤트 핸들러 (기존 메서드 수정)
+ */
+let scrollTimer = null
+const handleScroll = () => {
+  if (scrollTimer) clearTimeout(scrollTimer)
+
+  scrollTimer = setTimeout(() => {
+    updateStickyState()
+    detectCurrentSection() // 🆕 추가된 부분
+  }, 10)
+}
+
+/**
+ * 각 섹션의 offset 값들을 저장
+ */
+const calculateSectionOffsets = () => {
+  sectionOffsets.value = sections.value.map((section) => (section ? section.offsetTop : 0))
+}
+
+// =================================================================
+// 생명주기 메서드
+// =================================================================
+
+onMounted(() => {
+  nextTick(() => {
+    // 🆕 상품 데이터 먼저 로딩
+    loadProduct()
+
+    // 기존 탭 네비게이션 초기화는 그대로 유지
+    setTimeout(() => {
+      initTabNavigation()
+
+      const tabBar = document.querySelector('.shopping-product-mid-content-menu-bar')
+      if (tabBar) {
+        originalTabBarTop.value = tabBar.offsetTop
+      }
+
+      window.addEventListener('scroll', handleScroll)
+
+      window.addEventListener('resize', () => {
+        setTimeout(() => {
+          calculateSectionOffsets()
+          detectCurrentSection()
+        }, 100)
+      })
+    }, 300)
+  })
+})
+
+onUnmounted(() => {
+  // ⬇️ 수정
+  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('resize', calculateSectionOffsets)
+  if (scrollTimer) clearTimeout(scrollTimer)
+})
 </script>
 
 <template>
-  <div class="shopping-detail-container">
+  <!-- 로딩 상태 -->
+  <div v-if="productState.loading" class="loading-container">
+    <div class="loading-spinner">상품 정보를 불러오는 중...</div>
+  </div>
+
+  <!-- 에러 상태 -->
+  <div v-else-if="productState.error" class="error-container">
+    <div class="error-message">{{ productState.error }}</div>
+    <button @click="loadProduct" class="retry-button">다시 시도</button>
+  </div>
+
+  <!-- 정상 상태 - 기존 div에 v-else 추가 -->
+  <div v-else class="shopping-detail-container">
     <div class="shopping-detail-top">
       <div class="shopping-detail-top-left">
         <img
           class="shopping-detail-main-product-image"
-          src="https://papamarket.kr/web/product/big/202302/6825f425ba4f2273acf9d9d088aeb927.jpg"
-          alt="상품메인 이미지"
+          :src="
+            productState.data?.main_image_url ||
+            'https://papamarket.kr/web/product/big/202302/6825f425ba4f2273acf9d9d088aeb927.jpg'
+          "
+          :alt="productState.data?.title || '상품 이미지'"
         />
       </div>
       <div class="shopping-detail-top-right">
-        <span id="product-detail-category-badge">채소</span>
-        <h1 id="product-title-name-top">한통 양배추</h1>
-        <p id="product-descript-text-top">아삭한 잎에 깃든 달콤함</p>
+        <span id="product-detail-category-badge">{{ categoryName }}</span>
+        <h1 id="product-title-name-top">{{ productState.data?.title || '상품명' }}</h1>
+        <p id="product-descript-text-top">{{ productState.data?.subtitle || '상품 설명' }}</p>
 
         <div class="product-price-info-container">
           <div class="product-price-discount-and-current-price">
-            <h1>25%</h1>
-            <h2>2,990원</h2>
+            <h1>{{ productState.data?.discount_rate || 0 }}%</h1>
+            <h2>{{ discountedPrice.toLocaleString() }}원</h2>
           </div>
-          <h6>3,990원</h6>
+          <h6>{{ productState.data?.original_price?.toLocaleString() }}원</h6>
         </div>
 
-        <p id="product-origin-info">원산지: 국산</p>
+        <p id="product-origin-info">원산지: {{ productState.data?.origin || '미표기' }}</p>
 
         <div class="product-info-top-border-container">
           <div class="product-info-top-border-items-boxes">
@@ -90,12 +420,16 @@ function next() {
 
           <div class="product-info-top-border-items-boxes">
             <div class="product-info-top-border-items-left">판매단위</div>
-            <div class="product-info-top-border-items-right">1통</div>
+            <div class="product-info-top-border-items-right">
+              {{ productState.data?.unit || '1통' }}
+            </div>
           </div>
 
           <div class="product-info-top-border-items-boxes">
             <div class="product-info-top-border-items-left">중량/용량</div>
-            <div class="product-info-top-border-items-right">900g 내외</div>
+            <div class="product-info-top-border-items-right">
+              {{ productState.data?.weight_or_volume || '900g 내외' }}
+            </div>
           </div>
 
           <div class="product-info-top-border-items-boxes">
@@ -116,16 +450,25 @@ function next() {
             <div class="product-info-top-border-items-left">상품선택</div>
             <div class="product-info-top-border-items-right">
               <div class="product-items-buy-count-container">
-                <div class="product-buy-count-product-name">한통 양배추</div>
+                <div class="product-buy-count-product-name">
+                  {{ productState.data?.title || '상품명' }}
+                </div>
                 <div class="product-buy-count-info-bottom">
                   <div class="product-items-buy-count-button-container">
-                    <p id="product-buy-count-down">-</p>
-                    <span id="product-buy-count">1</span>
-                    <p id="product-buy-count-up">+</p>
+                    <p id="product-buy-count-down" @click="decreaseQuantity">-</p>
+                    <input
+                      id="product-buy-count"
+                      type="number"
+                      :value="productState.quantity"
+                      @input="handleQuantityInput"
+                      min="1"
+                      style="width: 50px; text-align: center; border: none; background: transparent"
+                    />
+                    <p id="product-buy-count-up" @click="increaseQuantity">+</p>
                   </div>
                   <div class="product-buy-count-price-container">
-                    <span>3,990원</span>
-                    <p>2,990원</p>
+                    <span>{{ productState.data?.original_price?.toLocaleString() }}원</span>
+                    <p>{{ discountedPrice.toLocaleString() }}원</p>
                   </div>
                 </div>
               </div>
@@ -134,97 +477,102 @@ function next() {
 
           <div class="product-price-big-font-size">
             <span>총 상품금액 : </span>
-            <h1>2,990</h1>
+            <h1>{{ totalPrice.toLocaleString() }}</h1>
             <h3>원</h3>
           </div>
 
           <div class="product-buy-decide-button-or-cart-push">
-            <button id="shopping-cart-push">장바구니 담기</button>
+            <button id="shopping-cart-push" @click="addToCart">장바구니 담기</button>
             <button id="shopping-product-right-now-buy" @click="goToPayment">바로 구매</button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="shopping-product-mid-content-menu-bar">
-      <div id="shopping-product-description-mid" class="shopping-product-mid-content-menu-items">
-        상품설명
-      </div>
-      <div id="shopping-product-reviews-mid" class="shopping-product-mid-content-menu-items">
-        상품후기 <span>(20,417)</span>
-      </div>
-      <div id="shopping-product-question-mid" class="shopping-product-mid-content-menu-items">
-        상품문의
-      </div>
+    <div class="shopping-product-mid-content-menu-bar" :class="{ 'sticky-tab-bar': isTabSticky }">
+      <div class="shopping-product-mid-content-menu-items">상품설명</div>
+      <div class="shopping-product-mid-content-menu-items">배송정보</div>
+      <div class="shopping-product-mid-content-menu-items">상품후기 <span>(20,417)</span></div>
     </div>
 
     <!-- 필수 표기 정보 -->
-    <div class="required-notation-info">
-      <h5>필수 표기 정보</h5>
+    <div class="detail-info required-notation-info">
+      <h5 class="product-info-position">필수 표기 정보</h5>
       <div class="required-notation-info-body">
         <div class="required-notation-info-body-row">
           <div class="required-notation-info-head-items">중량 (용량)</div>
-          <div class="required-notation-info-child-items">900g 내외</div>
+          <div class="required-notation-info-child-items">
+            {{ productState.data?.weight_or_volume || '900g 내외' }}
+          </div>
           <div class="required-notation-info-head-items">제품 주요 사양</div>
-          <div class="required-notation-info-child-items">-</div>
+          <div class="required-notation-info-child-items">
+            {{ productState.data?.packaging || '-' }}
+          </div>
         </div>
 
         <div class="required-notation-info-body-row">
           <div class="required-notation-info-head-items">권장 유통 기한</div>
-          <div class="required-notation-info-child-items">수령 후 일주일</div>
+          <div class="required-notation-info-child-items">
+            {{ productState.data?.expiration_date || '수령 후 일주일' }}
+          </div>
           <div class="required-notation-info-head-items">제조국</div>
-          <div class="required-notation-info-child-items">대한민국</div>
+          <div class="required-notation-info-child-items">
+            {{ productState.data?.origin || '대한민국' }}
+          </div>
         </div>
 
         <div class="required-notation-info-body-row">
           <div class="required-notation-info-head-items">사업자 명</div>
-          <div class="required-notation-info-child-items">PickCook</div>
+          <div class="required-notation-info-child-items">
+            {{ productState.data?.seller || 'PickCook' }}
+          </div>
           <div class="required-notation-info-head-items">제품 사용 방법</div>
           <div class="required-notation-info-child-items">취식</div>
         </div>
       </div>
     </div>
 
-    <div class="very-big-mid-title-and-image-and-description">
-      <img
-        src="https://cdnweb01.wikitree.co.kr/webdata/editor/202507/07/img_20250707171857_abeb8057.webp"
+    <div class="description-section very-big-mid-title-and-image-and-description">
+      <!-- <img
+        :src="
+          productState.data?.detail_image_url ||
+          'https://cdnweb01.wikitree.co.kr/webdata/editor/202507/07/img_20250707171857_abeb8057.webp'
+        "
         alt="중간 대표 이미지"
-      />
-      <h4>아삭한 잎에 깃든 달콤함</h4>
-      <h1>한통 양배추</h1>
+      /> -->
+      <h4>{{ productState.data?.subtitle || '상품 부제목' }}</h4>
+      <h1>{{ productState.data?.title || '상품명' }}</h1>
     </div>
 
     <div class="shopping-product-mid-description-text-box">
-      <p>
-        수분감 가득한 잎이 겹겹이 쌓인 양배추는 무궁무진한 활용도를 자랑하는 채소예요. 생으로 먹으면
-        아삭아삭한 식감이 돋보이고, 살짝 데치거나 볶아내면 은근한 단맛이 매력적이죠. 컬리는 원하는
-        대로 잘라 사용할 수 있도록 한 통 그대로 준비했어요. 채썬 양배추에 드레싱을 뿌려 간단한
-        샐러드로 즐겨도 좋고요. 가볍게 삶아 따끈한 밥과 양념장을 올려 맛있는 쌈밥을 만들어도 훌륭할
-        거예요.
-      </p>
+      <p>{{ productState.data?.description || '상품 상세 설명이 여기에 표시됩니다.' }}</p>
     </div>
 
-    <div class="shopping-product-mid-description-add-images-container">
+    <!-- <div class="shopping-product-mid-description-add-images-container">
       <img src="https://homeabs.kr/wp-content/uploads/2025/01/IMG_9686.jpg" alt="상품사진1" />
       <img
         src="https://recipe1.ezmember.co.kr/cache/recipe/2022/04/06/51f02b4c6475fea0ef12f727604cd2e21.jpg"
         alt="상품사진2"
       />
-    </div>
+    </div> -->
 
     <div class="shipping-information-container">
-      <h5>배송 정보</h5>
+      <h5 class="delivery-info">배송 정보</h5>
       <div class="shipping-information-container-body">
         <div class="shipping-information-container-body-row">
           <div class="shipping-information-container-head-items">배송 방법</div>
-          <div class="shipping-information-container-items">샛별배송</div>
+          <div class="shipping-information-container-items">
+            {{ productState.data?.shipping_info || '샛별배송' }}
+          </div>
           <div class="shipping-information-container-head-items">배송기간</div>
           <div class="shipping-information-container-items">새벽</div>
         </div>
 
         <div class="shipping-information-container-body-row">
           <div class="required-notation-info-head-items">배송사</div>
-          <div class="shipping-information-container-items">PickCook</div>
+          <div class="shipping-information-container-items">
+            {{ productState.data?.seller || 'PickCook' }}
+          </div>
           <div class="shipping-information-container-head-items">배송비</div>
           <div class="shipping-information-container-items">0원</div>
         </div>
@@ -243,32 +591,34 @@ function next() {
       </div>
     </div>
 
-    <div class="slider-container">
-      <button class="nav-button left" @click="prev" :disabled="currentIndex === 0">
-        <img src="/public/assets/icons/ic-banner-left.png" alt="left" />
-      </button>
+    <div class="review-section">
+      <div class="slider-container">
+        <button class="nav-button left" @click="prev" :disabled="currentIndex === 0">
+          <img src="/public/assets/icons/ic-banner-left.png" alt="left" />
+        </button>
 
-      <div class="slider-wrapper">
-        <div class="slider" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
-          <div class="slide" v-for="(slide, index) in groupedSlides" :key="index">
-            <img
-              v-for="(img, i) in slide"
-              :key="i"
-              :src="img"
-              alt="리뷰 이미지"
-              class="review-image"
-            />
+        <div class="slider-wrapper">
+          <div class="slider" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
+            <div class="slide" v-for="(slide, index) in groupedSlides" :key="index">
+              <img
+                v-for="(img, i) in slide"
+                :key="i"
+                :src="img"
+                alt="리뷰 이미지"
+                class="review-image"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <button
-        class="nav-button right"
-        @click="next"
-        :disabled="currentIndex === groupedSlides.length - 1"
-      >
-        <img src="/public/assets/icons/ic-banner-right.png" alt="오른쪽" />
-      </button>
+        <button
+          class="nav-button right"
+          @click="next"
+          :disabled="currentIndex === groupedSlides.length - 1"
+        >
+          <img src="/public/assets/icons/ic-banner-right.png" alt="오른쪽" />
+        </button>
+      </div>
     </div>
 
     <div class="shopping-product-reviews-filter-container">
@@ -357,5 +707,88 @@ function next() {
 .nav-button.left img {
   width: 20px;
   height: 20px;
+}
+
+.sticky-tab-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 활성 탭 스타일 */
+.shopping-product-mid-content-menu-items.active {
+  color: #e14345;
+  border-bottom: 2px solid #e14345;
+  font-weight: 600;
+}
+
+/* 탭 호버 효과 */
+.shopping-product-mid-content-menu-items {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  height: 50px;
+}
+
+.shopping-product-mid-content-menu-items:hover {
+  color: #e14345;
+}
+
+.required-notation-info {
+  margin-top: 60px; /* 헤더 높이만큼 */
+}
+
+/* 로딩/에러 상태 스타일 추가 */
+.loading-container,
+.error-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  width: 100%;
+  gap: 20px;
+}
+
+.loading-spinner {
+  font-size: 18px;
+  color: #666;
+  text-align: center;
+}
+
+.error-message {
+  font-size: 16px;
+  color: #e14345;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.retry-button {
+  padding: 10px 20px;
+  background-color: #e14345;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.retry-button:hover {
+  background-color: #d63031;
+}
+
+/* 수량 입력 스타일 개선 */
+#product-buy-count {
+  font-weight: bold;
+  font-size: 16px;
+  outline: none;
+}
+
+#product-buy-count:focus {
+  border: 1px solid #e14345 !important;
+  border-radius: 2px;
 }
 </style>

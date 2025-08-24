@@ -18,7 +18,7 @@ const cartList = async () => {
 
 const updateQuantity = async (cartItemId, quantity) => {
   try {
-    const response = await api.patch(`api/cart/${cartItemId}`, { quantity })
+    const response = await api.patch(`api/cart/${cartItemId}`, quantity )
     return {
       success: response.data.success,
       message: response.data.message,

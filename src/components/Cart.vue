@@ -19,22 +19,22 @@ onMounted(async () => {
   }
 })
 
-// 개별 수량 변경 핸들러 + 서버에 반영
-const handleQtyChange = async (id, newQty) => {
-  const item = cartItems.value.find((i) => i.idx === id)
-  if (!item) return
+  // 개별 수량 변경 핸들러 + 서버에 반영
+  const handleQtyChange = async (id, newQty) => {
+    const item = cartItems.value.find((i) => i.idx === id)
+    if (!item) return
 
-  const oldQty = item.quantity // 이전 값 저장
-  item.quantity = newQty // 화면에 즉시 반영
+    const oldQty = item.quantity // 이전 값 저장
+    item.quantity = newQty.quantity // 화면에 즉시 반영
 
-  try {
-    await axios.patch(`/api/cart/${id}`, { quantity: newQty })
-  } catch (e) {
-    console.error('수량 변경 실패: ', e)
-    item.quantity = oldQty
-    alert('수량 변경에 실패하였습니다.')
+    try {
+      await api.updateQuantity(id, newQty)
+    } catch (e) {
+      console.error('수량 변경 실패: ', e)
+      item.quantity = oldQty
+      alert('수량 변경에 실패하였습니다.')
+    }
   }
-}
 
 // 체크 상태 변경 핸들러
 const handleCheck = ({ checked, idx, product_id }) => {

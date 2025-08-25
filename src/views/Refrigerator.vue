@@ -106,7 +106,7 @@ const transformBackendData = (backendItem) => {
   return {
     id: backendItem.id,
     name: backendItem.ingredientName,
-    qnt: `${backendItem.quantity}개`, // 단위는 임시로 "개" 사용
+    qnt: backendItem.quantity, // 단위는 임시로 "개" 사용
     rawDate: backendItem.expirationDate,
     exDate: getDaysLeft(backendItem.expirationDate),
     category: backendItem.category?.name || '기타',
@@ -560,7 +560,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <!-- 🔥 동기화 프롬프트 모달 -->
+  <!-- 동기화 프롬프트 모달 -->
   <div v-if="showSyncModal" class="modal-overlay" @click="closeSyncModal">
     <div class="modal-content" @click.stop>
       <h2>{{ syncPromptData?.baseMessage }}</h2>

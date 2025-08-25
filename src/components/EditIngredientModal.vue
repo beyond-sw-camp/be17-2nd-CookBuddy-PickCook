@@ -61,7 +61,7 @@ async function submitForm() {
   // 백엔드 형식으로 데이터 변환
   const submitData = {
     ingredientName: form.name.trim(),
-    quantity: parseInt(form.qnt.replace(/[^0-9]/g, '')) || 1, // 스트링에서 숫자 추출
+    quantity: form.qnt.trim(),
     expirationDate: form.rawDate,
     categoryId: getCategoryIdByName(form.category), // 카테고리명 → ID 변환
     location: form.location,
@@ -74,7 +74,13 @@ async function submitForm() {
     closeModal()
   } catch (error) {
     console.error('식재료 수정 실패:', error)
-    alert('수정에 실패했습니다. 다시 시도해주세요.')
+
+    // ✅ 백엔드에서 온 정확한 오류 메시지 사용
+    if (error.response?.data?.message) {
+      alert(`수정 실패: ${error.response.data.message}`)
+    } else {
+      alert('수정에 실패했습니다. 다시 시도해주세요.')
+    }
   }
 }
 
@@ -144,7 +150,7 @@ function getCategoryIdByName(categoryName) {
           <label class="ingredient-label">보관위치</label>
           <select v-model="form.location" class="ingredient-select">
             <option value="">선택</option>
-            <option>실외 저장소</option>
+            <option>실외저장소</option>
             <option>냉장실</option>
             <option>냉동실</option>
           </select>

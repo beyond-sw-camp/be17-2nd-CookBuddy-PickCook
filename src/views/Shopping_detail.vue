@@ -532,14 +532,14 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <div class="description-section very-big-mid-title-and-image-and-description">
-      <!-- <img
+    <div class="very-big-mid-title-and-image-and-description">
+      <img
         :src="
           productState.data?.detail_image_url ||
           'https://cdnweb01.wikitree.co.kr/webdata/editor/202507/07/img_20250707171857_abeb8057.webp'
         "
         alt="중간 대표 이미지"
-      /> -->
+      />
       <h4>{{ productState.data?.subtitle || '상품 부제목' }}</h4>
       <h1>{{ productState.data?.title || '상품명' }}</h1>
     </div>
@@ -548,13 +548,19 @@ onUnmounted(() => {
       <p>{{ productState.data?.description || '상품 상세 설명이 여기에 표시됩니다.' }}</p>
     </div>
 
-    <!-- <div class="shopping-product-mid-description-add-images-container">
-      <img src="https://homeabs.kr/wp-content/uploads/2025/01/IMG_9686.jpg" alt="상품사진1" />
+    <div class="shopping-product-mid-description-add-images-container">
       <img
-        src="https://recipe1.ezmember.co.kr/cache/recipe/2022/04/06/51f02b4c6475fea0ef12f727604cd2e21.jpg"
-        alt="상품사진2"
+        :src="
+          productState.data?.detail_image_url ||
+          'https://homeabs.kr/wp-content/uploads/2025/01/IMG_9686.jpg'
+        "
+        alt="상품사진1"
       />
-    </div> -->
+      <!-- <img
+        src="https://recipe1.ezmember.co.kr/cache/recipe/2022/04/06/51f02b4c6475fea0ef12f727604cd2e21.jpg"
+        lt="상품사진2"
+      /> -->
+    </div>
 
     <div class="shipping-information-container">
       <h5 class="delivery-info">배송 정보</h5>

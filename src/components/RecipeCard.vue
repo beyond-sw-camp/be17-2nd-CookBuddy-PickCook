@@ -82,7 +82,7 @@ const toggleScrap = async (event) => {
 </script>
 
 <template>
-  <RouterLink :to="`/recipe/detail/${props.recipe.idx}`" class="c-board-link">
+  <RouterLink :to="`/recipe/detail/${recipe.idx}`">
     <div class="recipe-card content-card">
       <div class="recipe-rep-image card-image">
         <img :src="props.recipe.image_large_url" :alt="props.recipe.title" />

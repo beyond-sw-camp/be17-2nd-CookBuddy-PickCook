@@ -2,16 +2,38 @@
 import api from '@/api/recipe'
 import { onMounted, reactive } from 'vue'
 import RecipeCard from '@/components/RecipeCard.vue'
+import Pagination from '@/components/Pagination.vue'
 
 const recipeList = reactive([])
-const getRecipeList = async () => {
-  const data = await api.recipeList()
+const pageResponse = reactive({
+  content: [],
+  currentPage: 0,
+  totalPages: 0,
+  totalElements: 0,
+  size: 10,
+})
+
+// 페이지 이동 시 실행
+const loadPage = (newPage) => {
+  getRecipeList(newPage)
+}
+
+const getRecipeList = async (page = 0) => {
+  const data = await api.recipeList(page, pageResponse.size)
   if (data && data.success) {
     if (data.results) {
-      recipeList.push(...data.results)
+      Object.assign(recipeList, data.results.content)
+      pageResponse.content = data.results.content
+      pageResponse.currentPage = data.results.currentPage
+      pageResponse.totalPages = data.results.totalPages
+      pageResponse.totalElements = data.results.totalElements
+      pageResponse.size = data.results.size
     }
   } else {
     recipeList.splice(0)
+    pageResponse.content = []
+    pageResponse.totalPages = 0
+    pageResponse.totalElements = 0
   }
 }
 
@@ -46,6 +68,12 @@ onMounted(() => {
       <RecipeCard v-for="(recipe, index) in recipeList" :key="index" :recipe="recipe" />
     </div>
   </div>
+
+  <Pagination
+    :currentPage="pageResponse.currentPage"
+    :totalPages="pageResponse.totalPages"
+    @changePage="loadPage"
+  />
 </template>
 
 <style scoped>

@@ -234,6 +234,16 @@ const getExpiredIngredients = async () => {
   }
 }
 
+const getSyncPrompt = async () => {
+  try {
+    const response = await api.get('/api/refrigerator/items/sync-prompt')
+    return response.data.results
+  } catch (error) {
+    console.error('동기화 메시지 조회 실패:', error)
+    throw error
+  }
+}
+
 // =================================================================
 // Export
 // =================================================================
@@ -261,5 +271,6 @@ export default {
   // 특수 기능
   addBulkIngredients,
   getExpiringIngredients,
-  getExpiredIngredients
+  getExpiredIngredients,
+  getSyncPrompt
 }

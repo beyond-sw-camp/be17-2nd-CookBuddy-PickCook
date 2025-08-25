@@ -25,6 +25,9 @@ const items = ref([])
 const loading = ref(false)
 const categories = ref([])
 
+const showSyncModal = ref(false)
+const syncPromptData = ref(null)
+
 const filters = reactive({
   keyword: null,
   categoryId: null,
@@ -487,13 +490,67 @@ function getItemIndex(item) {
 }
 
 // =================================================================
+// 동기화 모달 관련 함수들
+// =================================================================
+
+const loadInitialData = async () => {
+  try {
+    // 1. 동기화 메시지 먼저 조회
+    const syncPrompt = await refrigeratorApi.getSyncPrompt()
+    syncPromptData.value = syncPrompt
+    showSyncModal.value = true
+
+    // 2. 기존 데이터 로드
+    await Promise.all([getIngredients(), loadCategories()])
+  } catch (error) {
+    console.error('초기 데이터 로드 실패:', error)
+    // 동기화 메시지 실패해도 기본 데이터는 로드
+    await Promise.all([getIngredients(), loadCategories()])
+  }
+}
+
+const getMessageLines = () => {
+  if (!syncPromptData.value?.contextMessage) return []
+  return syncPromptData.value.contextMessage.split('\n')
+}
+
+const getLineClass = (line) => {
+  if (line.includes('만료된')) return 'message-expired'
+  if (line.includes('긴급')) return 'message-urgent'
+  if (line.includes('2-3일')) return 'message-expiring'
+  return 'message-info'
+}
+
+const closeSyncModal = () => {
+  showSyncModal.value = false
+}
+
+const handleSyncAction = () => {
+  const action = syncPromptData.value?.recommendedAction
+
+  if (action?.includes('만료')) {
+    // 만료된 아이템 (0일 미만)
+    filters.expirationStatus = 'EXPIRED'
+    applyFilters()
+  } else if (action?.includes('긴급') || action?.includes('1일')) {
+    // 긴급 아이템 (1일 이하)
+    filters.expirationStatus = 'URGENT'
+    applyFilters()
+  } else if (action?.includes('임박') || action?.includes('3일')) {
+    // 임박 아이템 (2-3일)
+    filters.expirationStatus = 'EXPIRING_SOON'
+    applyFilters()
+  }
+
+  closeSyncModal()
+}
+
+// =================================================================
 // 라이프사이클
 // =================================================================
 
 onMounted(async () => {
-  await Promise.all([getIngredients(), loadCategories()])
-
-  // 외부 클릭 시 드롭다운 닫기
+  await loadInitialData()
   document.addEventListener('click', closeAllDropdowns)
 })
 
@@ -503,6 +560,34 @@ onUnmounted(() => {
 </script>
 
 <template>
+  <!-- 🔥 동기화 프롬프트 모달 -->
+  <div v-if="showSyncModal" class="modal-overlay" @click="closeSyncModal">
+    <div class="modal-content" @click.stop>
+      <h2>{{ syncPromptData?.baseMessage }}</h2>
+      <div
+        v-for="(line, index) in getMessageLines()"
+        :key="index"
+        :class="getLineClass(line)"
+        class="message-line"
+      >
+        {{ line }}
+      </div>
+
+      <div class="ingredient-edit-modal-button-container">
+        <button
+          v-if="syncPromptData?.recommendedAction"
+          @click="handleSyncAction"
+          class="ingredient-add-btn"
+        >
+          {{ syncPromptData.recommendedAction }}
+        </button>
+        <button @click="closeSyncModal" class="ingredient-add-btn secondary-btn">
+          나중에 하기
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- 검색 필터 영역 -->
   <div class="filter-section">
     <div class="refrigerator-search-help-section">
@@ -572,7 +657,7 @@ onUnmounted(() => {
           </button>
         </div>
         <div id="refrigerator-item-search-button">
-          <img src="/assets/icons/ic-white-bold-search.png" alt="돋보기" />
+          <img src="/assets/icons/ic-white-bold-search.png" alt="찾보기" />
         </div>
       </div>
     </div>
@@ -725,5 +810,37 @@ onUnmounted(() => {
 
 .dropdown-item:last-child {
   border-radius: 0 0 8px 8px;
+}
+
+/* 🔥 멀티라인 메시지 스타일 */
+.message-line {
+  padding: 8px 0;
+  font-weight: 600;
+  font-size: 14px;
+  text-align: center;
+}
+
+.message-expired {
+  color: #dc3545; /* 빨간색 - 가장 긴급 */
+}
+
+.message-urgent {
+  color: #ff6b00; /* 주황색 - 긴급 */
+}
+
+.message-expiring {
+  color: #ffc107; /* 노란색 - 주의 */
+}
+
+.message-info {
+  color: #495057; /* 회색 - 정보성 */
+}
+
+/* 보조 버튼 색상 */
+.secondary-btn {
+  background-color: var(--color-gray) !important;
+}
+.secondary-btn:hover {
+  background-color: #7c7c7c !important;
 }
 </style>

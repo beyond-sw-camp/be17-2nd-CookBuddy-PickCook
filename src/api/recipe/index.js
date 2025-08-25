@@ -1,8 +1,8 @@
 import api from '@/plugins/axiosinterceptor'
 
-const recipeList = async () => {
+const recipeList = async (page, size) => {
   let data = {}
-  let url = '/recipe'
+  let url = `api/recipe?page=${page}&size=${size}`
 
   await api
     .get(url)
@@ -18,14 +18,12 @@ const recipeList = async () => {
 
 const getRecipe = async (id) => {
   let data = {}
-  let url = `/recipes/${id}.json`
+  let url = `api/recipe/${id}`
 
   await api
-    .get(url, {
-      responseType: 'json',
-    })
+    .get(url)
     .then((res) => {
-      data = res.data.results[0]
+      data = res.data
     })
     .catch((error) => {
       console.error('❌ API 오류:', error)
@@ -33,6 +31,21 @@ const getRecipe = async (id) => {
     })
 
   return data
+}
+
+const registerRecipe = async (payload) => {
+  let data = {}
+  let url = 'api/recipe/register'
+
+  await api
+    .post(url, payload)
+    .then((res) => {
+      data = res.data
+    })
+    .catch((error) => {
+      console.error(error)
+      data = error.response?.data || { success: false }
+    })
 }
 
 export default { recipeList, getRecipe }

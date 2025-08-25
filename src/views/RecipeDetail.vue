@@ -24,6 +24,7 @@ const getRecipe = async () => {
   const data = await api.getRecipe(id)
   if (data) {
     Object.assign(recipe, data)
+    console.log(recipe)
   }
 }
 
@@ -35,7 +36,7 @@ onMounted(() => {
 <template>
   <div class="rd-container">
     <section class="recipe-image">
-      <img :src="recipe.thumbnail" alt="레시피 이미지" />
+      <img :src="recipe.image_large_url" alt="레시피 이미지" />
       <h2 class="recipe-title">{{ recipe.title }}</h2>
       <p class="recipe-description">{{ recipe.description }}</p>
       <div>
@@ -50,9 +51,9 @@ onMounted(() => {
         <h3>[주재료]</h3>
         <table class="rd-ingredients-table">
           <tbody>
-            <tr v-for="(item, i) in recipe.ingredients.main" :key="'main-' + i">
-              <td class="rd-td">{{ item.name }}</td>
-              <td class="rd-td">{{ item.amount }}</td>
+            <tr v-for="(item, i) in recipe.ingredients" :key="'main-' + i">
+              <td class="rd-td">{{ item.ingredient_name }}</td>
+              <td class="rd-td">{{ item.quantity }}</td>
             </tr>
           </tbody>
         </table>
@@ -77,9 +78,9 @@ onMounted(() => {
       <RecipeStep
         v-for="(step, i) in recipe.steps"
         :key="i"
-        :stepNumber="step.stepNumber"
-        :text="step.text"
-        :image="step.image"
+        :stepNumber="step.step_order"
+        :text="step.description"
+        :image="step.image_url"
       />
     </section>
   </div>

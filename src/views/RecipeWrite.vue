@@ -59,9 +59,7 @@ const handleImageUpload = (event, index) => {
 }
 
 // 제출
-const submitRecipe = () => {
-  console.log('레시피 등록:', recipe.value)
-}
+const submitRecipe = () => {}
 </script>
 
 <template>

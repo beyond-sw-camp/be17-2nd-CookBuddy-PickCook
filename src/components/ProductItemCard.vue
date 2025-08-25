@@ -29,23 +29,28 @@ const toggleCart = async (event) => {
   event.stopPropagation()
   event.preventDefault()
 
-  // UI 업데이트
-  inCart.value = !inCart.value
-
   cartAnimationg.value = true
   setTimeout(() => {
     cartAnimationg.value = false
   }, 300)
 
   try {
-    await api.toggleInCart([props.product.id])
-    // 성공 → 그대로 유지
+    if (inCart.value) {
+      // 현재 장바구니에 있음 → 삭제 호출
+      await api.removeFromCart([props.product.id])
+      inCart.value = false
+    } else {
+      // 장바구니에 없음 → 등록 호출
+      await api.addToCart([props.product.id], 1)
+      inCart.value = true
+    }
   } catch (err) {
-    console.error('장바구니 담기 실패', err)
-    // 실패 → 원래 상태로 롤백
+    console.error('장바구니 토글 실패', err)
+    // 실패 시 상태 롤백
     inCart.value = !inCart.value
   }
 }
+
 </script>
 
 <template>

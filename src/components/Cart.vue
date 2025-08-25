@@ -37,7 +37,7 @@ onMounted(async () => {
   }
 
 // 체크 상태 변경 핸들러
-const handleCheck = ({ checked, idx, product_id }) => {
+const handleCheck = ({ checked, idx }) => {
   checkedItems.value[idx] = checked
 }
 
@@ -77,7 +77,7 @@ const deleteSelected = async () => {
 
   try {
     // product_id 배열을 API에 전송
-    await api.toggleInCart(selectedProductIds)
+    await api.addToCart(selectedProductIds)
 
     // 삭제 후 프론트에서도 제거
     cartItems.value = cartItems.value.filter(
@@ -96,7 +96,7 @@ const deleteSelected = async () => {
 // 개별 아이템 삭제
 const deleteItem = async ({ productId, idx }) => {
   try {
-    await api.toggleInCart([productId])
+    await api.removeFromCart([productId])
 
     // 프론트에서도 제거
     cartItems.value = cartItems.value.filter((item) => item.idx !== idx)

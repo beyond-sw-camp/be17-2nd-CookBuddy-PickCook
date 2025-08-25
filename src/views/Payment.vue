@@ -110,7 +110,7 @@ const onSubmitPayment = async () => {
         alert('결제가 완료되었습니다!')
         router.push('/payment/complete')
       } else {
-        alert(`결제 검증 실패: ${result?.status}`)
+        alert(`결제 실패`)
         router.push('/payment')
       }
     }

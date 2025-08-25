@@ -7,7 +7,7 @@ const recipeList = async () => {
   await api
     .get(url)
     .then((res) => {
-      data = res.data.results
+      data = res.data.results.content
     })
     .catch((error) => {
       data = error.data.results

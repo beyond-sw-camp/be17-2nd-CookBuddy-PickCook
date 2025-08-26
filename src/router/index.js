@@ -79,12 +79,12 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/shopping',
+      path: '/products',
       name: 'shopping',
       component: Shopping,
     },
     {
-      path: '/shopping/detail/:id',
+      path: '/products/detail/:id',
       name: 'shoppingdetail',
       component: Shopping_detail,
       meta: { requiresAuth: true },

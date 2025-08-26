@@ -54,7 +54,7 @@ const toggleCart = async (event) => {
 </script>
 
 <template>
-  <router-link :to="`/shopping/detail/${props.product.id}`">
+  <router-link :to="`/products/detail/${props.product.id}`">
     <div class="ingredients-card content-card">
       <div class="card-image">
         <img :src="props.product.main_image_url" :alt="props.product.title" />

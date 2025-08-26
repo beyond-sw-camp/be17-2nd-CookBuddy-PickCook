@@ -30,7 +30,7 @@ const searchPlaceholder = computed(() => {
   if (route.path === '/') return '통합검색'
   if (route.path.startsWith('/refrigerator')) return '재료로 레시피 검색'
   if (route.path.startsWith('/recipe')) return '음식이름으로 레시피 검색'
-  if (route.path.startsWith('/shopping')) return '상품 검색'
+  if (route.path.startsWith('/products')) return '상품 검색'
   if (route.path.startsWith('/community')) return '커뮤니티 검색'
   return '통합검색' // 기본값
 })
@@ -60,7 +60,7 @@ function openSearchSlide() {
           >냉장고</RouterLink
         >
         <RouterLink to="/recipe" :class="{ active: isActive('/recipe') }">레시피</RouterLink>
-        <RouterLink to="/shopping" :class="{ active: isActive('/shopping') }">쇼핑</RouterLink>
+        <RouterLink to="/products" :class="{ active: isActive('/products') }">쇼핑</RouterLink>
         <RouterLink to="/community" :class="{ active: isActive('/community') }"
           >커뮤니티</RouterLink
         >

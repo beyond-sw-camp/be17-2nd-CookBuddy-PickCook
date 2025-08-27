@@ -1,23 +1,41 @@
 <script setup>
-import { reactive, onMounted, ref } from 'vue'
-import shoppingAPI from '@/api/shopping'
+import { reactive, onMounted } from 'vue'
+import api from '@/api/shopping'
 import ProductItemCard from '@/components/ProductItemCard.vue'
+import Pagination from '@/components/Pagination.vue'
 
-const products = reactive({
-  allProducts: [],
+const products = reactive([])
+const pageResponse = reactive({
+  content: [],
+  currentPage: 0,
+  totalPages: 0,
+  totalElements: 0,
+  size: 10,
 })
 
-const loading = ref(false)
+const loadPage = (newPage) => {
+  getProductList(newPage)
+}
 
-onMounted(async () => {
-  loading.value = true // 로딩 시작
-  try {
-    products.allProducts = await shoppingAPI.getAllProducts()
-  } catch (error) {
-    console.error('데이터 로딩 실패:', error)
-  } finally {
-    loading.value = false // 로딩 끝
+const getProductList = async (page = 0) => {
+  const data = await api.getAllProducts(page, pageResponse.size)
+  if (data && data.content) {
+    products.splice(0, products.length, ...data.content) 
+    pageResponse.content = data.results.content
+    pageResponse.currentPage = data.results.currentPage
+    pageResponse.totalPages = data.results.totalPages
+    pageResponse.totalElements = data.results.totalElements
+    pageResponse.size = data.results.size
+  } else {
+    products.splice(0)
+    pageResponse.content = []
+    pageResponse.totalPages = 0
+    pageResponse.totalElements = 0
   }
+}
+
+onMounted(() => {
+  getProductList()
 })
 </script>
 
@@ -77,15 +95,15 @@ onMounted(async () => {
         <span class="filter-tag">가격 낮은순 &nbsp;▼</span>
       </div>
     </div>
-    <div v-if="loading" class="loading">상품을 불러오는 중...</div>
-    <div v-else class="content-grid">
-      <ProductItemCard
-        v-for="product in products.allProducts"
-        :key="product.id"
-        :product="product"
-      />
+    <div class="content-grid">
+      <ProductItemCard v-for="(product, index) in products" :key="index" :product="product" />
     </div>
   </div>
+  <Pagination
+    :currentPage="pageResponse.currentPage"
+    :totalPages="pageResponse.totalPages"
+    @changePage="loadPage"
+  />
 </template>
 
 <style scoped>

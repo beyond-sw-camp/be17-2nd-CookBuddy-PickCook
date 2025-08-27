@@ -60,7 +60,7 @@ onMounted(() => {
   <!-- 컨텐츠 섹션 -->
   <div class="content-section">
     <div class="content-header">
-      <p class="result-count">전체 14,596</p>
+      <p class="result-count">전체 {{pageResponse.totalElements.toLocaleString()}}개</p>
     </div>
 
     <!-- 레시피 그리드 -->

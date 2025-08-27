@@ -136,6 +136,7 @@ const goToPayment = () => {
   localStorage.setItem('checkoutItems', JSON.stringify(selectedItems))
 }
 
+
 // 쇼핑 페이지로 이동
 const goToShopping = () => {
   router.push('/shopping')

@@ -1,10 +1,12 @@
 <script setup>
 import { ref, watch, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   item: Object,
   isChecked: Boolean,
 })
+const router = useRouter()
 
 // 부모에게 알릴 요소들
 const emit = defineEmits(['update:quantity', 'toggle-check', 'delete-item']) 
@@ -68,6 +70,10 @@ const maxQty = 10
 // 버튼 활성화 상태
 const canDecrease = computed(() => quantity.value > minQty)
 const canIncrease = computed(() => quantity.value < maxQty)
+
+const goToShopping = (productId) => {
+  router.push({ name: 'shoppingdetail', params: { id: productId } })
+}
 </script>
 
 <template>
@@ -84,6 +90,7 @@ const canIncrease = computed(() => quantity.value < maxQty)
 
     <div class="my-cart-item-card-bottom">
       <img
+        @click="goToShopping(props.item.product_id)"
         :src="props.item.main_image_url"
         alt="상품 이미지"
       />

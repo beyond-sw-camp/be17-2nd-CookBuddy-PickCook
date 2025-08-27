@@ -7,9 +7,9 @@ import api from '@/plugins/axiosinterceptor'
 /**
  * 모든 상품 목록 조회
  */
-const getAllProducts = async () => {
+const getAllProducts = async (page, size) => {
   try {
-    const response = await api.get('/api/products/list')
+    const response = await api.get(`/api/products?page=${page}&size=${size}&sort=id&dir=ASC`)
     return response.data.results || []
   } catch (error) {
     console.error('상품 목록 조회 실패:', error)

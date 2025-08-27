@@ -38,7 +38,7 @@ const updateQuantity = async (cartItemId, quantity) => {
 const addToCart = async (cartItemIds, quantity = 1) => {
   try {
     const response = await api.post('api/cart/register', { 
-      product_id: cartItemIds,
+      product_ids: cartItemIds,
       quantity: quantity
     });
     return {

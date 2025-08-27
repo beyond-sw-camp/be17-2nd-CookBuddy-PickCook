@@ -2,6 +2,7 @@
 import { ref, computed, reactive, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import shoppingAPI from '@/api/shopping'
+import cartAPI from '@/api/cart'
 
 // =================================================================
 // 라우터 및 기본 설정
@@ -10,9 +11,42 @@ import shoppingAPI from '@/api/shopping'
 const router = useRouter()
 const route = useRoute()
 const productId = computed(() => route.params.id)
+const showCartModal = ref(false)
+
+const closeModal = () => {
+  showCartModal.value = false
+}
+
+const goToCart = () => {
+  showCartModal.value = false
+  router.push({ name: 'mypage-cart' })  // 장바구니 페이지로 이동
+}
 
 const goToPayment = () => {
-  router.push('/payment')
+  if (!productState.data) {
+    alert('상품 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.')
+    return
+  }
+
+  // 결제에 필요한 데이터 생성
+  const checkoutItem = {
+    idx: productState.data.id,         
+    product_id: productState.data.id,
+    name: productState.data.title,
+    main_image_url: productState.data.main_image_url,
+    discount_rate: productState.data.discount_rate,
+    original_price: productState.data.original_price,
+    quantity: productState.quantity,
+  }
+
+  // state로 전달
+  router.push({
+    path: '/payment',
+    state: { items: [checkoutItem] }, // 배열 형태로 넘김
+  })
+
+  // 새로고침 대비 localStorage에도 저장
+  localStorage.setItem('checkoutItems', JSON.stringify([checkoutItem]))
 }
 
 // =================================================================
@@ -156,20 +190,15 @@ const addToCart = async () => {
       button.textContent = '담는 중...'
     }
 
-    // 🔧 기존 방식으로 단순하게 호출
-    const cartAPI = await import('@/api/cart')
-    const response = await cartAPI.default.toggleInCart([productState.data.id])
+    const response = await cartAPI.addToCart([productState.data.id], productState.quantity)
 
     if (response.success) {
-      alert(
-        `${productState.data.title}이(가) 장바구니에 담겼습니다!\n장바구니에서 수량을 조절할 수 있습니다.`,
-      )
+      showCartModal.value = true // 모달 표시
     } else {
       throw new Error(response.message || '장바구니 담기에 실패했습니다.')
     }
   } catch (error) {
     console.error('장바구니 추가 실패:', error)
-    alert('장바구니에 담는 중 오류가 발생했습니다.')
   } finally {
     // 버튼 다시 활성화
     const button = document.getElementById('shopping-cart-push')
@@ -488,6 +517,17 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
+    <!-- 장바구니 담기 성공 모달 -->
+    <div v-if="showCartModal" class="modal-backdrop">
+      <div class="modal-content">
+        <img src="/assets/icons/ic-product-in-cart.png" alt="장바구니 담기 성공"/>
+        <h3>장바구니에 상품이 성공적으로 담겼습니다.</h3>
+        <div>
+          <button @click="goToCart">장바구니로 이동</button>
+          <button @click="closeModal">쇼핑 계속하기</button>
+        </div>
+      </div>
+    </div>
 
     <div class="shopping-product-mid-content-menu-bar" :class="{ 'sticky-tab-bar': isTabSticky }">
       <div class="shopping-product-mid-content-menu-items">상품설명</div>
@@ -796,5 +836,62 @@ onUnmounted(() => {
 #product-buy-count:focus {
   border: 1px solid #e14345 !important;
   border-radius: 2px;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 35px 20px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.modal-content > img {
+  width: 35px;
+}
+
+.modal-content h3 {
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 20px;
+}
+
+.modal-content > div {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.modal-content button {
+  width: 135px;
+  padding: 10px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-content button:first-child {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.modal-content button:first-child:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.modal-content button:last-child:hover {
+  background-color: #eaeaea;
 }
 </style>

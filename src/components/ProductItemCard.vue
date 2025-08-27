@@ -10,7 +10,7 @@ const props = defineProps({
 })
 
 // 로컬 상태
-const inCart = ref(props.product.inCart)
+const inCart = ref(props.product.isInCart)
 const cartAnimationg = ref(false)
 
 const cartSrc = computed(() =>
@@ -45,12 +45,10 @@ const toggleCart = async (event) => {
       inCart.value = true
     }
   } catch (err) {
-    console.error('장바구니 토글 실패', err)
     // 실패 시 상태 롤백
     inCart.value = !inCart.value
   }
 }
-
 </script>
 
 <template>
@@ -66,8 +64,10 @@ const toggleCart = async (event) => {
         </div>
         <div class="card-price">
           <span class="card-discount">{{ props.product.discount_rate }}%</span>
-          <span>{{ price }}원</span>
-          <div class="card-original-price">{{ props.product.original_price }}원</div>
+          <span>{{ price.toLocaleString() }}원</span>
+          <div class="card-original-price">
+            {{ props.product.original_price.toLocaleString() }}원
+          </div>
         </div>
         <div class="ingredients-stats card-stats">
           <!-- TODO: 백엔드 리뷰 기능 완성 후 평점과 리뷰 수 받아와 적용하기 -->

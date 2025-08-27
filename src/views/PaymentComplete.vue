@@ -1,6 +1,9 @@
 <script setup>
 import { onMounted, ref } from "vue"
 import lottie from "lottie-web"
+import { useRouter } from "vue-router"
+
+const router = useRouter()
 
 const lottieContainer = ref(null)
 
@@ -10,10 +13,15 @@ onMounted(() => {
     renderer: "svg",
     loop: true,
     autoplay: true,
-      // path: "/assets/animations/payment-success.json"
     path: "/assets/animations/bqh4dsxhG0.json"
   })
 })
+
+
+// 쇼핑 페이지로 이동
+const goToShopping = () => {
+  router.push('/shopping')
+}
 </script>
 
 <template>
@@ -26,7 +34,7 @@ onMounted(() => {
 
             <div class="payment-complete-buttons-container">
                 <button class="order-detail-page-go">주문 상세보기</button>
-                <button class="shopping-continue-go">쇼핑 계속하기</button>
+                <button @click="goToShopping" class="shopping-continue-go">쇼핑 계속하기</button>
             </div>
         </div>
     </div>

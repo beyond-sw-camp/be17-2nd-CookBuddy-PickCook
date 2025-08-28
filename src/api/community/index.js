@@ -1,9 +1,9 @@
 import api from '@/plugins/axiosinterceptor'
 import axios from 'axios'
 
-const getPostList = async () => {
+const getPostList = async (page, direction, keyword) => {
   let data = {}
-  let url = '/posts'
+  let url = `/posts/list?page=${page}&size=10&dir=${direction}&keyword=${keyword}`
 
   await api
     .get(url)

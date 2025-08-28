@@ -1,15 +1,17 @@
 <script setup>
 import { useUserStore } from '@/store/useUserStore'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import ProfileModal from './ProfileModal.vue'
 import { ref, computed, defineEmits } from 'vue'
 import { useBreakpoints } from '@/composables/useBreakpoints.js'
 
+const router = useRouter()
 const route = useRoute()
 const auth = useUserStore()
 const showProfileModal = ref(false)
 const { isDesktop, isMobileOrTablet } = useBreakpoints()
 const emit = defineEmits(['open-menu'])
+const keyword = ref('')
 
 // 경로 확인 (기존)
 const isActive = (path) => {
@@ -23,6 +25,20 @@ const isActive = (path) => {
 // 프로필 모달 토글 (기존)
 const profileModalToggle = () => {
   showProfileModal.value = !showProfileModal.value
+}
+
+const search = () => {
+  if (!keyword.value.trim()) return
+
+  // 기존 쿼리 유지하면서 keyword만 변경
+  router.push({
+    name: route.name,
+    query: {
+      ...route.query, // 기존 page, size, dir 유지
+      keyword: keyword.value.trim(),
+      page: 0, // 검색 시 1페이지로 초기화
+    },
+  })
 }
 
 // 경로에 따른 검색창 placeholder 변경
@@ -66,9 +82,18 @@ function openSearchSlide() {
         >
       </nav>
       <div class="search-bar">
-        <input type="text" :placeholder="searchPlaceholder" />
+        <input
+          v-model="keyword"
+          @keyup.enter="search"
+          type="text"
+          :placeholder="searchPlaceholder"
+        />
         <span
-          ><img class="header-search-icon" src="/assets/icons/ic-search-header.png" alt="검색"
+          ><img
+            @click="search"
+            class="header-search-icon"
+            src="/assets/icons/ic-search-header.png"
+            alt="검색"
         /></span>
       </div>
       <!-- 로그인 했을 경우 -->

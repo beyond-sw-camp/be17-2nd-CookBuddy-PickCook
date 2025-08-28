@@ -27,7 +27,7 @@ defineProps({
             <span class="c-board-dot"></span>
             <span class="c-board-comments">댓글 {{ post.comments }}</span>
             <span class="c-board-dot"></span>
-            <span class="c-board-likes">좋아요 {{ post.likes }}</span>
+            <span class="c-board-likes">좋아요 {{ post.likeCount }}</span>
           </div>
         </div>
       </div>

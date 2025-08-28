@@ -22,7 +22,7 @@ const getRecipeList = async (page = 0) => {
   const data = await api.recipeList(page, pageResponse.size)
   if (data && data.success) {
     if (data.results) {
-      Object.assign(recipeList, data.results.content)
+      recipeList.splice(0, recipeList.length, ...data.results.content)
       pageResponse.content = data.results.content
       pageResponse.currentPage = data.results.currentPage
       pageResponse.totalPages = data.results.totalPages

@@ -145,7 +145,7 @@ onMounted(async () => {
   <div class="content-section">
     <div class="section-header">
       <h2 class="section-title">🛒 신선 식재료 특가</h2>
-      <RouterLink to="/shopping" class="section-more">더보기 &gt;</RouterLink>
+      <RouterLink to="/products" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">
       <ProductItemCard
@@ -160,7 +160,7 @@ onMounted(async () => {
   <div class="content-section">
     <div class="section-header">
       <h2 class="section-title">🥘 밀키트 & 간편식</h2>
-      <RouterLink to="/shopping" class="section-more">더보기 &gt;</RouterLink>
+      <RouterLink to="/products" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">
       <ProductItemCard

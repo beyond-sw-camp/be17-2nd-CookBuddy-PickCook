@@ -20,12 +20,12 @@ const loadPage = (newPage) => {
 const getProductList = async (page = 0) => {
   const data = await api.getAllProducts(page, pageResponse.size)
   if (data && data.content) {
-    products.splice(0, products.length, ...data.content) 
-    pageResponse.content = data.results.content
-    pageResponse.currentPage = data.results.currentPage
-    pageResponse.totalPages = data.results.totalPages
-    pageResponse.totalElements = data.results.totalElements
-    pageResponse.size = data.results.size
+    Object.assign(products, data.content)
+    pageResponse.content = data.content
+    pageResponse.currentPage = data.currentPage
+    pageResponse.totalPages = data.totalPages
+    pageResponse.totalElements = data.totalElements
+    pageResponse.size = data.size
   } else {
     products.splice(0)
     pageResponse.content = []

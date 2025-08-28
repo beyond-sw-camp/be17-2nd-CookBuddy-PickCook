@@ -129,7 +129,6 @@ const onSubmitPayment = async () => {
       <!-- 주문 상품 -->
       <PaymentLayout title="주문 상품">
         <div class="payment-order-items-container">
-          <div class="payment-order-items-shipping-info">샛별 배송</div>
           <div class="payment-order-items-list">
             <div v-for="item in selectedItems" :key="item.idx" class="payment-order-item-card">
               <img :src="item.main_image_url" alt="상품 이미지" />

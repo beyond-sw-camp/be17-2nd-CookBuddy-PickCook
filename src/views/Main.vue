@@ -56,14 +56,14 @@ const showToast = (message) => {
     transform: translateX(100%);
     transition: transform 0.3s ease;
   `
-  
+
   document.body.appendChild(toast)
-  
+
   // 애니메이션으로 나타나기
   setTimeout(() => {
     toast.style.transform = 'translateX(0)'
   }, 100)
-  
+
   // 2초 후 자동으로 사라지기
   setTimeout(() => {
     toast.style.transform = 'translateX(100%)'
@@ -76,7 +76,7 @@ const showToast = (message) => {
 // OAuth2 로그인 성공 처리 함수
 const handleLoginSuccess = async () => {
   console.log('현재 URL 쿼리:', route.query)
-  
+
   if (route.query.loginSuccess === 'true') {
     const nickname = route.query.nickname
     const loginType = route.query.loginType
@@ -88,10 +88,10 @@ const handleLoginSuccess = async () => {
         console.error('사용자 정보 복원 실패:', error)
       }
     }
-    
+
     if (nickname) {
       const decodedNickname = decodeURIComponent(nickname)
-      
+
       let message
       if (loginType === 'social') {
         message = `🎉 ${decodedNickname}님, 환영합니다!`
@@ -100,17 +100,15 @@ const handleLoginSuccess = async () => {
       }
       showToast(message)
     }
-    
+
     router.replace({ query: {} })
   }
 }
-
 
 onMounted(async () => {
   await handleLoginSuccess() // async 추가
   getHomeData()
 })
-
 </script>
 
 <template>
@@ -124,11 +122,7 @@ onMounted(async () => {
       <RouterLink to="/recipe" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">
-      <RecipeCard
-        v-for="(item, idx) in state.recipes.slice(0, 4)"
-        :key="idx"
-        :recipe="item"
-      />
+      <RecipeCard v-for="(item, idx) in state.recipes.slice(0, 4)" :key="idx" :recipe="item" />
     </div>
   </div>
 
@@ -154,7 +148,11 @@ onMounted(async () => {
       <RouterLink to="/shopping" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">
-      <ProductItemCard v-for="(item, idx) in state.products.slice(0, 4)" :key="idx" :product="item" />
+      <ProductItemCard
+        v-for="(item, idx) in state.products.slice(0, 4)"
+        :key="idx"
+        :product="item"
+      />
     </div>
   </div>
 
@@ -165,7 +163,11 @@ onMounted(async () => {
       <RouterLink to="/shopping" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">
-        <ProductItemCard v-for="(item, idx) in state.products.slice(0, 4)" :key="idx" :product="item" />
+      <ProductItemCard
+        v-for="(item, idx) in state.products.slice(0, 4)"
+        :key="idx"
+        :product="item"
+      />
     </div>
   </div>
 </template>

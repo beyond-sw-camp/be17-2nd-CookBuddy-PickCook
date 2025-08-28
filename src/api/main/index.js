@@ -2,7 +2,7 @@ import api from '@/plugins/axiosinterceptor'
 
 const recipeList = async () => {
   let data = {}
-  let url = 'api/recipe'
+  let url = 'api/recipe?page=0&size=4'
 
   await api
     .get(url)
@@ -34,12 +34,12 @@ const communityList = async () => {
 
 const productList = async () => {
   let data = {}
-  let url = '/api/products/list'
+  let url = '/api/products?page=0&size=4&sort=id&dir=ASC'
 
   await api
     .get(url)
     .then((res) => {
-      data = res.data.results
+      data = res.data.results.content
     })
     .catch((error) => {
       data = error.data.results

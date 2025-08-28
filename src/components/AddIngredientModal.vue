@@ -86,12 +86,9 @@ async function submitForm() {
     return
   }
 
-  // 수량을 숫자로 변환 (예: "2개" → 2)
-  const quantityNumber = parseInt(form.quantity.replace(/[^0-9]/g, '')) || 1
-
   const submitData = {
     ingredientName: form.ingredientName.trim(),
-    quantity: quantityNumber,
+    quantity: form.quantity,
     expirationDate: form.expirationDate,
     categoryId: parseInt(form.categoryId),
     location: form.location,

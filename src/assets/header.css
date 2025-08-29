@@ -119,12 +119,12 @@ a:hover {
   position: absolute;
   text-align: center;
   top: 100%; /* 이미지 아래로 딱 붙음 */
-  left: 0;
+  left: -50px;
   margin-top: 8px;
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  width: 150px;
+  width: 120px;
   z-index: 999;
 }
 

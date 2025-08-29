@@ -28,6 +28,10 @@ const profileModalToggle = () => {
   showProfileModal.value = !showProfileModal.value
 }
 
+const writeModalToggle = () => {
+  showWriteModal.value = !showWriteModal.value
+}
+
 const search = () => {
   if (!keyword.value.trim()) return
 
@@ -117,10 +121,10 @@ function openSearchSlide() {
           />
           <ProfileModal v-if="showProfileModal" @click="profileModalToggle" class="profile-modal" />
         </div>
-        <div to="/community/write" class="write-btn" @click="showWriteModal = !showWriteModal">
+        <div to="/community/write" class="write-btn" @click="writeModalToggle">
           글쓰기 &nbsp;&nbsp;▼
         </div>
-        <div v-if="showWriteModal" class="write-modal">
+        <div v-if="showWriteModal" class="write-modal" @click="writeModalToggle">
           <RouterLink to="/recipe/write" class="write-dropdown-btn">레시피</RouterLink>
           <RouterLink to="/community/write" class="write-dropdown-btn">일반</RouterLink>
         </div>
@@ -130,7 +134,13 @@ function openSearchSlide() {
         <RouterLink to="/login">로그인</RouterLink>
         <RouterLink to="/user/signup">회원가입</RouterLink>
         <a href="#">고객센터</a>
-        <RouterLink to="/community/write" class="write-btn">글쓰기 &nbsp;&nbsp;▼</RouterLink>
+        <div to="/community/write" class="write-btn" @click="writeModalToggle">
+          글쓰기 &nbsp;&nbsp;▼
+        </div>
+        <div v-if="showWriteModal" class="write-modal" @click="writeModalToggle">
+          <RouterLink to="/recipe/write" class="write-dropdown-btn">레시피</RouterLink>
+          <RouterLink to="/community/write" class="write-dropdown-btn">일반</RouterLink>
+        </div>
       </div>
     </div>
   </header>

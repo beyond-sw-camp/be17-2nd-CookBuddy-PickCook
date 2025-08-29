@@ -12,10 +12,10 @@ const goToMypage = () => {
 
 const logout = async () => {
   const result = await auth.logout() // ✅ logout으로 변경
-  
+
   if (result.success) {
     const isAuthRequired = route.meta?.requiresAuth
-    
+
     if (isAuthRequired) {
       router.push('/login')
     } else {
@@ -23,14 +23,12 @@ const logout = async () => {
     }
   }
 }
-  
 </script>
 
 <template>
   <div class="profile-modal-container">
     <div @click="goToMypage">마이페이지</div>
     <div @click="logout">로그아웃</div>
-    <div>회원 탈퇴</div>
   </div>
 </template>
 

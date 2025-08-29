@@ -9,6 +9,7 @@ const router = useRouter()
 const route = useRoute()
 const auth = useUserStore()
 const showProfileModal = ref(false)
+const showWriteModal = ref(false)
 const { isDesktop, isMobileOrTablet } = useBreakpoints()
 const emit = defineEmits(['open-menu'])
 const keyword = ref('')
@@ -116,7 +117,13 @@ function openSearchSlide() {
           />
           <ProfileModal v-if="showProfileModal" @click="profileModalToggle" class="profile-modal" />
         </div>
-        <RouterLink to="/community/write" class="write-btn">글쓰기 &nbsp;&nbsp;▼</RouterLink>
+        <div to="/community/write" class="write-btn" @click="showWriteModal = !showWriteModal">
+          글쓰기 &nbsp;&nbsp;▼
+        </div>
+        <div v-if="showWriteModal" class="write-modal">
+          <RouterLink to="/recipe/write" class="write-dropdown-btn">레시피</RouterLink>
+          <RouterLink to="/community/write" class="write-dropdown-btn">일반</RouterLink>
+        </div>
       </div>
       <!-- 로그인 안 했을 경우 -->
       <div v-else class="header-right">
@@ -129,4 +136,32 @@ function openSearchSlide() {
   </header>
 </template>
 
-<style scoped></style>
+<style scoped>
+.write-modal {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  right: 0px;
+  top: 48px;
+  width: 94px;
+
+  text-align: center;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.write-btn {
+  cursor: pointer;
+}
+
+.write-dropdown-btn {
+  padding: 12px 0;
+  color: var(--color-gray);
+}
+
+.write-dropdown-btn:hover {
+  background-color: #f3f3f3;
+  color: var(--color-dark-strong);
+}
+</style>

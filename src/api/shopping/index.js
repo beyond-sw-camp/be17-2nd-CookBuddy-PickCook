@@ -43,14 +43,34 @@ const getProductDetail = async (productId) => {
 /**
  * 상품 리뷰 조회 (✅ 새로 추가)
  */
-const getProductReviews = async (productId) => {
-  try {
-    const response = await api.get(`/api/products/${productId}/reviews`)
-    return response.data.results || []
-  } catch (error) {
-    console.error('리뷰 조회 실패:', error)
-    throw error
+export const getProductReviews = async (productId, filterRequest) => {
+  const params = new URLSearchParams()
+  
+  // null이 아닌 값들만 파라미터로 추가
+  if (filterRequest.rating !== null && filterRequest.rating !== undefined) {
+    params.append('rating', filterRequest.rating)
   }
+  if (filterRequest.sortType) {
+    params.append('sortType', filterRequest.sortType)
+  }
+  if (filterRequest.period) {
+    params.append('period', filterRequest.period)
+  }
+  if (filterRequest.imageFilter) {
+    params.append('imageFilter', filterRequest.imageFilter)
+  }
+  if (filterRequest.page !== undefined) {
+    params.append('page', filterRequest.page)
+  }
+  if (filterRequest.size) {
+    params.append('size', filterRequest.size)
+  }
+
+  const url = `/api/reviews/products/${productId}?${params.toString()}`
+  console.log('실제 호출 URL:', url) // 확인용
+  
+  const response = await api.get(url)
+  return response.data.results
 }
 
 /**

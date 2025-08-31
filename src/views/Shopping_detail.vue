@@ -912,134 +912,141 @@ onUnmounted(() => {
       </div>
 
       <!-- ⬇️ 위 코드를 아래 코드로 교체 -->
-      <div class="review-filters">
-        <!-- 별점 필터 -->
-        <div class="filter-dropdown">
-          <button class="filter-button" @click="toggleDropdown('rating')">
-            {{ getRatingFilterText() }} ▼
-          </button>
-          <div v-show="openDropdown === 'rating'" class="dropdown-menu">
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.rating === null }"
-              @click="handleFilterChange('rating', null)"
-            >
-              전체 별점
+      <div class="review-filters-container">
+        <div class="review-filter">
+          <!-- 별점 필터 -->
+          <div class="filter-dropdown">
+            <button class="filter-button" @click="toggleDropdown('rating')">
+              {{ getRatingFilterText() }} ▼
+            </button>
+            <div v-show="openDropdown === 'rating'" class="dropdown-menu">
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.rating === null }"
+                @click="handleFilterChange('rating', null)"
+              >
+                전체 별점
+              </div>
+              <div
+                v-for="star in [5, 4, 3, 2, 1]"
+                :key="star"
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.rating === star }"
+                @click="handleFilterChange('rating', star)"
+              >
+                {{ star }}점만
+              </div>
             </div>
-            <div
-              v-for="star in [5, 4, 3, 2, 1]"
-              :key="star"
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.rating === star }"
-              @click="handleFilterChange('rating', star)"
-            >
-              {{ star }}점만
+          </div>
+
+          <!-- 기간 필터 -->
+          <div class="filter-dropdown">
+            <button class="filter-button" @click="toggleDropdown('period')">
+              {{ getPeriodFilterText() }} ▼
+            </button>
+            <div v-show="openDropdown === 'period'" class="dropdown-menu">
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.period === null }"
+                @click="handleFilterChange('period', null)"
+              >
+                전체
+              </div>
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.period === 'WEEK' }"
+                @click="handleFilterChange('period', 'WEEK')"
+              >
+                최근 일주일
+              </div>
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.period === 'MONTH' }"
+                @click="handleFilterChange('period', 'MONTH')"
+              >
+                최근 한달
+              </div>
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.period === 'YEAR' }"
+                @click="handleFilterChange('period', 'YEAR')"
+              >
+                최근 일년
+              </div>
+            </div>
+          </div>
+
+          <!-- 이미지 필터 -->
+          <div class="filter-dropdown">
+            <button class="filter-button" @click="toggleDropdown('image')">
+              {{ getImageFilterText() }} ▼
+            </button>
+            <div v-show="openDropdown === 'image'" class="dropdown-menu">
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.imageFilter === null }"
+                @click="handleFilterChange('imageFilter', null)"
+              >
+                전체
+              </div>
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.imageFilter === 'WITH_IMAGE' }"
+                @click="handleFilterChange('imageFilter', 'WITH_IMAGE')"
+              >
+                사진 리뷰만
+              </div>
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.imageFilter === 'TEXT_ONLY' }"
+                @click="handleFilterChange('imageFilter', 'TEXT_ONLY')"
+              >
+                글 리뷰만
+              </div>
+            </div>
+          </div>
+
+          <!-- 정렬 필터 -->
+          <div class="filter-dropdown">
+            <button class="filter-button" @click="toggleDropdown('sort')">
+              {{ getSortFilterText() }} ▼
+            </button>
+            <div v-show="openDropdown === 'sort'" class="dropdown-menu">
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.sortType === 'LATEST' }"
+                @click="handleFilterChange('sortType', 'LATEST')"
+              >
+                최신순
+              </div>
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.sortType === 'OLDEST' }"
+                @click="handleFilterChange('sortType', 'OLDEST')"
+              >
+                오래된순
+              </div>
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.sortType === 'RATING_HIGH' }"
+                @click="handleFilterChange('sortType', 'RATING_HIGH')"
+              >
+                별점 높은순
+              </div>
+              <div
+                class="dropdown-item"
+                :class="{ active: reviewState.filters.sortType === 'RATING_LOW' }"
+                @click="handleFilterChange('sortType', 'RATING_LOW')"
+              >
+                별점 낮은순
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- 기간 필터 -->
-        <div class="filter-dropdown">
-          <button class="filter-button" @click="toggleDropdown('period')">
-            {{ getPeriodFilterText() }} ▼
-          </button>
-          <div v-show="openDropdown === 'period'" class="dropdown-menu">
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.period === null }"
-              @click="handleFilterChange('period', null)"
-            >
-              전체
-            </div>
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.period === 'WEEK' }"
-              @click="handleFilterChange('period', 'WEEK')"
-            >
-              최근 일주일
-            </div>
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.period === 'MONTH' }"
-              @click="handleFilterChange('period', 'MONTH')"
-            >
-              최근 한달
-            </div>
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.period === 'YEAR' }"
-              @click="handleFilterChange('period', 'YEAR')"
-            >
-              최근 일년
-            </div>
-          </div>
-        </div>
-
-        <!-- 이미지 필터 -->
-        <div class="filter-dropdown">
-          <button class="filter-button" @click="toggleDropdown('image')">
-            {{ getImageFilterText() }} ▼
-          </button>
-          <div v-show="openDropdown === 'image'" class="dropdown-menu">
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.imageFilter === null }"
-              @click="handleFilterChange('imageFilter', null)"
-            >
-              전체
-            </div>
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.imageFilter === 'WITH_IMAGE' }"
-              @click="handleFilterChange('imageFilter', 'WITH_IMAGE')"
-            >
-              사진 리뷰만
-            </div>
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.imageFilter === 'TEXT_ONLY' }"
-              @click="handleFilterChange('imageFilter', 'TEXT_ONLY')"
-            >
-              글 리뷰만
-            </div>
-          </div>
-        </div>
-
-        <!-- 정렬 필터 -->
-        <div class="filter-dropdown">
-          <button class="filter-button" @click="toggleDropdown('sort')">
-            {{ getSortFilterText() }} ▼
-          </button>
-          <div v-show="openDropdown === 'sort'" class="dropdown-menu">
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.sortType === 'LATEST' }"
-              @click="handleFilterChange('sortType', 'LATEST')"
-            >
-              최신순
-            </div>
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.sortType === 'OLDEST' }"
-              @click="handleFilterChange('sortType', 'OLDEST')"
-            >
-              오래된순
-            </div>
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.sortType === 'RATING_HIGH' }"
-              @click="handleFilterChange('sortType', 'RATING_HIGH')"
-            >
-              별점 높은순
-            </div>
-            <div
-              class="dropdown-item"
-              :class="{ active: reviewState.filters.sortType === 'RATING_LOW' }"
-              @click="handleFilterChange('sortType', 'RATING_LOW')"
-            >
-              별점 낮은순
-            </div>
-          </div>
+        <div class="review-count_container">
+          <p class="review-count_a">{{ reviewState.reviews.length }}</p>
+          <p class="review-count_b">개의 리뷰가 있습니다.</p>
         </div>
       </div>
 
@@ -1052,7 +1059,6 @@ onUnmounted(() => {
       <!-- 🚨 수정: 리뷰 목록 - 새로운 디자인으로 교체 -->
       <!-- 리뷰 목록 - 기존 CSS 클래스 그대로 사용 -->
       <div v-else-if="reviewState.reviews.length > 0">
-        <p>{{ reviewState.reviews.length }}개의 리뷰가 있습니다.</p>
         <!-- 확인용 -->
         <div
           v-for="review in reviewState.reviews"
@@ -1383,33 +1389,60 @@ onUnmounted(() => {
    리뷰 필터 스타일
    ================================================================= */
 
-.review-filters {
+.review-filters-container {
   display: flex;
-  gap: 12px;
-  margin: 25px 0;
-  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.review-filter {
+  display: flex;
+  gap: 10px;
+  justify-content: start;
 }
 
 .filter-dropdown {
   position: relative;
+  z-index: 1001; /* 높은 값으로 수정 */
 }
 
 .filter-button {
-  padding: 10px 16px;
+  padding: 5px 10px;
   border: 1px solid #ddd;
   background: white;
-  border-radius: 6px;
+  border-radius: 25px;
   cursor: pointer;
   font-size: 14px;
-  min-width: 130px;
-  text-align: left;
+  min-width: 120px;
+  text-align: center;
   transition: all 0.2s ease;
+  font-weight: 400;
+  margin-bottom: 5px;
 }
 
 .filter-button:hover {
   border-color: #e14345;
   color: #e14345;
+  font-weight: 500;
   box-shadow: 0 2px 4px rgba(225, 67, 69, 0.1);
+}
+
+.review-count_container {
+  display: flex;
+  justify-content: start;
+  align-items: end;
+}
+
+.review-count_a {
+  font-weight: 500;
+  font-size: x-large;
+  color: #e14345;
+}
+
+.review-count_b {
+  margin-left: 3px;
+  color: gray;
 }
 
 .dropdown-menu {
@@ -1421,13 +1454,13 @@ onUnmounted(() => {
   border: 1px solid #ddd;
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1000;
-  margin-top: 4px;
+  z-index: 1002;
+  margin-top: 2px;
   overflow: hidden;
 }
 
 .dropdown-item {
-  padding: 12px 16px;
+  padding: 8px 16px;
   cursor: pointer;
   font-size: 14px;
   border-bottom: 1px solid #f5f5f5;

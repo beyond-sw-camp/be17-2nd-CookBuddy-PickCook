@@ -1,69 +1,97 @@
 <script setup>
 import OrderProductItemCard from '../components/OderProductItemCard.vue'
-import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import api from '@/api/payment'
 
 const isOrderProductListOpen = ref(true)
 const customerCenterBoxOpen = ref(false)
+const orderDetail = ref({})
 const router = useRouter()
+const route = useRoute()
+const customerEmail = import.meta.env.VITE_CUSTOMER_EMAIL || 'support@example.com'
 
-function goBack() { router.back() }
-
-const orders = ref([])
-// 서버에서 주문 내역 받아오기 (테스트용)
-const fetchOrders = async () => {
-  const response = await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          orderNumber: '20240706-0000001',
-          orderDate: '2024.07.06',
-          status: '상품준비중',
-          products: [
-            {
-              id: 1,
-              name: '프렌치 토스트 밀키트',
-              quantityText: '2인분 / 1개',
-              image:
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo4Jinz57LhP8UclbLg255t0uVGnnKyQVprA&s',
-              price: 8900,
-            },
-            {
-              id: 2,
-              name: '핫도그 세트',
-              quantityText: '1인분 / 2세트',
-              image:
-                'https://static.wtable.co.kr/image/production/service/recipe/1793/78e41de9-7045-41e0-8a44-6cbbcd65ddd5.jpg?size=800x800',
-              price: 12000,
-            },
-          ],
-        },
-      ])
-    }, 500) // 0.5초 딜레이로 비동기 흉내
-  })
-
-  orders.value = response
+function goBack() {
+  router.back()
 }
 
-// 화면 로딩 시 주문 데이터 불러오기
-onMounted(() => fetchOrders())
+const sendMail = () => {
+  if (!orderDetail) return
+
+  const subject = encodeURIComponent('주문 문의')
+  const body = encodeURIComponent(`안녕하세요.\n주문 번호: ${orderDetail.value.orderNumber}\n주문 관련 문의드립니다.`)
+
+  // Gmail 새 메일 작성 창으로 열기
+  const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${customerEmail}&su=${subject}&body=${body}`
+  window.open(gmailUrl, '_blank')
+}
+
+function formatDateTime(isoString) {
+  const date = new Date(isoString);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
+  const day = String(date.getDate()).padStart(2, '0');
+
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+
+  return `${year}-${month}-${day}  ${hours}:${minutes}`;
+}
+
+const fetchOrderDetail = async (orderId) => {
+  if (!orderId) return
+  try {
+    const res = await api.orderDetail(orderId)
+    orderDetail.value = res.results
+  } catch (err) {
+    console.error('주문 상세 조회 실패:', err)
+  }
+}
+
+watch(
+  () => route.params.orderId,
+  (newOrderId) => {
+    fetchOrderDetail(newOrderId)
+  },
+  { immediate: true }, // 페이지 로드 시 바로 호출
+)
+
+// 총 상품 금액
+const totalOriginalPrice = computed(
+  () =>
+    orderDetail.value?.orderItems?.reduce(
+      (sum, item) => sum + item.original_price * item.quantity,
+      0,
+    ) || 0,
+)
+
+// 총 할인 금액
+const totalDiscount = computed(
+  () =>
+    orderDetail.value?.orderItems?.reduce(
+      (sum, item) =>
+        sum + Math.round(item.original_price * (item.discount_rate / 100) * item.quantity),
+      0,
+    ) || 0,
+)
 </script>
 
 <template>
   <div class="order-detail-info-body">
     <div class="order-detail-info-container">
       <div class="order-detail-info-header">
-        <img src="/assets/icons/ic-arrow-left.png" alt="뒤로 가기" id="no-rotate" @click="goBack"/>
+        <img src="/assets/icons/ic-arrow-left.png" alt="뒤로 가기" id="no-rotate" @click="goBack" />
         <span>주문 상세조회</span>
         <div></div>
       </div>
 
       <div class="order-detail-info-first-container order-detail-page-container-section">
-        <h3>주문번호 8fc531b3-9899-4233-b9c2-95a150977099</h3>
+        <h3>주문번호 {{ orderDetail.orderNumber }}</h3>
         <div>
-          <p>2025-08-29 17:21</p>
+          <p>{{ formatDateTime(orderDetail.approvedAt) }}</p>
           <span>|</span>
-          <p>김아영</p>
+          <p>{{ orderDetail.orderDelivery.receiverName }}</p>
         </div>
       </div>
 
@@ -81,9 +109,7 @@ onMounted(() => fetchOrders())
         </div>
         <div v-show="isOrderProductListOpen" class="order-detail-info-contents">
           <OrderProductItemCard
-            v-for="order in orders"
-            :key="order.orderNumber"
-            :order="order"
+            :order="orderDetail"
             :showHeader="false"
           />
         </div>
@@ -99,7 +125,7 @@ onMounted(() => fetchOrders())
               <div class="order-detail-space-between order-detail-payment-info">
                 <p>총 상품 금액</p>
                 <span
-                  ><h4>45,600</h4>
+                  ><h4>{{ totalOriginalPrice.toLocaleString() }}</h4>
                   원</span
                 >
               </div>
@@ -107,15 +133,26 @@ onMounted(() => fetchOrders())
                 <div class="order-detail-space-between order-detail-payment-info">
                   <p>총 할인 혜택</p>
                   <span
-                    ><h4>-2,200</h4>
+                    ><h4>-{{ totalDiscount.toLocaleString() }}</h4>
                     원</span
                   >
                 </div>
 
                 <div class="product-discount-detail-list">
-                  <div class="order-detail-space-between discount-detail-gray-font-color">
-                    <span>ㄴ 상품 할인</span>
-                    <span>-4,000원</span>
+                  <div
+                    v-for="item in orderDetail.orderItems"
+                    :key="item.product_id"
+                  >
+                    <div v-if="item.discount_rate > 0" class="order-detail-space-between discount-detail-gray-font-color">
+                      <span>ㄴ 상품 할인</span>
+                      <span>
+                        -{{
+                          Math.round(
+                            ((item.original_price * item.discount_rate) / 100) * item.quantity,
+                          ).toLocaleString()
+                        }}원
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -135,7 +172,7 @@ onMounted(() => fetchOrders())
                 <div class="order-detail-space-between order-detail-payment-info">
                   <h2>결제 금액</h2>
                   <span
-                    ><h4>45,600</h4>
+                    ><h4>{{ orderDetail.total_price.toLocaleString() }}</h4>
                     원</span
                   >
                 </div>
@@ -143,7 +180,7 @@ onMounted(() => fetchOrders())
                 <div class="product-discount-detail-list">
                   <div class="order-detail-space-between discount-detail-gray-font-color">
                     <span>ㄴ 결제 수단</span>
-                    <span>카카오페이</span>
+                    <span>{{ orderDetail.paymentMethod }}</span>
                   </div>
                 </div>
               </div>
@@ -163,8 +200,8 @@ onMounted(() => fetchOrders())
             <span>연락처</span>
           </div>
           <div class="order-delivery-place-info-box-rigth">
-            <p>김아영</p>
-            <p>010-2222-2222</p>
+            <p>{{ orderDetail.orderDelivery.receiverName }}</p>
+            <p>{{ orderDetail.orderDelivery.receiverPhone }}</p>
           </div>
         </div>
 
@@ -175,9 +212,9 @@ onMounted(() => fetchOrders())
             <span>상세 주소</span>
           </div>
           <div class="order-delivery-place-info-box-rigth">
-            <p>12345</p>
-            <p>경남 양산시 양양양 산산산 123</p>
-            <p>보라매아파트 111동 111호</p>
+            <p>{{ orderDetail.orderDelivery.zipCode }}</p>
+            <p>{{ orderDetail.orderDelivery.address }}</p>
+            <p>{{ orderDetail.orderDelivery.detailAddress }}</p>
           </div>
         </div>
 
@@ -186,7 +223,7 @@ onMounted(() => fetchOrders())
             <span>요청사항</span>
           </div>
           <div class="order-delivery-place-info-box-rigth">
-            <p>문 앞에 놓아주세요.</p>
+            <p>{{ orderDetail.orderDelivery.requestMessage }}</p>
           </div>
         </div>
       </div>
@@ -205,7 +242,7 @@ onMounted(() => fetchOrders())
         </div>
         <div v-show="customerCenterBoxOpen" class="order-detail-page-customer-center-info">
           <p>이메일 문의 <span>(평일 10:00 ~ 17:00)</span></p>
-          <button class="order-detail-send-mail">
+          <button class="order-detail-send-mail" @click="sendMail">
             <img src="/assets/icons/ic-mail.png" alt="메일 보내기" />
             <span>메일 문의</span>
           </button>
@@ -290,9 +327,6 @@ onMounted(() => fetchOrders())
   color: var(--color-light-gray);
 }
 
-.order-detail-info-header > span {
-}
-
 .order-detail-info-second-container,
 .order-detail-info-four-container {
   cursor: pointer;
@@ -334,6 +368,7 @@ onMounted(() => fetchOrders())
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .order-detail-space-between span {
@@ -435,10 +470,10 @@ onMounted(() => fetchOrders())
 }
 
 .order-detail-page-container-section:last-child {
-    border: none;
+  border: none;
 }
 
 #no-rotate {
-    transform: none;
+  transform: none;
 }
 </style>

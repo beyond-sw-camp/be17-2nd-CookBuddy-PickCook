@@ -42,8 +42,30 @@ function statusText(status) {
   }
 }
 
-function goDetailInfo() {
-  router.push('/order/details')
+function formatDateTime(isoString) {
+  const date = new Date(isoString);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+const discountedPrice = (product) => {
+  return Math.round(product.original_price * (100 - product.discount_rate) / 100);
+};
+
+const goDetailInfo = () => {
+  if (!props.order) return
+  router.push({
+    name: 'order-detail',
+    params: { orderId: props.order.orderId } 
+  })
+}
+
+const goProductDetail = (productId) => {
+  router.push(`/products/detail/${productId}`)
 }
 </script>
 
@@ -51,7 +73,7 @@ function goDetailInfo() {
   <div class="mypage-main-my-order-boards">
     <div v-if="showHeader" class="mypage-my-order-boards-top">
       <div class="mypage-my-order-boards-top-left">
-        <p>{{ order.orderDate }}</p>
+        <p>{{ formatDateTime(order.date) }}</p>
       </div>
       <div class="mypage-my-order-boards-top-right">
         <img src="/assets/icons/ic-arrow-right.png" alt="주문 상세보기" @click="goDetailInfo" />
@@ -59,24 +81,24 @@ function goDetailInfo() {
     </div>
 
     <div class="mypage-my-order-boards-mid">
-      <div class="mypage-my-order-boards-el" v-for="product in order.products" :key="product.id">
+      <div class="mypage-my-order-boards-el" v-for="product in order.orderItems" :key="product.product_id">
         <div class="mypage-my-order-boards-el-left">
-          <img :src="product.image" alt="상품 이미지" />
+          <img :src="product.product_image" alt="상품 이미지" @click="goProductDetail(product.product_id)"/>
           <div class="mypage-my-order-boards-product-content">
             <div class="mypage-my-order-boards-product-name-and-status">
-              <p>{{ product.name }}</p>
+              <p @click="goProductDetail(product.product_id)">{{ product.product_name }}</p>
 
               <div :class="['order-status-code-tag', statusClass(order.status)]">
                 <span>{{ statusText(order.status) }}</span>
               </div>
             </div>
             <div class="mypage-my-order-boards-product-amount-and-quantity">
-              <span>{{ product.amount }}</span>
+              <span>{{ product.product_amount }}</span>
               |
-              <span>{{ product.quantityText }}</span>
+              <span>{{ product.quantity }}개</span>
             </div>
             <div class="mypage-my-order-boards-product-price">
-              {{ product.price.toLocaleString() }}원
+              {{ discountedPrice(product).toLocaleString() }}원
             </div>
           </div>
         </div>

@@ -33,7 +33,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/order/details',
+      path: '/order/details/:orderId',
       name: 'order-detail',
       component: OrderDetailInfo,
       meta: { requiresAuth: true },

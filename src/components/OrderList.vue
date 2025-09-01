@@ -20,25 +20,7 @@ const getOrderList = async (period = '3M', page = 0) => {
 
   if (data && data.success) {
     if (data.results) {
-      // 프론트에서 orderDate, status, products 구조로 변환
-      const transformedOrders = data.results.content.map(order => ({
-        orderId: order.orderId,
-        orderDate: new Date(order.date).toLocaleDateString(), // date -> orderDate
-        status: order.items[0]?.status || "",                 // 대표 상품 상태
-        products: order.items.map(item => ({
-          id: item.product_id,
-          name: item.product_name,
-          image: item.product_image,
-          quantityText: `${item.quantity}개`,
-          price: item.original_price,
-          amount: item.product_amount
-        }))
-      }));
-
-      // orders 배열 갱신
-      orders.splice(0, orders.length, ...transformedOrders);
-
-      // 페이지 정보 갱신
+      orders.splice(0, orders.length, ...data.results.content);
       pageResponse.content = transformedOrders;
       pageResponse.currentPage = data.results.currentPage;
       pageResponse.totalPages = data.results.totalPages;

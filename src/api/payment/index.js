@@ -70,6 +70,22 @@ const orderList = async (period, page, size) => {
   return data
 }
 
+const orderDetail = async (orderId) => {
+  let data = {}
+  let url = `/order/details?orderId=${orderId}`
+
+  await api
+    .get(url)
+    .then((res) => {
+      data = res.data
+    })
+    .catch((error) => {
+      data = error.data
+    })
+
+  return data
+}
+
 const userInfo = async () => {
   let data = {}
   let url = '/api/user/me'
@@ -86,4 +102,4 @@ const userInfo = async () => {
   return data
 }
 
-export default { startPayment, validatePayment, orderList, userInfo }
+export default { startPayment, validatePayment, orderList, orderDetail, userInfo }

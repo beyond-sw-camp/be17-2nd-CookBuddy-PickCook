@@ -64,7 +64,10 @@ const goToPayment = () => {
   })
 
   // 새로고침 대비 localStorage에도 저장
-  localStorage.setItem('checkoutItems', JSON.stringify([checkoutItem]))
+  localStorage.setItem(
+    'checkoutItems',
+    JSON.stringify({ items: [checkoutItem], orderType: 'DIRECT' }),
+  )
 }
 
 // =================================================================

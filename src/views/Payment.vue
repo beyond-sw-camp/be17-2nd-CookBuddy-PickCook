@@ -12,6 +12,7 @@ import PrivacyThirdPartyConsentModal from '@/components/PrivacyThirdPartyConsent
 const route = useRoute()
 const router = useRouter()
 const selectedItems = ref([]) // 결제할 상품 목록
+const orderType = ref('CART')
 
 const isSelectShippingRegionModalOpen = ref(false) // 배송지 변경 모달
 const isShippingRequestModalOpen = ref(false) // 배송요청 입력 모달
@@ -67,13 +68,19 @@ onMounted(() => {
   // router state에서 결제할 상품 정보 받아오기
   if (route.state?.items) {
     selectedItems.value = route.state.items
+    orderType.value = route.state.orderType || 'CART'
     // localStorage에도 저장 (새로고침 대비)
-    localStorage.setItem('checkoutItems', JSON.stringify(selectedItems.value))
+    localStorage.setItem('checkoutItems', JSON.stringify({
+      items: selectedItems.value,
+      orderType: orderType.value
+    }))
   } else {
     // 만약 router state 없으면 localStorage에서 복구
     const saved = localStorage.getItem('checkoutItems')
     if (saved) {
-      selectedItems.value = JSON.parse(saved)
+      const parsed = JSON.parse(saved)
+      selectedItems.value = parsed.items || []
+      orderType.value = parsed.orderType || 'CART'
     } else {
       // 데이터 없음 → 경고/리다이렉트 처리
       alert('선택한 상품 정보가 없습니다.')
@@ -87,7 +94,7 @@ onMounted(() => {
 const onSubmitPayment = async () => {
   try {
     // 백엔드에서 uuid(payment_id) 생성 요청
-    const { paymentId } = await orderApi.startPayment(totalPrice.value, selectedItems.value)
+    const { paymentId } = await orderApi.startPayment(totalPrice.value, selectedItems.value, orderType.value)
     const idxs = selectedItems.value.map((item) => item.idx)
 
     const payment = await PortOne.requestPayment({
@@ -276,6 +283,8 @@ const onSubmitPayment = async () => {
   align-items: center;
   background-color: white;
   padding: 38px 20px 0;
+  max-width: 800px;
+  width: 100%;
 }
 
 .payment-order-sheet-container > h3 {

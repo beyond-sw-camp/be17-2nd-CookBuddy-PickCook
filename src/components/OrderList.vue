@@ -149,6 +149,7 @@ const selectOption = (option) => {
   font-family: sans-serif;
   user-select: none;
   outline: none;
+  font-size: 15px;
 }
 
 .dropdown-toggle {
@@ -158,6 +159,7 @@ const selectOption = (option) => {
   border-radius: 5px;
   cursor: pointer;
   width: 100px;
+  font-size: 15px;
 }
 
 @media (max-width: 1023px) {

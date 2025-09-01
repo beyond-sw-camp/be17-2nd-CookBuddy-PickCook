@@ -80,14 +80,14 @@ watch(
         <img src="/public/assets/icons/ic-mypage-shopping-cart.png" alt="메뉴이미지" />
         <p class="mypage-sub-menu-title">장바구니</p>
       </div>
-      <div
+      <!-- <div
         class="mypage-sub-menu-bar-items"
         :class="{ active: activePath === 'payment-method' }"
         @click="goTo('payment_method')"
       >
         <img src="/public/assets/icons/ic-mypage-credit_card.png" alt="메뉴이미지" />
         <p class="mypage-sub-menu-title">결제수단</p>
-      </div>
+      </div> -->
     </div>
 
     <!-- 커뮤니티 메뉴 -->

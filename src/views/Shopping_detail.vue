@@ -60,9 +60,10 @@ const goToPayment = () => {
 
   router.push({
     path: '/payment',
-    state: { items: [checkoutItem] },
+    state: { items: [checkoutItem], orderType: 'DIRECT' }, // 배열 형태로 넘김
   })
 
+  // 새로고침 대비 localStorage에도 저장
   localStorage.setItem('checkoutItems', JSON.stringify([checkoutItem]))
 }
 

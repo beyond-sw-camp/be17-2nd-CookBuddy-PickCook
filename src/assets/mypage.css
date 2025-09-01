@@ -10,6 +10,7 @@
   gap: 15px;
   width: 100%;
   max-width: 1270px;
+  justify-content: center;
 }
 
 /* 마이페이지 서브 메뉴바 관련 스타일 */
@@ -61,10 +62,6 @@
 }
 
 /* 마이페이지 내용 부분 스타일  */
-.mypage-main {
-  width: 100%;  
-}
-
 .mypage-main-header {
   display: flex;
   padding: 0 25px;
@@ -360,27 +357,34 @@
   background-color: #f7f9fa;
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 18px;
+  margin-bottom: 25px;
 }
 
 .mypage-my-order-boards-top {
   width: 100%;
-  height: 42px;
+  height: 45px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 18px;
 }
 
+.mypage-my-order-boards-top-left {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .mypage-my-order-boards-top-left > p {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
 }
 
-.mypage-my-order-boards-top-left span {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--color-gray);
+.mypage-my-order-boards-top-right > img {
+  width: 22px;
+  height: 22px;
+  margin-top: 6px;
+  cursor: pointer;
 }
 
 .order-status-code-tag {
@@ -390,7 +394,14 @@
   border-radius: 3px;
   font-size: 12px;
   font-weight: 500;
-  padding: 8px 12px;
+  padding: 4px 8px;
+  width: fit-content;
+}
+
+.mypage-my-order-boards-product-name-and-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .preparing-product {
@@ -411,8 +422,7 @@
 .mypage-my-order-boards-el {
   padding: 18px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
 }
 
 .cart-in-products-order-go {
@@ -442,15 +452,28 @@
   height: 85px;
   border-radius: 3px;
   object-fit: cover;
+  cursor: pointer;
 }
 
 .mypage-my-order-boards-mid {
   background-color: white;
 }
 
-.mypage-my-order-boards-product-content > p {
+.mypage-my-order-boards-product-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mypage-my-order-boards-product-content p {
+  display: inline-block;
+  max-width: 650px; 
   font-size: 15px;
   font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;       /* 한 줄로 제한 */
+  overflow: hidden;          /* 넘치는 내용 숨김 */
+  text-overflow: ellipsis; 
 }
 
 .mypage-my-order-boards-product-content > span {
@@ -650,7 +673,8 @@
 .mypage-sub-menu-bar-items-category {
   font-size: 14px;
   color: var(--color-gray);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  padding: 5px 4px;
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {

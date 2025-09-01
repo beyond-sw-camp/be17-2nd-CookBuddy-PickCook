@@ -1,7 +1,7 @@
 import api from '@/plugins/axiosinterceptor'
 
 // 결제 시작 요청 → 백엔드에서 uuid(payment_id) 받아오기
-const startPayment = async (totalPrice, orderItems) => {
+const startPayment = async (totalPrice, orderItems, orderType) => {
   let data = {}
   const url = '/order/start'
 
@@ -14,6 +14,7 @@ const startPayment = async (totalPrice, orderItems) => {
         product_price: Math.round(item.original_price * (100 - item.discount_rate) / 100), // 할인 적용 가격
         quantity: item.quantity,
       })),
+      orderType: orderType
     })
     .then((res) => {
       data = res.data.results // 여기서 payment_id(uuid) 받기

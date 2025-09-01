@@ -1,5 +1,9 @@
 <script setup>
-import { ref } from "vue"
+import { ref, watch } from "vue"
+
+const props = defineProps({
+  user: { type: Object, default: () => ({}) } // 부모에서 전달받는 유저 정보
+})
 
 // 체크박스 상태 (주문자 정보와 동일)
 const isDefault = ref(false)
@@ -7,16 +11,36 @@ const toggleCheck = () => {
   isDefault.value = !isDefault.value
 }
 
+// input 상태
+const recipient = ref("") // 받으실 분
+const phone = ref("") // 핸드폰
+const requestMessage = ref("") // 배송 요청사항
+
+// 체크박스가 변경될 때 유저 정보 자동 입력
+watch(isDefault, (newVal) => {
+  if (newVal && props.user) {
+    recipient.value = props.user.name || ""
+    phone.value = props.user.phone || ""
+  } else if (!newVal) {
+    recipient.value = ""
+    phone.value = ""
+  }
+})
+
 // 라디오 버튼 상태 (받으실 장소)
 const selectedPlace = ref("문 앞") // 기본 선택값
+const handleClick = (place) => { selectedPlace.value = place }
 
-const handleClick = (place) => {
-  selectedPlace.value = place
-}
-
-const emit = defineEmits(["close"])
-const close = () => {
-  emit("close")
+const emit = defineEmits(["close", "save"])
+const close = () => { emit("close") }
+const save = () => {
+  emit("save", {
+    receiverName: recipient.value,
+    receiverPhone: phone.value,
+    deliveryPlace: selectedPlace.value,
+    requestMessage: requestMessage.value
+  })
+  close() // 모달 닫기
 }
 </script>
 
@@ -42,12 +66,12 @@ const close = () => {
 
       <div class="shipping-request-modal-input-container">
         <p>받으실 분<span>*</span></p>
-        <input type="text" />
+        <input type="text" v-model="recipient"/>
       </div>
 
       <div class="shipping-request-modal-input-container">
         <p>핸드폰<span>*</span></p>
-        <input type="tel" />
+        <input type="tel" v-model="phone"/>
       </div>
 
       <div class="shipping-request-modal-input-container">
@@ -106,12 +130,13 @@ const close = () => {
         <input
           type="text"
           placeholder="공동현관 출입번호나 기사님께 전달할 말씀이 있으시면 작성해주세요."
+          v-model="requestMessage"
         />
       </div>
 
       <div class="shipping-request-button-container">
         <button @click="close">취소</button>
-        <button>동의하고 저장</button>
+        <button @click="save">동의하고 저장</button>
       </div>
     </div>
   </div>
@@ -137,7 +162,7 @@ const close = () => {
   width: 500px;
   z-index: 1000;
   padding-bottom: 15px;
-  max-height: 700px;
+  max-height: 650px;
   overflow-y: auto;
 }
 

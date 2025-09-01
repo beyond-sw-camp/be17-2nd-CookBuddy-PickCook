@@ -13,6 +13,9 @@ const route = useRoute()
 const router = useRouter()
 const selectedItems = ref([]) // 결제할 상품 목록
 const orderType = ref('CART')
+const user = ref({})
+const shippingInfo = ref(null)
+const isAgreeChecked = ref(false) // 체크박스 상태
 
 const isSelectShippingRegionModalOpen = ref(false) // 배송지 변경 모달
 const isShippingRequestModalOpen = ref(false) // 배송요청 입력 모달
@@ -57,6 +60,19 @@ const totalPrice = computed(() => {
   }, 0)
 })
 
+// 총 상품 원가 (할인 전)
+const totalProductPrice = computed(() =>
+  selectedItems.value.reduce((sum, item) => sum + item.original_price * item.quantity, 0),
+)
+
+// 총 할인 금액 (얼마나 깎였는지)
+const totalDiscount = computed(() =>
+  selectedItems.value.reduce((sum, item) => {
+    const discountAmountPerOne = item.original_price - discountedPrice(item)
+    return sum + discountAmountPerOne * item.quantity
+  }, 0),
+)
+
 // 상품명 요약
 const orderNameSummary = computed(() => {
   if (selectedItems.value.length === 0) return ''
@@ -64,16 +80,19 @@ const orderNameSummary = computed(() => {
   return `${selectedItems.value[0].name} 외 ${selectedItems.value.length - 1}개`
 })
 
-onMounted(() => {
+onMounted(async () => {
   // router state에서 결제할 상품 정보 받아오기
   if (route.state?.items) {
     selectedItems.value = route.state.items
     orderType.value = route.state.orderType || 'CART'
     // localStorage에도 저장 (새로고침 대비)
-    localStorage.setItem('checkoutItems', JSON.stringify({
-      items: selectedItems.value,
-      orderType: orderType.value
-    }))
+    localStorage.setItem(
+      'checkoutItems',
+      JSON.stringify({
+        items: selectedItems.value,
+        orderType: orderType.value,
+      }),
+    )
   } else {
     // 만약 router state 없으면 localStorage에서 복구
     const saved = localStorage.getItem('checkoutItems')
@@ -85,16 +104,42 @@ onMounted(() => {
       // 데이터 없음 → 경고/리다이렉트 처리
       alert('선택한 상품 정보가 없습니다.')
       router.push('/cart') // 장바구니로 돌아가기
+      return
     }
+  }
+
+  try {
+    const userData = await orderApi.userInfo()
+    user.value = userData.results
+    console.log(user.value.name)
+  } catch (error) {
+    console.error('유저 정보 가져오기 실패', error)
   }
 })
 
-// 결제 요청
+const handleSaveShippingInfo = (data) => {
+  shippingInfo.value = data
+  console.log('부모에서 받은 배송 정보:', shippingInfo.value)
+}
 
+// 결제 요청
 const onSubmitPayment = async () => {
+  if (!shippingInfo.value) {
+    alert('배송 정보를 입력해주세요.')
+    return
+  } else if (!isPaymentEnabled.value) {
+    alert('결제 동의란에 체크해주세요.')
+  }
+
   try {
     // 백엔드에서 uuid(payment_id) 생성 요청
-    const { paymentId } = await orderApi.startPayment(totalPrice.value, selectedItems.value, orderType.value)
+    const { paymentId } = await orderApi.startPayment(
+      totalPrice.value,
+      selectedItems.value,
+      orderType.value,
+      shippingInfo.value,
+      user.value,
+    )
     const idxs = selectedItems.value.map((item) => item.idx)
 
     const payment = await PortOne.requestPayment({
@@ -126,6 +171,11 @@ const onSubmitPayment = async () => {
     router.push('/payment')
   }
 }
+
+// 버튼 활성화 여부
+const isPaymentEnabled = computed(() => {
+  return isAgreeChecked.value && shippingInfo.value && selectedItems.value.length > 0
+})
 </script>
 
 <template>
@@ -142,13 +192,15 @@ const onSubmitPayment = async () => {
               <div>
                 <span class="payment-order-item-name">{{ item.name }}</span>
                 <div class="payment-order-item-price-info-container">
-                  <span class="payment-order-item-price">{{
-                    (discountedPrice(item) * item.quantity).toLocaleString()
-                  }}</span>
-                  <span class="payment-order-item-original-price">{{
-                    (item.original_price * item.quantity).toLocaleString()
-                  }}</span>
-                  <span>|</span>
+                  <span class="payment-order-item-price"
+                    >{{ (discountedPrice(item) * item.quantity).toLocaleString() }}원</span
+                  >
+                  <div v-if="item.discount_rate > 0" class="payment-order-item-discount-rate-info">
+                    <span class="payment-order-item-original-price"
+                      >{{ (item.original_price * item.quantity).toLocaleString() }}원</span
+                    >
+                    <span>|</span>
+                  </div>
                   <span class="payment-order-item-quantity">{{ item.quantity }} 개</span>
                 </div>
               </div>
@@ -166,9 +218,9 @@ const onSubmitPayment = async () => {
             <span>이메일</span>
           </div>
           <div class="payment-order-user-info-as-container">
-            <span>이름</span>
-            <span>010-1234-5678</span>
-            <span>test01@test.com</span>
+            <span>{{ user.name }}</span>
+            <span>{{ user.phone }}</span>
+            <span>{{ user.email }}</span>
           </div>
         </div>
       </PaymentLayout>
@@ -178,7 +230,7 @@ const onSubmitPayment = async () => {
         <div class="payment-order-items-shipping-info-container">
           <div class="payment-order-items-shipping-info-title-container">배송지</div>
           <div class="payment-order-items-shipping-lnfo-as-container">
-            <p>경상남도 양사닛 양양양 123 보라매아파트 111동 222호</p>
+            <p>{{ user.address }} {{ user.detailAddress }}</p>
             <button id="shipping-destination-button" @click="openSelectShippingRegionModal">
               변경
             </button>
@@ -187,7 +239,14 @@ const onSubmitPayment = async () => {
         <div class="payment-order-items-shipping-info-container">
           <div class="payment-order-items-shipping-info-title-container">배송 요청사항</div>
           <div class="payment-order-items-shipping-lnfo-as-container">
-            <p class="red-font-color">배송 요청사항을 입력해주세요.</p>
+            <div v-if="shippingInfo" class="user-shipping-request-message">
+              <div>
+                <span>{{ shippingInfo.deliveryPlace }}</span> |
+                <span>{{ shippingInfo.requestMessage }}</span>
+              </div>
+              <div>{{ shippingInfo.receiverName }}, {{ shippingInfo.receiverPhone }}</div>
+            </div>
+            <p v-else class="red-font-color">배송 요청사항을 입력해주세요.</p>
             <button id="shipping-destination-button" @click="openShippingRequestModal">입력</button>
           </div>
         </div>
@@ -196,7 +255,12 @@ const onSubmitPayment = async () => {
         v-if="isSelectShippingRegionModalOpen"
         @close="closeSelectShippingRegionModal"
       />
-      <ShippingRequestModal v-if="isShippingRequestModalOpen" @close="closeShippingRequestModal" />
+      <ShippingRequestModal
+        v-if="isShippingRequestModalOpen"
+        @close="closeShippingRequestModal"
+        @save="handleSaveShippingInfo"
+        :user="user"
+      />
 
       <!-- 결제 수단 -->
       <!-- <PaymentLayout title="결제 수단"> </PaymentLayout> -->
@@ -214,7 +278,7 @@ const onSubmitPayment = async () => {
 
         <div class="payment-agree-checkbox-container">
           <label class="custom-checkbox">
-            <input type="checkbox" />
+            <input type="checkbox" v-model="isAgreeChecked" />
             <span class="checkmark"></span>
           </label>
           <p>위 내용을 확인 하였으며 결제에 동의합니다.</p>
@@ -240,15 +304,15 @@ const onSubmitPayment = async () => {
           <div class="payment-cost-partition-box">
             <div class="payment-cost-info-text-box">
               <span>주문금액</span>
-              <span class="payment-big-cost">33,333원</span>
+              <span class="payment-big-cost">{{ totalPrice.toLocaleString() }}원</span>
             </div>
             <div class="payment-cost-info-text-box light-gray-text-color">
               <span>ㄴ 상품금액</span>
-              <span>33,333원</span>
+              <span>{{ totalProductPrice.toLocaleString() }}원</span>
             </div>
             <div class="payment-cost-info-text-box light-gray-text-color">
               <span>ㄴ 상품할인금액</span>
-              <span>33,333원</span>
+              <span>- {{ totalDiscount.toLocaleString() }}원</span>
             </div>
             <div class="margin-box"></div>
             <div class="payment-cost-info-text-box shipping-cost-container">
@@ -259,9 +323,14 @@ const onSubmitPayment = async () => {
           <div class="payment-cost-partition-box second-box">
             <div class="payment-cost-info-text-box final-payment-cost-container">
               <span>최종 결제금액</span>
-              <span><span class="final-cost-big-font-size">33,333</span>원</span>
+              <span
+                ><span class="final-cost-big-font-size">{{ totalPrice.toLocaleString() }}</span
+                >원</span
+              >
             </div>
-            <button @click="onSubmitPayment">결제하기</button>
+            <button :disabled="!isPaymentEnabled" @click="onSubmitPayment" class="payment-button">
+              결제하기
+            </button>
           </div>
         </div>
       </PaymentLayout>
@@ -336,7 +405,7 @@ const onSubmitPayment = async () => {
 .payment-order-item-price-info-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 5px;
   margin-top: 2px;
 }
 
@@ -353,12 +422,19 @@ const onSubmitPayment = async () => {
   margin-top: 2px;
 }
 
-.payment-order-item-price-info-container span:nth-child(3) {
-  color: var(--color-light-gray);
-  font-weight: 200;
+.payment-order-item-discount-rate-info {
+  display: flex;
+  gap: 5px;
+  margin-left: 8px;
 }
 
-.payment-order-item-quantity {
+.payment-order-item-discount-rate-info > span:last-child {
+  color: var(--color-light-gray);
+  margin-bottom: 2px;
+}
+
+.payment-order-item-quantity,
+.payment-order-item-discount-rate-info > span:first-child {
   color: var(--color-gray);
   font-size: 14px;
 }
@@ -378,7 +454,7 @@ const onSubmitPayment = async () => {
 
 .payment-order-user-info-container > span,
 .payment-order-user-info-as-container > span {
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .payment-order-user-info-container > span {
@@ -398,7 +474,7 @@ const onSubmitPayment = async () => {
 }
 
 .payment-order-items-shipping-info-title-container {
-  font-size: 15px;
+  font-size: 14px;
   color: var(--color-dark-strong);
   font-weight: 500;
 }
@@ -409,8 +485,10 @@ const onSubmitPayment = async () => {
   gap: 25px;
 }
 
-.payment-order-items-shipping-lnfo-as-container > p {
-  font-size: 15px;
+.payment-order-items-shipping-lnfo-as-container > p,
+.payment-order-user-info-as-container > span {
+  font-size: 14px;
+  color: var(--color-dark-strong);
 }
 
 .payment-order-items-shipping-info-container:last-child p {
@@ -436,8 +514,12 @@ const onSubmitPayment = async () => {
   background-color: #f8f8f8;
 }
 
+.personal-info-container:first-child {
+  margin-top: 10px;
+}
+
 .personal-info-container {
-  padding: 25px 30px 0;
+  padding: 18px 30px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -449,8 +531,7 @@ const onSubmitPayment = async () => {
 }
 
 .personal-info-container > p {
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 14px;
   color: var(--color-dark-strong);
 }
 
@@ -465,12 +546,13 @@ const onSubmitPayment = async () => {
   padding: 0 30px 30px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   border-bottom: 0.5px solid var(--color-light-gray);
 }
 
 .payment-agree-checkbox-container > p {
   font-size: 15px;
+  margin-bottom: 3px;
 }
 
 .payment-sub-notice-container {
@@ -544,5 +626,32 @@ const onSubmitPayment = async () => {
 
 .payment-layout-body:last-child {
   margin-bottom: 45px;
+}
+
+.user-shipping-request-message {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user-shipping-request-message > div:first-child {
+  color: var(--color-light-gray);
+}
+
+.user-shipping-request-message span {
+  color: var(--color-dark-strong);
+}
+
+.user-shipping-request-message div {
+  color: var(--color-dark-strong);
+  font-size: 14px;
+  display: flex;
+  gap: 8px;
+}
+
+.payment-button:disabled,
+.payment-button:disabled:hover {
+  background-color: #ccc;
+  cursor: default;
 }
 </style>

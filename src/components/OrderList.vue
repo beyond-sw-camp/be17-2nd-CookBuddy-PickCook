@@ -1,92 +1,82 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import OderProductItemCard from './OderProductItemCard.vue'
+import { useRouter } from 'vue-router'
+import api from '@/api/payment'
 
 // 주문 목록 데이터
-const orders = ref([])
-
-// 주문 상태별 카운트 계산
-const statusCounts = computed(() => {
-  const counts = {
-    상품준비중: 0,
-    배송중: 0,
-    배송완료: 0,
-    '취소/반품': 0,
-  }
-
-  for (const order of orders.value) {
-    if (counts[order.status] !== undefined) {
-      counts[order.status]++
-    }
-  }
-
-  return counts
+const orders = reactive([])
+const router = useRouter()
+const pageResponse = reactive({
+  content: [],
+  currentPage: 0,
+  totalPages: 0,
+  totalElements: 0,
+  size: 10,
 })
 
-// 서버에서 주문 내역 받아오기 (테스트용)
-const fetchOrders = async () => {
-  const response = await new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          orderNumber: '20240706-0000001',
-          orderDate: '2024.07.06',
-          status: '상품준비중',
-          products: [
-            {
-              id: 1,
-              name: '프렌치 토스트 밀키트',
-              quantityText: '2인분 / 1개',
-              image:
-                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSo4Jinz57LhP8UclbLg255t0uVGnnKyQVprA&s',
-              price: 8900,
-            },
-            {
-              id: 2,
-              name: '핫도그 세트',
-              quantityText: '1인분 / 2세트',
-              image:
-                'https://static.wtable.co.kr/image/production/service/recipe/1793/78e41de9-7045-41e0-8a44-6cbbcd65ddd5.jpg?size=800x800',
-              price: 12000,
-            },
-          ],
-        },
-        {
-          orderNumber: '20240705-0000002',
-          orderDate: '2024.07.05',
-          status: '배송완료',
-          products: [
-            {
-              id: 3,
-              name: '치즈 닭갈비',
-              quantityText: '3인분 / 1팩',
-              image:
-                'https://d1nzxr3h07h50a.cloudfront.net/assets/prod/product/ce2f7347-f96f-4049-9661-08a585edd503.jpg',
-              price: 15500,
-            },
-            {
-              id: 4,
-              name: '치즈 닭갈비',
-              quantityText: '3인분 / 1팩',
-              image:
-                'https://d1nzxr3h07h50a.cloudfront.net/assets/prod/product/ce2f7347-f96f-4049-9661-08a585edd503.jpg',
-              price: 15500,
-            },
-          ],
-        },
-      ])
-    }, 500) // 0.5초 딜레이로 비동기 흉내
-  })
+const getOrderList = async (period = '3M', page = 0) => {
+  const data = await api.orderList(period, page, pageResponse.size);
 
-  orders.value = response
-}
+  if (data && data.success) {
+    if (data.results) {
+      // 프론트에서 orderDate, status, products 구조로 변환
+      const transformedOrders = data.results.content.map(order => ({
+        orderId: order.orderId,
+        orderDate: new Date(order.date).toLocaleDateString(), // date -> orderDate
+        status: order.items[0]?.status || "",                 // 대표 상품 상태
+        products: order.items.map(item => ({
+          id: item.product_id,
+          name: item.product_name,
+          image: item.product_image,
+          quantityText: `${item.quantity}개`,
+          price: item.original_price,
+          amount: item.product_amount
+        }))
+      }));
+
+      // orders 배열 갱신
+      orders.splice(0, orders.length, ...transformedOrders);
+
+      // 페이지 정보 갱신
+      pageResponse.content = transformedOrders;
+      pageResponse.currentPage = data.results.currentPage;
+      pageResponse.totalPages = data.results.totalPages;
+      pageResponse.totalElements = data.results.totalElements;
+      pageResponse.size = data.results.size;
+    }
+  } else {
+    orders.splice(0);
+    pageResponse.content = [];
+    pageResponse.totalPages = 0;
+    pageResponse.totalElements = 0;
+  }
+};
+
+
 
 // 화면 로딩 시 주문 데이터 불러오기
-onMounted(() => fetchOrders())
+onMounted(() => getOrderList())
 
 const options = ['3개월', '6개월', '1년', '3년']
 const selected = ref('3개월')
 const isOpen = ref(false)
+
+const periodMap = {
+  "3개월": "3M",
+  "6개월": "6M",
+  "1년": "1Y",
+  "3년": "3Y"
+}
+
+const selectOption = (option) => {
+  selected.value = option
+  isOpen.value = false
+
+  // ✅ 선택한 기간에 맞춰 API 요청
+  const period = periodMap[option]
+  getOrderList(period, 0)  // 페이지는 0부터 시작
+}
 
 const toggleDropdown = () => {
   isOpen.value = !isOpen.value
@@ -96,15 +86,14 @@ const closeDropdown = () => {
   isOpen.value = false
 }
 
-const selectOption = (option) => {
-  selected.value = option
-  isOpen.value = false
-  console.log('선택된 값:', option)
+// 쇼핑 페이지로 이동
+const goToShopping = () => {
+  router.push('/products')
 }
 </script>
 
 <template>
-  <div class="mypage-my-order-list-container">
+  <div class="mypage-my-order-list-container" v-if="orders.length > 0">
     <div class="mypage-header-box">
       <div class="mypage-header-box-title">주문 내역</div>
 
@@ -139,6 +128,11 @@ const selectOption = (option) => {
       </div>
     </div>
   </div>
+
+  <div v-else class="empty-order-list-message">
+    주문 내역이 없습니다.
+    <button @click="goToShopping">상품 구경하러 가기</button>
+  </div>
 </template>
 
 <style scoped>
@@ -149,7 +143,7 @@ const selectOption = (option) => {
   font-family: sans-serif;
   user-select: none;
   outline: none;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .dropdown-toggle {
@@ -159,7 +153,7 @@ const selectOption = (option) => {
   border-radius: 5px;
   cursor: pointer;
   width: 100px;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 @media (max-width: 1023px) {

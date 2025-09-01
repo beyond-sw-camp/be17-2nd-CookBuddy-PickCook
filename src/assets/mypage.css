@@ -61,6 +61,11 @@
   width: 18px;
 }
 
+.mypage-main {
+  max-width: 900px;
+  width: 100%;
+}
+
 /* 마이페이지 내용 부분 스타일  */
 .mypage-main-header {
   display: flex;
@@ -817,7 +822,8 @@
   }
 }
 
-.empty-cart-message {
+.empty-cart-message,
+.empty-order-list-message {
   max-width: 927px;
   width: 100%;
   margin: 0 auto;
@@ -831,7 +837,15 @@
   gap: 25px;
 }
 
-.empty-cart-message > button {
+.mypage-my-order-boards-product-amount-and-quantity {
+  display: flex;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--color-gray);
+}
+
+.empty-cart-message > button,
+.empty-order-list-message > button {
   border: none;
   border-radius: 5px;
   background-color: var(--color-primary);

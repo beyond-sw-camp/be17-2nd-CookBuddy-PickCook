@@ -38,7 +38,9 @@ const registerRecipe = async (payload) => {
   let url = 'api/recipe/register'
 
   await api
-    .post(url, payload)
+    .post(url, payload, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
     .then((res) => {
       data = res.data
     })
@@ -48,4 +50,4 @@ const registerRecipe = async (payload) => {
     })
 }
 
-export default { recipeList, getRecipe }
+export default { recipeList, getRecipe, registerRecipe }

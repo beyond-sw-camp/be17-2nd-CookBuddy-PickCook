@@ -1,5 +1,9 @@
 <script setup>
 import { ref } from 'vue'
+import api from '@/api/recipe'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 // 기본 데이터 구조
 const recipe = ref({
@@ -59,7 +63,44 @@ const handleImageUpload = (event, index) => {
 }
 
 // 제출
-const submitRecipe = () => {}
+const submitRecipe = async () => {
+  console.log('submit recipe')
+  const recipeDto = {
+    title: recipe.value.title,
+    cooking_method: recipe.value.method,
+    category: recipe.value.category,
+    serving_size: recipe.value.nation,
+    hashtags: recipe.value.hashtags,
+    tip: recipe.value.tip,
+    steps: recipe.value.steps.map((s, idx) => ({
+      stepNumber: idx + 1,
+      description: s.description,
+      // 이미지 파일은 files 배열로 따로 보냄
+    })),
+    ingredients: recipe.value.ingredients.map((i) => ({
+      ingredient_name: i.name, // 기존 name → ingredient_name
+      quantity: i.amount, // 기존 amount → quantity
+    })),
+    nutrition: null, // 아직 nutrition 입력 UI가 없으니 null
+  }
+
+  // FormData 생성
+  const formData = new FormData()
+  formData.append('dto', new Blob([JSON.stringify(recipeDto)], { type: 'application/json' }))
+
+  if (recipe.value.coverImage) {
+    formData.append('files', recipe.value.coverImage) // small
+    formData.append('files', recipe.value.coverImage) // large
+  }
+
+  recipe.value.steps.forEach((s) => {
+    if (s.image) formData.append('files', s.image)
+  })
+
+  const result = await api.registerRecipe(formData)
+  console.log(result)
+  router.push('/recipe')
+}
 </script>
 
 <template>

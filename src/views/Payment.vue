@@ -199,7 +199,7 @@ const onSubmitPayment = async () => {
       <ShippingRequestModal v-if="isShippingRequestModalOpen" @close="closeShippingRequestModal" />
 
       <!-- 결제 수단 -->
-      <PaymentLayout title="결제 수단"> </PaymentLayout>
+      <!-- <PaymentLayout title="결제 수단"> </PaymentLayout> -->
 
       <!-- 개인정보 및 결제 동의 -->
       <PaymentLayout title="개인정보 및 결제 동의">

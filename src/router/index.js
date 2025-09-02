@@ -28,6 +28,7 @@ import RecipeWrite from '@/views/RecipeWrite.vue'
 import Payment from '@/views/Payment.vue'
 import PaymentComplete from '@/views/PaymentComplete.vue'
 import OrderDetailInfo from '@/views/OrderDetailInfo.vue'
+import OrderDetailInfo from '@/views/OrderDetailInfo.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

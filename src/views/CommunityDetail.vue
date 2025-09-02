@@ -2,6 +2,8 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '@/api/community'
+import likeAPI from '@/api/like'
+import scrapAPI from '@/api/scrap'
 import Comment from '@/components/Comment.vue'
 
 const route = useRoute()
@@ -11,17 +13,30 @@ const post = reactive({
   content: '',
   authorName: '',
   likes: 0,
+  isLiked: false,
   scraps: 0,
+  isScrapped: false,
   updatedAt: '',
 })
 const newComment = ref('')
 const comments = reactive([])
 const replyId = ref(null)
 const totalComments = computed(() => countComments(comments))
-const hasLiked = ref(false)
-const hasScrapped = ref(false)
-const likeCount = ref(0)
-const scrapCount = ref(0)
+const likeAnimating = ref(false)
+const scrapAnimating = ref(false)
+const isLiked = ref(post.isLiked)
+const likeCount = ref(post.likes)
+const isScrapped = ref(post.isScrapped)
+const scrapCount = ref(post.scraps)
+
+// 아이콘 경로
+const likeSrc = computed(() =>
+  isLiked.value ? '/assets/icons/ic-full-like.png' : '/assets/icons/ic-empty-like.png',
+)
+
+const scrapSrc = computed(() =>
+  isScrapped.value ? '/assets/icons/ic-full-scrap.png' : '/assets/icons/ic-gray-empty-scrap.png',
+)
 
 function countComments(comments) {
   let total = 0
@@ -66,25 +81,53 @@ const submitComment = async () => {
   getComments()
 }
 
-const toggleLike = async () => {
-  const data = await api.like({
-    targetType: 'POST',
-    targetId: post.id,
-  })
-  if (data.success && data.results) {
-    likeCount.value = data.results.likeCount
-    hasLiked.value = data.results.hasLiked
+// 좋아요 토글
+const toggleLike = async (event) => {
+  event.stopPropagation()
+  event.preventDefault()
+
+  // UI 업데이트
+  isLiked.value = !isLiked.value
+  likeCount.value += isLiked.value ? 1 : -1
+
+  likeAnimating.value = true
+  setTimeout(() => {
+    likeAnimating.value = false
+  }, 300)
+
+  try {
+    await likeAPI.toggleLike('POST', post.id)
+    // 성공 → 그대로 유지
+  } catch (err) {
+    console.error('좋아요 실패', err)
+    // 실패 → 원래 상태로 롤백
+    isLiked.value = !isLiked.value
+    likeCount.value += isLiked.value ? 1 : -1
   }
 }
 
-const toggleScrap = async () => {
-  const data = await api.scrap({
-    targetType: 'POST',
-    targetId: post.id,
-  })
-  if (data.success && data.results) {
-    scrapCount.value = data.results.scrapCount
-    hasScrapped.value = data.results.hasScrapped
+// 스크랩 토글
+const toggleScrap = async (event) => {
+  event.stopPropagation()
+  event.preventDefault()
+
+  // UI 업데이트
+  isScrapped.value = !isScrapped.value
+  scrapCount.value += isScrapped.value ? 1 : -1
+
+  scrapAnimating.value = true
+  setTimeout(() => {
+    scrapAnimating.value = false
+  }, 300)
+
+  try {
+    await scrapAPI.toggleScrap('POST', post.id)
+    // 성공 → 그대로 유지
+  } catch (err) {
+    console.error('스크랩 실패', err)
+    // 실패 → 원래 상태로 롤백
+    isScrapped.value = !isScrapped.value
+    scrapCount.value += isScrapped.value ? 1 : -1
   }
 }
 
@@ -111,17 +154,15 @@ onMounted(() => {
     <div class="cd-action-bar">
       <button class="cd-action-btn" @click="toggleLike">
         <img
-          :src="hasLiked ? '/assets/icons/ic-full-like.png' : '/assets/icons/ic-empty-like.png'"
+          :src="likeSrc"
+          :class="{ 'icon-pop': likeAnimating }"
         />
         좋아요 {{ likeCount }}
       </button>
       <button class="cd-action-btn" @click="toggleScrap">
         <img
-          :src="
-            hasScrapped
-              ? '/assets/icons/ic-full-scrap.png'
-              : '/assets/icons/ic-empty-scrap-mypage.png'
-          "
+          :src="scrapSrc"
+          :class="{ 'icon-pop': scrapAnimating }"
         />
         스크랩 {{ scrapCount }}
       </button>
@@ -223,7 +264,7 @@ onMounted(() => {
 }
 
 .cd-action-btn img {
-  height: 12px;
+  height: 15px;
 }
 
 /* 태그 */

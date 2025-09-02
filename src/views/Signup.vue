@@ -14,9 +14,6 @@ const form = reactive({
   passwordCheck: '',
   name: '',
   phone: '',
-  zipCode: '',
-  address: '',
-  detailAddress: '',
 })
 
 // 이메일 구성 관리
@@ -166,14 +163,6 @@ const phoneValidation = computed(() => {
   return { isValid: true, message: '' }
 })
 
-// 주소 표시
-const fullAddress = computed(() => {
-  if (form.address && form.detailAddress) {
-    return `${form.address} ${form.detailAddress}`
-  }
-  return ''
-})
-
 // 폼 준비 상태 계산
 const isFormReady = computed(() => {
   return (
@@ -189,7 +178,6 @@ const isFormReady = computed(() => {
     nicknameValidation.value.isValid &&
     nameValidation.value.isValid &&
     phoneValidation.value.isValid &&
-    fullAddress.value &&
     emailVerification.isVerified &&
     nicknameVerification.isVerified
   )
@@ -390,42 +378,6 @@ const checkNickname = async () => {
   }
 }
 
-// 주소 관리
-const openAddressPopup = () => {
-  const width = 500
-  const height = 650
-  const left = window.screenX + (window.outerWidth - width) / 2
-  const top = window.screenY + (window.outerHeight - height) / 2
-
-  return window.open(
-    `${window.location.origin}/address/search`,
-    '주소검색팝업',
-    `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=yes`,
-  )
-}
-
-const handleAddressMessage = (event) => {
-  const newData = event.data
-  if (!newData || typeof newData !== 'object' || !newData.address || !newData.zipCode) {
-    return
-  }
-
-  form.zipCode = newData.zipCode
-
-  const addressParts = newData.address.split(' ')
-  const detailIndex = addressParts.findIndex(
-    (part) => /^\d/.test(part) || part.includes('동') || part.includes('호') || part.includes('층'),
-  )
-
-  if (detailIndex > 0) {
-    form.address = addressParts.slice(0, detailIndex).join(' ')
-    form.detailAddress = addressParts.slice(detailIndex).join(' ')
-  } else {
-    form.address = newData.address
-    form.detailAddress = ''
-  }
-}
-
 // 회원가입 처리
 const signup = async () => {
   validateEmail()
@@ -441,9 +393,6 @@ const signup = async () => {
     }
     if (!nicknameVerification.isVerified) {
       formErrors.nickname.message = '닉네임 중복 확인을 먼저 해주세요.'
-    }
-    if (!fullAddress.value) {
-      alert('주소를 입력해주세요.')
     }
     return
   }
@@ -728,34 +677,6 @@ onUnmounted(() => {
             class="error-message"
           >
             {{ formErrors.phone.message || phoneValidation.message }}
-          </div>
-        </div>
-
-        <!-- 주소 -->
-        <div class="form-items">
-          <label for="address">주소</label>
-
-          <div v-if="!fullAddress">
-            <input
-              class="login-and-signup-input"
-              type="text"
-              readonly
-              placeholder="여기를 클릭해주세요"
-              style="background-color: #f8f9fa; cursor: pointer; width: 350px"
-              @click="openAddressPopup"
-            />
-          </div>
-
-          <div v-if="fullAddress">
-            <div
-              class="login-and-signup-input"
-              style="background-color: #f8f9fa; cursor: pointer; display: flex; align-items: center"
-              @click="openAddressPopup"
-            >
-              <span style="flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">
-                {{ fullAddress }}
-              </span>
-            </div>
           </div>
         </div>
 

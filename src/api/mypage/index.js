@@ -80,6 +80,115 @@ const updateUserInfo = async (userData) => {
   }
 }
 
+// 배송지 목록 조회
+const getAddresses = async () => {
+  try {
+    const response = await api.get('/api/user/addresses')
+    return {
+      success: true,
+      data: response.data.results || []
+    }
+  } catch (error) {
+    console.error('배송지 목록 조회 실패:', error)
+    return {
+      success: false,
+      message: error.response?.data?.message || '배송지 목록 조회 중 오류가 발생했습니다.',
+      data: []
+    }
+  }
+}
+
+// 특정 배송지 조회
+const getAddress = async (addressId) => {
+  try {
+    const response = await api.get(`/api/user/addresses/${addressId}`)
+    return {
+      success: true,
+      data: response.data.results
+    }
+  } catch (error) {
+    console.error('배송지 조회 실패:', error)
+    return {
+      success: false,
+      message: error.response?.data?.message || '배송지 조회 중 오류가 발생했습니다.',
+      data: null
+    }
+  }
+}
+
+// 배송지 추가
+const createAddress = async (addressData) => {
+  try {
+    const response = await api.post('/api/user/addresses', addressData)
+    return {
+      success: true,
+      data: response.data.results,
+      message: response.data.message || '배송지가 성공적으로 추가되었습니다.'
+    }
+  } catch (error) {
+    console.error('배송지 추가 실패:', error)
+    return {
+      success: false,
+      message: error.response?.data?.message || '배송지 추가 중 오류가 발생했습니다.',
+      data: null
+    }
+  }
+}
+
+// 배송지 수정
+const updateAddress = async (addressId, addressData) => {
+  try {
+    const response = await api.put(`/api/user/addresses/${addressId}`, addressData)
+    return {
+      success: true,
+      data: response.data.results,
+      message: response.data.message || '배송지가 성공적으로 수정되었습니다.'
+    }
+  } catch (error) {
+    console.error('배송지 수정 실패:', error)
+    return {
+      success: false,
+      message: error.response?.data?.message || '배송지 수정 중 오류가 발생했습니다.',
+      data: null
+    }
+  }
+}
+
+// 배송지 삭제
+const deleteAddress = async (addressId) => {
+  try {
+    const response = await api.delete(`/api/user/addresses/${addressId}`)
+    return {
+      success: true,
+      message: response.data.message || '배송지가 성공적으로 삭제되었습니다.'
+    }
+  } catch (error) {
+    console.error('배송지 삭제 실패:', error)
+    return {
+      success: false,
+      message: error.response?.data?.message || '배송지 삭제 중 오류가 발생했습니다.'
+    }
+  }
+}
+
+// 기본배송지 조회
+const getDefaultAddress = async () => {
+  try {
+    const response = await api.get('/api/user/addresses/default')
+    return {
+      success: true,
+      data: response.data.results
+    }
+  } catch (error) {
+    console.error('기본배송지 조회 실패:', error)
+    return {
+      success: false,
+      message: error.response?.data?.message || '기본배송지 조회 중 오류가 발생했습니다.',
+      data: null
+    }
+  }
+}
+
 export default { 
   getCartList, 
   getOrderList, 
@@ -87,5 +196,11 @@ export default {
   getLikedPosts, 
   getScrappedPosts, 
   getCommentedPosts,
-  updateUserInfo
+  updateUserInfo,
+  getAddresses,
+  getAddress,
+  createAddress,
+  updateAddress,
+  deleteAddress,
+  getDefaultAddress
 }

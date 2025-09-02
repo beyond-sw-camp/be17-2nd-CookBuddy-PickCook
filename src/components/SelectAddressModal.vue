@@ -1,29 +1,61 @@
 <script setup>
-import { ref } from 'vue'
+import { reactive, onMounted, onBeforeUnmount } from 'vue'
+import mypageAPI from '@/api/mypage/index'
 import AddressCard from './AddressCard.vue'
 
-const addresses = ref([
-  { id: 1, address: '경상남도 양산시 양양양 보라아파트 111동 111호', isDefault: true },
-  { id: 2, address: '서울특별시 강남구 테헤란로 123', isDefault: false },
-  { id: 3, address: '부산광역시 해운대구 센텀로 45', isDefault: false },
-])
+const state = reactive({
+  addresses: [],
+  loading: false,
+  selectedId: null,
+})
 
 const emit = defineEmits(['close'])
 const close = () => {
   emit('close')
 }
 
-const selectedId = ref(addresses.value.find((addr) => addr.isDefault)?.id || null)
-const onSelect = (id) => {
-  selectedId.value = id
+const onSelect = (addressId) => {
+  state.selectedId = addressId
+}
+
+const loadAddresses = async () => {
+  state.loading = true
+  try {
+    const result = await mypageAPI.getAddresses()
+    if (result.success) {
+      state.addresses = result.data
+      const defaultAddress = state.addresses.find((addr) => addr.isDefault)
+      if (defaultAddress) {
+        state.selectedId = defaultAddress.addressId
+      }
+    } else {
+      console.error('배송지 목록 로드 실패:', result.message)
+    }
+  } catch (error) {
+    console.error('배송지 목록 로드 중 오류:', error)
+  } finally {
+    state.loading = false
+  }
 }
 
 function onEditAddress(address) {
-  const popupWindow = openPopup(`/mypage/address/edit/${address.id}`)
+  const popupWindow = openPopup(`/mypage/address/edit/${address.addressId}`)
 
   setTimeout(() => {
     if (popupWindow) {
-      popupWindow.postMessage({ type: 'editData', data: address }, window.location.origin)
+      popupWindow.postMessage(
+        {
+          type: 'editData',
+          data: {
+            addressId: address.addressId,
+            postalCode: address.postalCode,
+            roadAddress: address.roadAddress,
+            detailAddress: address.detailAddress,
+            isDefault: address.isDefault,
+          },
+        },
+        window.location.origin,
+      )
     }
   }, 500)
 }
@@ -40,6 +72,21 @@ function openPopup(relativePath) {
     `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=yes`,
   )
 }
+
+function handleAddressMessage(event) {
+  if (event.data && event.data.type === 'addressSaved') {
+    loadAddresses()
+  }
+}
+
+onMounted(() => {
+  loadAddresses()
+  window.addEventListener('message', handleAddressMessage)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('message', handleAddressMessage)
+})
 </script>
 
 <template>
@@ -50,13 +97,21 @@ function openPopup(relativePath) {
       <div class="select-address-modal-header">배송지 선택</div>
       <div class="select-address-item-list">
         <div id="small-padding"></div>
+
+        <!-- 로딩 상태 -->
+        <div v-if="state.loading" style="text-align: center; padding: 20px">
+          <p>배송지 목록을 불러오는 중...</p>
+        </div>
+
+        <!-- 배송지 목록 -->
         <AddressCard
-          v-for="item in addresses"
-          :key="item.id"
-          :address="item.address"
+          v-else
+          v-for="item in state.addresses"
+          :key="item.addressId"
+          :address="item.fullAddress"
           :isDefault="item.isDefault"
-          :isSelected="item.id === selectedId"
-          @click="onSelect(item.id)"
+          :isSelected="item.addressId === state.selectedId"
+          @click="onSelect(item.addressId)"
           @edit="onEditAddress(item)"
         />
       </div>

@@ -14,8 +14,13 @@ function handleClick() {
 }
 
 function handleEditClick(event) {
-  event.stopPropagation()  // 부모 클릭 이벤트와 겹치지 않도록 막기
+  event.stopPropagation() // 부모 클릭 이벤트와 겹치지 않도록 막기
   emit('edit')
+}
+
+function handleDeleteClick(event) {
+  event.stopPropagation()
+  emit('delete')
 }
 </script>
 
@@ -38,7 +43,9 @@ function handleEditClick(event) {
       </div>
 
       <div class="mypage-address-delete-and-edit-container">
-        <p v-if="!isDefault">삭제</p>
+        <p v-if="!isDefault" @click="handleDeleteClick" class="mypage-address-delete-button">
+          삭제
+        </p>
         <p v-if="!isDefault">|</p>
         <p @click="handleEditClick">수정</p>
       </div>

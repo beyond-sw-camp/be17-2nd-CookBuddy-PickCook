@@ -14,9 +14,6 @@ const userInfo = reactive({
   phone: '',
   profileImage:
     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAlaTCW_H-l1mSyOngrADrGNhk2nTIl-iDew&s',
-  zipCode: '',
-  address: '',
-  detailAddress: '',
 })
 
 // 🔧 추가: 회원탈퇴 모달 및 폼 상태
@@ -25,14 +22,6 @@ const withdrawForm = reactive({
   password: '',
   reason: '',
   confirmWithdraw: false,
-})
-
-// 🔧 추가: 주소 표시용 computed
-const fullAddress = computed(() => {
-  if (userInfo.address && userInfo.detailAddress) {
-    return `${userInfo.address} ${userInfo.detailAddress}`
-  }
-  return ''
 })
 
 // 🔧 추가: 회원탈퇴 모달 관련 함수들
@@ -100,44 +89,6 @@ const confirmWithdraw = async () => {
   }
 }
 
-// 🔧 추가: 주소 검색 팝업 열기
-const openAddressPopup = () => {
-  const width = 500
-  const height = 650
-  const left = window.screenX + (window.outerWidth - width) / 2
-  const top = window.screenY + (window.outerHeight - height) / 2
-
-  return window.open(
-    `${window.location.origin}/address/search`,
-    '주소검색팝업',
-    `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=yes`,
-  )
-}
-
-// 🔧 추가: 주소 메시지 핸들러
-const handleAddressMessage = (event) => {
-  const newData = event.data
-  if (!newData || typeof newData !== 'object' || !newData.address || !newData.zipCode) {
-    return
-  }
-
-  userInfo.zipCode = newData.zipCode
-
-  // address는 "기본주소 상세주소" 형태로 오므로 분리
-  const addressParts = newData.address.split(' ')
-  const detailIndex = addressParts.findIndex(
-    (part) => /^\d/.test(part) || part.includes('동') || part.includes('호') || part.includes('층'),
-  )
-
-  if (detailIndex > 0) {
-    userInfo.address = addressParts.slice(0, detailIndex).join(' ')
-    userInfo.detailAddress = addressParts.slice(detailIndex).join(' ')
-  } else {
-    userInfo.address = newData.address
-    userInfo.detailAddress = ''
-  }
-}
-
 const originalUserInfo = reactive({
   nickname: '',
 })
@@ -151,8 +102,6 @@ const isSocialUser = computed(() => {
 
 onMounted(async () => {
   await loadUserInfo()
-  // 🔧 추가: 주소 메시지 리스너 등록
-  window.addEventListener('message', handleAddressMessage)
 })
 
 // 🔧 수정: 사용자 정보 로드 시 주소 정보도 포함
@@ -166,10 +115,6 @@ const loadUserInfo = async () => {
       name: result.user.name || '',
       phone: result.user.phone || '',
       profileImage: result.user.profileImage || userInfo.profileImage,
-      // 🔧 추가: 주소 정보 로드
-      zipCode: result.user.zipCode || '',
-      address: result.user.address || '',
-      detailAddress: result.user.detailAddress || '',
     })
 
     // 추가: 원본 닉네임 저장
@@ -352,62 +297,6 @@ const onSubmit = async () => {
             @input="onPhoneInput"
             placeholder="010-0000-0000"
           />
-        </div>
-
-        <!-- 🔧 추가: 주소 입력 섹션 -->
-        <div class="mypage-my-profile-info-input-el">
-          <label>주소</label>
-
-          <!-- 주소가 없을 때: 빈 input 창 + 검색 버튼 -->
-          <div v-if="!fullAddress">
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 10px 12px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                background-color: #f8f9fa;
-                cursor: pointer;
-                width: 430px;
-                font-size: 14px;
-              "
-              @click="openAddressPopup"
-            >
-              <span style="flex: 1; color: #666; margin-right: 10px"> 여기를 클릭해주세요 </span>
-            </div>
-          </div>
-
-          <!-- 주소가 있을 때: 주소 표시 + 수정 버튼 -->
-          <div v-if="fullAddress">
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 10px 12px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                background-color: #f8f9fa;
-              "
-            >
-              <span
-                style="
-                  flex: 1;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                  margin-right: 10px;
-                  width: 395px;
-                  font-size: 14px;
-                "
-                @click="openAddressPopup"
-              >
-                {{ fullAddress }}
-              </span>
-            </div>
-          </div>
         </div>
 
         <div class="mypage-my-preofile-info-save">

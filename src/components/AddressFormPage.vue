@@ -1,16 +1,25 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { reactive, ref, onMounted, nextTick } from 'vue'
+import mypageAPI from '@/api/mypage/index'
+import { useRoute } from 'vue-router'
 
-const zipCode = ref('')
-const addr1 = ref('')
-const addr2 = ref('')
-const isDefault = ref(false)
+const route = useRoute()
+
+const state = reactive({
+  zipCode: '',
+  addr1: '',
+  addr2: '',
+  isDefault: false,
+  isEditMode: !!route.params.id,
+  addressId: route.params.id || null,
+  loading: false,
+})
 
 const zipCodeInput = ref(null)
 const addr2Input = ref(null)
 
 function toggleCheck() {
-  isDefault.value = !isDefault.value
+  state.isDefault = !state.isDefault
 }
 
 function showDaumApi() {
@@ -29,10 +38,9 @@ function showDaumApi() {
         fullRoadAddr += ' (' + extraRoadAddr + ')'
       }
 
-      zipCode.value = data.zonecode
-      addr1.value = fullRoadAddr
+      state.zipCode = data.zonecode
+      state.addr1 = fullRoadAddr
 
-      // 주소 입력된 후 상세주소로 포커스 이동
       nextTick(() => {
         addr2Input.value?.focus()
       })
@@ -40,22 +48,67 @@ function showDaumApi() {
   }).open()
 }
 
-function handleSave() {
-  if (!addr1.value || !addr2.value) {
+const loadExistingData = async () => {
+  if (!state.isEditMode || !state.addressId) return
+
+  state.loading = true
+  try {
+    const result = await mypageAPI.getAddress(state.addressId)
+    if (result.success) {
+      const address = result.data
+      state.zipCode = address.postalCode || ''
+      state.addr1 = address.roadAddress || ''
+      state.addr2 = address.detailAddress || ''
+      state.isDefault = address.isDefault || false
+    } else {
+      console.error('배송지 로딩 실패:', result.message)
+      // postMessage로 받은 데이터가 있다면 그것을 사용
+    }
+  } catch (error) {
+    console.error('배송지 로딩 실패:', error)
+    // postMessage로 받은 데이터가 있다면 그것을 사용
+  } finally {
+    state.loading = false
+  }
+}
+
+const handleSave = async () => {
+  if (!state.addr1 || !state.addr2) {
     alert('주소를 모두 입력해주세요.')
     return
   }
 
-  const newAddress = {
-    id: Date.now(),
-    zipCode: zipCode.value,
-    address: addr1.value + ' ' + addr2.value,
-    isDefault: isDefault.value,
+  const addressData = {
+    postalCode: state.zipCode,
+    roadAddress: state.addr1,
+    detailAddress: state.addr2,
+    isDefault: state.isDefault,
   }
 
-  if (window.opener) {
-    window.opener.postMessage(newAddress, '*')
-    window.close()
+  state.loading = true
+  try {
+    let result
+    if (state.isEditMode) {
+      result = await mypageAPI.updateAddress(state.addressId, addressData)
+    } else {
+      result = await mypageAPI.createAddress(addressData)
+    }
+
+    if (result.success) {
+      alert(result.message)
+
+      // 단순히 창 닫기만
+      if (window.opener) {
+        window.close()
+      }
+    } else {
+      alert(result.message)
+    }
+  } catch (error) {
+    console.error('주소 저장 실패:', error)
+    alert('주소 저장에 실패했습니다.')
+  } finally {
+    state.loading = false
   }
 }
 
@@ -65,13 +118,16 @@ onMounted(() => {
     script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'
     document.body.appendChild(script)
   }
+  loadExistingData()
 })
 </script>
 
 <template>
   <div class="mypage-address-form-page-container">
     <div class="mypage-address-form-title-container">
-      <h2><span>더 행복한 한끼</span>를 위해</h2>
+      <h2>
+        <span>{{ state.isEditMode ? '배송지 수정' : '새 배송지 추가' }}</span>
+      </h2>
       <p>고객님의 집 앞까지 빠르고 안전하게 전해드리겠습니다.</p>
     </div>
 
@@ -80,7 +136,7 @@ onMounted(() => {
         <input
           id="zip-code"
           type="text"
-          :value="addr1"
+          :value="state.addr1"
           readonly
           ref="zipCodeInput"
           placeholder="주소를 검색해주세요"
@@ -91,7 +147,7 @@ onMounted(() => {
       <input
         id="detail-address"
         type="text"
-        v-model="addr2"
+        v-model="state.addr2"
         placeholder="상세주소"
         ref="addr2Input"
       />
@@ -100,7 +156,7 @@ onMounted(() => {
         <div class="default-address-check-box">
           <img
             :src="
-              isDefault
+              state.isDefault
                 ? '/assets/icons/ic-mypage-full-check.png'
                 : '/assets/icons/ic-mypage-empty-check.png'
             "
@@ -111,7 +167,9 @@ onMounted(() => {
       </div>
     </div>
 
-    <div class="new-address-submit-button" @click="handleSave">저장</div>
+    <div class="new-address-submit-button" @click="handleSave" :disabled="state.loading">
+      {{ state.loading ? '처리중...' : state.isEditMode ? '수정완료' : '저장' }}
+    </div>
   </div>
 </template>
 

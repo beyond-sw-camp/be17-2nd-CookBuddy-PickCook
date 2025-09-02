@@ -54,7 +54,7 @@ const handleSubmit = async () => {
   const payload = {
     title: boardForm.title,
     content: boardForm.content,
-    imageList: boardForm.imageList,
+    imageList: boardForm.imageList.map(url => ({ imageUrl: url })),
   }
   await api.postUpload(payload)
   router.push('/community')

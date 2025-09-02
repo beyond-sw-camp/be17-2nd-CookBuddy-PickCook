@@ -3,7 +3,9 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import api from '@/api/community'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const editorRef = ref(null)
 
 const boardForm = reactive({
@@ -54,8 +56,8 @@ const handleSubmit = async () => {
     content: boardForm.content,
     imageList: boardForm.imageList,
   }
-  const response = await api.postUpload(payload)
-  console.log('업로드 결과:', response)
+  await api.postUpload(payload)
+  router.push('/community')
 }
 
 onMounted(() => {

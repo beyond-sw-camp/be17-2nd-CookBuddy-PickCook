@@ -446,14 +446,14 @@ const initTabNavigation = () => {
   sections.value = [
     document.querySelector('.required-notation-info'),
     document.querySelector('.shipping-information-container'),
-    document.querySelector('.review-section'),
+    document.querySelector('.review-summary'),
   ].filter((section) => section !== null)
 
   gnbItems.value.forEach((gnbItem, index) => {
     gnbItem.addEventListener('click', (e) => {
       e.preventDefault()
       if (sections.value[index]) {
-        const sectionTop = sections.value[index].offsetTop - 250
+        const sectionTop = sections.value[index].offsetTop - 150
         window.scroll({
           top: sectionTop,
           behavior: 'smooth',
@@ -514,7 +514,7 @@ const detectCurrentSection = () => {
 
   const headerHeight = 50
   const tabBarHeight = 50
-  const scrollY = window.scrollY + headerHeight + tabBarHeight + 100
+  const scrollY = window.scrollY + headerHeight + tabBarHeight + 80
 
   let currentSection = 0
 
@@ -853,7 +853,7 @@ onUnmounted(() => {
               getStarDisplay(Math.round(reviewState.statistics.averageRating))
             }}</span>
             <span class="total-count"
-              >총 {{ reviewState.statistics.totalReviews.toLocaleString() }}개 후기</span
+              >총 {{ reviewState.statistics.totalReviews.toLocaleString() }}개 리뷰</span
             >
           </div>
 

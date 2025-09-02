@@ -159,7 +159,8 @@ const onSubmitPayment = async () => {
       const result = await orderApi.validatePayment(payment.paymentId)
 
       if (result?.status === 'PAID') {
-        router.push('/payment/complete')
+        const orderId = result?.order_id
+        router.push(`/payment/complete/${orderId}`)
       } else {
         alert(`결제 실패`)
         router.push('/payment')

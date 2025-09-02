@@ -39,7 +39,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: '/payment/complete',
+      path: '/payment/complete/:orderId',
       name: 'payment-complete',
       component: PaymentComplete,
       meta: { requiresAuth: true },

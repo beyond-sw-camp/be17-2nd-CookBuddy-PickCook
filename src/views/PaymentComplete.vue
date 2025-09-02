@@ -1,9 +1,10 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import lottie from 'lottie-web'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 
 const lottieContainer = ref(null)
 
@@ -21,6 +22,12 @@ onMounted(() => {
 const goToShopping = () => {
   router.push('/products')
 }
+
+function goOrderDetail() {
+  const pathParts = route.path.split('/');
+  const orderId = pathParts[pathParts.length - 1];
+  router.push(`/order/details/${orderId}`);
+}
 </script>
 
 <template>
@@ -32,7 +39,7 @@ const goToShopping = () => {
         <p>고객님의 <span>맛있는 한 끼</span>를 위해 빠르게 배송해드릴게요.</p>
 
         <div class="payment-complete-buttons-container">
-          <button class="order-detail-page-go">주문 상세보기</button>
+          <button @click="goOrderDetail" class="order-detail-page-go">주문 상세보기</button>
           <button @click="goToShopping" class="shopping-continue-go">쇼핑 계속하기</button>
         </div>
       </div>

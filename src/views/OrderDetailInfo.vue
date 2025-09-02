@@ -146,7 +146,7 @@ const totalDiscount = computed(
                     <div v-if="item.discount_rate > 0" class="order-detail-space-between discount-detail-gray-font-color">
                       <span>ㄴ 상품 할인</span>
                       <span>
-                        -{{
+                        - {{
                           Math.round(
                             ((item.original_price * item.discount_rate) / 100) * item.quantity,
                           ).toLocaleString()

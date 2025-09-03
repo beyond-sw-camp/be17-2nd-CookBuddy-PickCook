@@ -81,6 +81,18 @@ function onEditAddress(address) {
   }, 500)
 }
 
+function openAddressPopup() {
+  const popupWindow = openPopup('/mypage/address/new')
+
+  // 팝업 창이 닫힌 후 새로고침하도록 폴링 방식 적용
+  const checkClosed = setInterval(() => {
+    if (popupWindow.closed) {
+      clearInterval(checkClosed)
+      loadAddresses() // 팝업 닫힌 후 목록 새로고침
+    }
+  }, 500)
+}
+
 onMounted(() => {
   loadAddresses() // 추가
 })
@@ -115,9 +127,7 @@ onMounted(() => {
   </div>
 
   <div class="mypage-address-button-container-parents">
-    <button class="mypage-address-add" @click="() => openPopup('/mypage/address/new')">
-      배송지 추가
-    </button>
+    <button class="mypage-address-add" @click="openAddressPopup">배송지 추가</button>
   </div>
 </template>
 

@@ -101,12 +101,28 @@ const searchProducts = async (keyword) => {
   }
 }
 
+// 기존 코드 유지하고 아래 함수 추가
+
+/**
+ * 레시피 기반 연관 상품 조회 (🆕 새로 추가)
+ */
+const getRelatedProductsByRecipe = async (recipeId) => {
+  try {
+    const response = await api.get(`/api/products/recipe/${recipeId}/related`)
+    return response.data.results || []
+  } catch (error) {
+    console.error('레시피 연관 상품 조회 실패:', error)
+    throw error
+  }
+}
+
 const shoppingAPI = {
   getAllProducts,
   getProductDetail,
   getProductReviews,
   getProductsByCategory,
-  searchProducts
+  searchProducts,
+  getRelatedProductsByRecipe
 }
 
 export default shoppingAPI

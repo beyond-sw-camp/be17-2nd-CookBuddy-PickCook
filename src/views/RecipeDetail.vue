@@ -71,7 +71,7 @@ onMounted(() => {
       </div>
     </section>
 
-    <RelatedProducts :title="recipe.title" :ingredients="recipe.ingredients" />
+    <RelatedProducts :recipe-id="Number(route.params.id)" :title="recipe.title" />
 
     <section class="recipe-steps">
       <h2>요리 순서</h2>

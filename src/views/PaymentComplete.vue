@@ -12,10 +12,7 @@ onMounted(() => {
   lottie.loadAnimation({
     container: lottieContainer.value,
     renderer: 'svg',
-    renderer: 'svg',
     loop: true,
-    autoplay: true,
-    path: '/assets/animations/bqh4dsxhG0.json',
     path: '/assets/animations/bqh4dsxhG0.json',
   })
 })
@@ -35,10 +32,6 @@ function goOrderDetail() {
 <template>
   <div class="payment-complete-page-body">
     <div class="payment-complete-contents-container">
-      <div>
-        <div ref="lottieContainer" class="lottie-image"></div>
-        <h3>주문이 완료되었습니다.</h3>
-        <p>고객님의 <span>맛있는 한 끼</span>를 위해 빠르게 배송해드릴게요.</p>
         <div>
           <div ref="lottieContainer" class="lottie-image"></div>
           <h3>주문이 완료되었습니다.</h3>
@@ -48,7 +41,6 @@ function goOrderDetail() {
             <button @click="goOrderDetail" class="order-detail-page-go">주문 상세보기</button>
             <button @click="goToShopping" class="shopping-continue-go">쇼핑 계속하기</button>
           </div>
-        </div>
       </div>
     </div>
   </div>

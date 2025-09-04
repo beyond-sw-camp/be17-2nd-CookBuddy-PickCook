@@ -50,4 +50,42 @@ const registerRecipe = async (payload) => {
     })
 }
 
-export default { recipeList, getRecipe, registerRecipe }
+const getRecipeComments = async (recipeId) => {
+  let data = {}
+  let url = `api/recipe/comment?recipeId=${recipeId}`
+
+  await api
+    .get(url)
+    .then((res) => {
+      data = res.data
+    })
+    .catch((error) => {
+      console.log(error)
+      data = error.data
+    })
+
+  return data
+}
+
+const addRecipeComment = async (formData) => {
+  let data = {}
+  let url = 'api/recipe/comment'
+
+  await api
+    .post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then((res) => {
+      data = res.data
+    })
+    .catch((error) => {
+      console.log(error)
+      data = error.data
+    })
+
+  return data
+}
+
+export default { recipeList, getRecipe, registerRecipe, getRecipeComments, addRecipeComment }

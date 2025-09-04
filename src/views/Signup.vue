@@ -451,15 +451,6 @@ const onNicknameInput = () => {
   resetNicknameVerification()
   clearNicknameError()
 }
-
-// 라이프사이클 관리
-onMounted(() => {
-  window.addEventListener('message', handleAddressMessage)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('message', handleAddressMessage)
-})
 </script>
 
 <template>

@@ -1,8 +1,9 @@
 <script setup>
 import RecipeStep from '@/components/RecipeStep.vue'
 import RelatedProducts from './RelatedProducts.vue'
+import RecipeComment from '@/components/RecipeComment.vue'
 import api from '@/api/recipe'
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -17,19 +18,66 @@ const recipe = reactive({
     seasoning: [],
   },
   steps: [],
+  comments: [],
 })
 
+const newComment = ref('')
+const newCommentImage = ref(null)
+const newCommentImagePreview = ref(null)
+const fileInput = ref(null)
+const activeReplyId = ref(null)
+
+// 레시피 정보 가져오기
 const getRecipe = async () => {
   const id = route.params.id
   const data = await api.getRecipe(id)
-  if (data) {
-    Object.assign(recipe, data)
-    console.log(recipe)
+  if (data) Object.assign(recipe, data)
+}
+
+// 레시피 댓글 가져오기
+const getComments = async () => {
+  const id = route.params.id
+  const data = await api.getRecipeComments(id)
+  if (data.success) recipe.comments = data.results
+}
+
+// 댓글 새로고침
+const refreshComments = async () => {
+  await getComments()
+  activeReplyId.value = null
+}
+
+const updateNewCommentImage = (e) => {
+  newCommentImage.value = e.target.files[0]
+  newCommentImagePreview.value = URL.createObjectURL(newCommentImage.value)
+}
+
+// 최상위 댓글 등록
+const submitComment = async () => {
+  if (!newComment.value.trim() && !newCommentImage.value) return
+
+  const formData = new FormData()
+  const requestData = {
+    content: newComment.value,
+    recipeId: route.params.id,
+  }
+  formData.append('data', new Blob([JSON.stringify(requestData)], { type: 'application/json' }))
+
+  if (newCommentImage.value) formData.append('image', newCommentImage.value)
+
+  const data = await api.addRecipeComment(formData)
+  if (data.success) {
+    newComment.value = ''
+    newCommentImage.value = null
+    newCommentImagePreview.value = null
+    await refreshComments()
   }
 }
 
-onMounted(() => {
-  getRecipe()
+// 페이지 로드 시 데이터 불러오기
+onMounted(async () => {
+  await getRecipe()
+  await getComments()
 })
 </script>
 
@@ -81,6 +129,43 @@ onMounted(() => {
         :stepNumber="step.step_order"
         :text="step.description"
         :image="step.image_url"
+      />
+    </section>
+
+    <section class="recipe-comments">
+      <h2>댓글</h2>
+      <div class="rd-comment-form">
+        <div class="new-comment-input-wrapper">
+          <textarea
+            v-model="newComment"
+            placeholder="칭찬과 격려의 댓글은 작성자에게 큰 힘이 됩니다 :)"
+            class="comment-input"
+          ></textarea>
+
+          <img
+            :src="newCommentImagePreview || '/assets/icons/ic-photo.png'"
+            alt="new comment image"
+            class="rd-image-placeholder"
+            @click="fileInput.click()"
+          />
+          <input
+            type="file"
+            accept="image/*"
+            style="display: none"
+            :ref="(el) => (fileInput = el)"
+            @change="updateNewCommentImage($event)"
+          />
+        </div>
+        <button @click="submitComment" class="comment-submit-btn">댓글 작성</button>
+      </div>
+      <div v-if="recipe.comments.length === 0">등록된 댓글이 없습니다.</div>
+      <RecipeComment
+        v-for="comment in recipe.comments"
+        :key="comment.id"
+        :comment="comment"
+        :replyId="activeReplyId"
+        @toggle-reply="(id) => (activeReplyId = id)"
+        @refresh-comments="refreshComments"
       />
     </section>
   </div>
@@ -151,5 +236,57 @@ onMounted(() => {
   text-align: right;
   width: 40%;
   padding-right: 24px; /* 오른쪽 여백 */
+}
+
+.recipe-comments {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rd-comment-form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.new-comment-input-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+}
+
+.comment-input {
+  flex-grow: 1;
+  width: 100%;
+  height: 6rem;
+  resize: none;
+  font-family: inherit;
+  padding: 10px;
+  border: 1px solid #bcbbbd;
+  border-radius: 4px;
+}
+
+.comment-input::placeholder {
+  color: #ececec;
+}
+
+.comment-input:focus {
+  outline: none;
+}
+
+.rd-image-placeholder {
+  height: 8rem;
+}
+
+.comment-submit-btn {
+  padding: 6px;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  background-color: var(--color-primary);
+  align-self: right;
 }
 </style>

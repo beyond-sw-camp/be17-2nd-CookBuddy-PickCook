@@ -450,7 +450,7 @@ const initTabNavigation = () => {
   sections.value = [
     document.querySelector('.required-notation-info'),
     document.querySelector('.shipping-information-container'),
-    document.querySelector('.review-summary'),
+    document.querySelector('.review-section'),
   ].filter((section) => section !== null)
 
   gnbItems.value.forEach((gnbItem, index) => {

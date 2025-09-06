@@ -6,6 +6,11 @@ import { RouterLink, useRouter } from 'vue-router'
 const auth = useUserStore()
 const router = useRouter()
 
+const kakaoLoginUrl = computed(() => {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL
+  return `${baseUrl}/oauth2/authorization/kakao`
+})
+
 // 폼 데이터 관리
 const form = reactive({
   email: '',
@@ -255,7 +260,7 @@ onUnmounted(() => {
         <div></div>
       </div>
       <div class="sns-icons">
-        <a href="http://localhost:8080/oauth2/authorization/kakao">
+        <a :href="kakaoLoginUrl">
           <img src="/assets/icons/ic-kakao-login.png" alt="카카오 로그인" />
         </a>
       </div>

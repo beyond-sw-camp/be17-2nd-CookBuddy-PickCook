@@ -11,6 +11,8 @@ const kakaoLoginUrl = computed(() => {
   return `${baseUrl}/oauth2/authorization/kakao`
 })
 
+console.log(kakaoLoginUrl)
+
 // 폼 데이터 관리
 const form = reactive({
   email: '',

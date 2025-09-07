@@ -11,7 +11,20 @@ const state = reactive({
 
 const emit = defineEmits(['close'])
 const close = () => {
-  emit('close')
+  const selectedAddress = state.addresses.find((addr) => addr.addressId === state.selectedId)
+
+  if (selectedAddress) {
+    // 부모 컴포넌트로 데이터 전달
+    emit('close', {
+      postalCode: selectedAddress.postalCode,
+      roadAddress: selectedAddress.roadAddress,
+      detailAddress: selectedAddress.detailAddress,
+      fullAddress: selectedAddress.fullAddress,
+    })
+  } else {
+    // 선택된 주소가 없으면 그냥 닫기
+    emit('close', null)
+  }
 }
 
 const onSelect = (addressId) => {
@@ -74,7 +87,11 @@ function openPopup(relativePath) {
 }
 
 function handleAddressMessage(event) {
+  console.log('[SelectAddressModal] message event:', event.origin, event.data)
+
   if (event.data && event.data.type === 'addressSaved') {
+    const savedAddress = event.data.data
+    console.log('새로 저장된 주소:', savedAddress)
     loadAddresses()
   }
 }
@@ -104,16 +121,23 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- 배송지 목록 -->
-        <AddressCard
-          v-else
-          v-for="item in state.addresses"
-          :key="item.addressId"
-          :address="item.fullAddress"
-          :isDefault="item.isDefault"
-          :isSelected="item.addressId === state.selectedId"
-          @click="onSelect(item.addressId)"
-          @edit="onEditAddress(item)"
-        />
+        <!-- 배송지 목록 -->
+        <template v-else>
+          <div v-if="state.addresses.length">
+            <AddressCard
+              v-for="item in state.addresses"
+              :key="item.addressId"
+              :address="item.fullAddress"
+              :isDefault="item.isDefault"
+              :isSelected="item.addressId === state.selectedId"
+              @click="onSelect(item.addressId)"
+              @edit="onEditAddress(item)"
+            />
+          </div>
+          <div v-else class="no-delivery-register">
+            <p>등록된 배송지가 없습니다.</p>
+          </div>
+        </template>
       </div>
 
       <div class="select-address-button-container">
@@ -200,6 +224,14 @@ onBeforeUnmount(() => {
 }
 
 #small-padding {
-  height: 10px;
+  min-height: 10px;
+}
+
+.no-delivery-register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 180px;
+  font-size: 14px;
 }
 </style>

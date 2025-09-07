@@ -97,10 +97,24 @@ const handleSave = async () => {
     if (result.success) {
       alert(result.message)
 
-      // 단순히 창 닫기만
       if (window.opener) {
-        window.close()
-      }
+    window.opener.postMessage(
+      {
+        type: 'addressSaved',
+        data: {
+          postalCode: state.zipCode,
+          roadAddress: state.addr1,
+          detailAddress: state.addr2,
+          fullAddress: state.addr1 + ' ' + state.addr2,
+          isDefault: state.isDefault,
+          addressId: state.addressId || result.data.addressId, // 새로 생성 시 ID
+        },
+      },
+      '*' // 개발용, 배포 시 부모 origin 명시 ex.(프로토콜)://(프론트엔드서버 도메인):(포트번호)
+    )
+  }
+
+  window.close()
     } else {
       alert(result.message)
     }

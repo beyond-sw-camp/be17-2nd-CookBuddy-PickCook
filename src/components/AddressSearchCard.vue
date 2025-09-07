@@ -50,17 +50,25 @@ function handleSave() {
     return
   }
 
-  const newAddress = {
-    id: Date.now(),
-    zipCode: form.zipCode,
-    address: form.addr1 + ' ' + form.addr2,
-    isDefault: form.isDefault,
+  const payload = {
+    type: 'addressSaved',
+    data: {
+      postalCode: form.zipCode,
+      roadAddress: form.addr1,
+      detailAddress: form.addr2,
+      fullAddress: form.addr1 + ' ' + form.addr2,
+      isDefault: form.isDefault,
+    },
   }
 
   if (window.opener) {
-    window.opener.postMessage(newAddress, '*')
-    window.close()
+    window.opener.postMessage(payload, '*') // 개발 중 테스트용 '*'
+    console.log('[팝업] 메시지 전송 완료', payload)
+  } else {
+    console.warn('[팝업] 부모 창(window.opener) 없음!')
   }
+
+  window.close()
 }
 
 onMounted(() => {

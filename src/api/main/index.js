@@ -18,15 +18,15 @@ const recipeList = async () => {
 
 const communityList = async () => {
   let data = {}
-  let url = 'api/community_home.json'
+  let url = '/api/posts/mplist?page=0&size=4&sortType=latest&filterType=all'
 
   await api
     .get(url)
     .then((res) => {
-      data = res.data
+      data = res.data.results.content
     })
     .catch((error) => {
-      data = error.data
+      data = error.data.results
     })
 
   return data

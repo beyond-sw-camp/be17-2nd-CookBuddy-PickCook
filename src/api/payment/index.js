@@ -1,7 +1,7 @@
 import api from '@/plugins/axiosinterceptor'
 
 // 결제 시작 요청 → 백엔드에서 uuid(payment_id) 받아오기
-const startPayment = async (totalPrice, orderItems, orderType, shippingInfo, user) => {
+const startPayment = async (totalPrice, orderItems, orderType, shippingInfo, user, postalCode, roadAddress, detailAddress) => {
   let data = {}
   const url = 'api/order/start'
 
@@ -18,9 +18,9 @@ const startPayment = async (totalPrice, orderItems, orderType, shippingInfo, use
       orderDelivery: {
         receiverName: shippingInfo.receiverName,
         receiverPhone: shippingInfo.receiverPhone,
-        zipCode: user.zipCode,
-        address: user.address,
-        detailAddress: user.detailAddress,
+        zipCode: postalCode,
+        address: roadAddress,
+        detailAddress: detailAddress,
         deliveryPlace: shippingInfo.deliveryPlace,
         requestMessage: shippingInfo.requestMessage,
       },
@@ -102,4 +102,20 @@ const userInfo = async () => {
   return data
 }
 
-export default { startPayment, validatePayment, orderList, orderDetail, userInfo }
+const userAddress = async () => {
+  let data = {}
+  let url = '/api/user/addresses'
+
+  await api
+    .get(url)
+    .then((res) => {
+      data = res.data.results
+    })
+    .catch((error) => {
+      data = error.data
+    })
+
+  return data
+}
+
+export default { startPayment, validatePayment, orderList, orderDetail, userInfo, userAddress }

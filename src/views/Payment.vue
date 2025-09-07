@@ -14,6 +14,10 @@ const router = useRouter()
 const selectedItems = ref([]) // 결제할 상품 목록
 const orderType = ref('CART')
 const user = ref({})
+const userAddress = ref({})
+const postalCode = ref('')
+const roadAddress = ref('')
+const detailAddress = ref('')
 const shippingInfo = ref(null)
 const isAgreeChecked = ref(false) // 체크박스 상태
 
@@ -26,7 +30,13 @@ const isPrivacyThirdPartyConsentModalOpen = ref(false) // 개인정보 제 3자 
 const openSelectShippingRegionModal = () => {
   isSelectShippingRegionModalOpen.value = true
 }
-const closeSelectShippingRegionModal = () => {
+const closeSelectShippingRegionModal = (address) => {
+  if (address) {
+    postalCode.value = address.postalCode
+    roadAddress.value = address.roadAddress
+    detailAddress.value = address.detailAddress
+    userAddress.value = address
+  }
   isSelectShippingRegionModalOpen.value = false
 }
 const openShippingRequestModal = () => {
@@ -109,9 +119,18 @@ onMounted(async () => {
   }
 
   try {
-    const userData = await orderApi.userInfo()
-    user.value = userData.results
-    console.log(user.value.name)
+    const [userData, userAddressData] = await Promise.all([
+      orderApi.userInfo(),
+      orderApi.userAddress(),
+    ])
+
+    if (userData && userData.results) {
+      user.value = userData.results
+    }
+
+    if (userAddressData[0]) {
+      userAddress.value = userAddressData[0]
+    }
   } catch (error) {
     console.error('유저 정보 가져오기 실패', error)
   }
@@ -119,7 +138,6 @@ onMounted(async () => {
 
 const handleSaveShippingInfo = (data) => {
   shippingInfo.value = data
-  console.log('부모에서 받은 배송 정보:', shippingInfo.value)
 }
 
 // 결제 요청
@@ -139,6 +157,9 @@ const onSubmitPayment = async () => {
       orderType.value,
       shippingInfo.value,
       user.value,
+      postalCode.value,
+      roadAddress.value,
+      detailAddress.value,
     )
     const idxs = selectedItems.value.map((item) => item.idx)
 
@@ -231,7 +252,9 @@ const isPaymentEnabled = computed(() => {
         <div class="payment-order-items-shipping-info-container">
           <div class="payment-order-items-shipping-info-title-container">배송지</div>
           <div class="payment-order-items-shipping-lnfo-as-container">
-            <p>{{ user.address }} {{ user.detailAddress }}</p>
+            <p>
+              {{ userAddress.fullAddress ? userAddress.fullAddress : '배송지를 입력해주세요.' }}
+            </p>
             <button id="shipping-destination-button" @click="openSelectShippingRegionModal">
               변경
             </button>

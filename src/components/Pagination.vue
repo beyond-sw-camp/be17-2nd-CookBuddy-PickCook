@@ -22,15 +22,13 @@ const pageRange = computed(() => {
 const goToPage = (page) => {
   if (page >= 0 && page < props.totalPages) {
     emit('changePage', page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
 </script>
 
 <template>
-  <div
-    class="pagination"
-    style="display: flex; justify-content: center; gap: 4px; margin-top: 16px"
-  >
+  <div class="pagination">
     <!-- 맨 처음 -->
     <button @click="goToPage(0)" :disabled="props.currentPage === 0">«</button>
 
@@ -42,12 +40,7 @@ const goToPage = (page) => {
       v-for="page in pageRange"
       :key="page"
       @click="goToPage(page - 1)"
-      :style="{
-        padding: '4px 8px',
-        borderRadius: '4px',
-        backgroundColor: page - 1 === props.currentPage ? '#3b82f6' : '#e5e7eb',
-        color: page - 1 === props.currentPage ? '#fff' : '#000',
-      }"
+      :class="{ active: page - 1 === props.currentPage }"
     >
       {{ page }}
     </button>
@@ -65,7 +58,39 @@ const goToPage = (page) => {
       @click="goToPage(props.totalPages - 1)"
       :disabled="props.currentPage === props.totalPages - 1"
     >
-      »
+      » 
     </button>
   </div>
 </template>
+
+<style scoped>
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 16px;
+}
+
+.pagination button {
+  padding: 6px 10px;
+  border-radius: 4px;
+  background-color: #e5e7eb;
+  color: #565656;
+  border: none;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination button.active {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+.pagination button:hover:not(:disabled):not(.active) {
+  background-color: #d1d5db;
+}
+</style>

@@ -18,19 +18,45 @@ const showMoreMenus = ref(false)
 const PostMoreMenuModalToggle = () => {
   showMoreMenus.value = !showMoreMenus.value
 }
+
+const truncateContent = (html, maxLength) => {
+  // HTML 태그 제거 후 글자수 제한
+  const div = document.createElement('div')
+  div.innerHTML = html
+  let text = div.textContent || div.innerText || ''
+  
+  if (text.length > maxLength) {
+    text = text.slice(0, maxLength) + '...'
+  }
+  return text
+}
+
+const formatRelativeTime = (isoString) => {
+  const now = new Date()
+  const past = new Date(isoString)
+  const diff = Math.floor((now - past) / 1000) // 초 단위
+
+  if (diff < 60) return `${diff}초 전`
+  if (diff < 3600) return `${Math.floor(diff / 60)}분 전`
+  if (diff < 86400) return `${Math.floor(diff / 3600)}시간 전`
+  if (diff < 604800) return `${Math.floor(diff / 86400)}일 전`
+
+  // 너무 오래된 글은 날짜 표시
+  return `${past.getFullYear()}.${(past.getMonth() + 1).toString().padStart(2,'0')}.${past.getDate().toString().padStart(2,'0')}`
+}
 </script>
 
 <template>
   <div class="mypage-main-my-activity-boards">
     <div class="mypage-my-activity-boards-el">
       <div class="mypage-my-activity-boards-left">
-        <img :src="post.image" alt="커뮤니티 대표 이미지" />
+        <img :src="post.postImage" alt="커뮤니티 대표 이미지" />
         <div class="mypage-my-activity-boards-content">
           <p>{{ post.title }}</p>
-          <p>{{ post.content }}</p>
+          <p v-html="truncateContent(post.content, 200)"></p>
           <span
-            >{{ post.createdAt }} · 조회 {{ post.views }} · 좋아요 {{ post.likes }}개 · 댓글
-            {{ post.comments }}개</span
+            >{{ formatRelativeTime(post.updatedAt) }} · 조회 {{ post.viewCount }} · 좋아요 {{ post.likeCount }}개 ·
+            스크랩 {{ post.scrapCount }}개 · 댓글 {{ post.commentCount }}개</span
           >
         </div>
       </div>
@@ -41,8 +67,8 @@ const PostMoreMenuModalToggle = () => {
 
       <div v-else class="mypage-my-activity-board-more-menu-button">
         <!-- 모바일/태블릿에서 보여줄 다른 버튼 UI -->
-        <img src="/public/assets/icons/ic-more.png" alt="더보기" @click="PostMoreMenuModalToggle"/>
-        <MyPagePostItemMenuModal v-if="showMoreMenus" class="post-more-menu-modal"/>
+        <img src="/public/assets/icons/ic-more.png" alt="더보기" @click="PostMoreMenuModalToggle" />
+        <MyPagePostItemMenuModal v-if="showMoreMenus" class="post-more-menu-modal" />
       </div>
     </div>
   </div>

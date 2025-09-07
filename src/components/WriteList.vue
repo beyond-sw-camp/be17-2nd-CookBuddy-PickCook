@@ -10,6 +10,7 @@ const page = ref(0)
 const size = ref(6)
 const totalPages = ref(1)
 const loading = ref(false)
+const scrollContainer = ref(null)
 
 const { isMobileOrTablet } = useBreakpoints()
 
@@ -30,20 +31,16 @@ const selectOption = (option) => {
   selected.value = option
   isOpen.value = false
   page.value = 0
-  getMyPosts(true) // 선택 변경 시 리스트 초기화 후 새로 불러오기
+  loadPosts(true) // 드롭다운 선택 변경 시 초기화
 }
 
-// API 호출
-const getMyPosts = async (reset = false) => {
+const loadPosts = async (reset = false) => {
   if (loading.value) return
   loading.value = true
 
   try {
     const sortType = selected.value === '오래된 순' ? 'oldest' : 'latest'
-    const response = await api.get(
-      `/api/posts/mplist?page=${page.value}&size=${size.value}&sortType=${sortType}&filterType=my`
-    )
-    const data = response.data.results
+    const data = await api.getMyPosts(page.value, size.value, sortType)
     totalPages.value = data.totalPages
 
     if (reset) {
@@ -58,29 +55,29 @@ const getMyPosts = async (reset = false) => {
   }
 }
 
-// 무한 스크롤 핸들러
-const handleScroll = () => {
-  const scrollContainer = document.querySelector('.mypage-main-content-scroll')
-  if (!scrollContainer) return
+// 무한 스크롤
+const handleScroll = async () => {
+  const el = scrollContainer.value
+  if (!el || loading.value) return
 
-  const { scrollTop, scrollHeight, clientHeight } = scrollContainer
-  if (scrollTop + clientHeight >= scrollHeight - 50 && page.value + 1 < totalPages.value) {
+  if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50 && page.value + 1 < totalPages.value) {
     page.value += 1
-    getMyPosts()
+    await loadPosts()  
   }
 }
 
-// 초기 호출 및 스크롤 이벤트 등록
-onMounted(() => {
-  getMyPosts()
-  const scrollContainer = document.querySelector('.mypage-main-content-scroll')
-  scrollContainer?.addEventListener('scroll', handleScroll)
+onMounted(async () => {
+  await loadPosts()
+
+  if (scrollContainer.value) {
+    scrollContainer.value.addEventListener('scroll', handleScroll)
+  }
 })
 
-// 컴포넌트 언마운트 시 이벤트 제거
 onBeforeUnmount(() => {
-  const scrollContainer = document.querySelector('.mypage-main-content-scroll')
-  scrollContainer?.removeEventListener('scroll', handleScroll)
+  if (scrollContainer.value) {
+    scrollContainer.value.removeEventListener('scroll', handleScroll)
+  }
 })
 </script>
 
@@ -110,7 +107,7 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="mypage-body-box">
-      <div class="mypage-main-content-scroll">
+      <div class="mypage-main-content-scroll" ref="scrollContainer">
         <MyWritePostItemCard
           v-for="post in posts"
           :key="post.id"

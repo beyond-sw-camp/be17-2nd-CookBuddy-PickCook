@@ -528,6 +528,13 @@ const closeSyncModal = () => {
 const handleSyncAction = () => {
   const action = syncPromptData.value?.recommendedAction
 
+  // 🆕 빈 상태일 때 식재료 추가 모달 열기
+  if (action?.includes('첫 식재료 등록하기')) {
+    showAddModal.value = true // 식재료 추가 모달 열기
+    closeSyncModal() // 동기화 모달 닫기
+    return
+  }
+
   if (action?.includes('만료')) {
     // 만료된 아이템 (0일 미만)
     filters.expirationStatus = 'EXPIRED'

@@ -256,7 +256,7 @@ onMounted(() => {
 .cd-action-bar {
   display: flex;
   align-items: center;
-  padding: 20px 0;
+  padding: 40px 0 20px;
   gap: 20px;
 }
 

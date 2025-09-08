@@ -167,6 +167,7 @@ function openSearchSlide() {
 
 .write-dropdown-btn {
   padding: 12px 0;
+  font-size: 14px;
   color: var(--color-gray);
 }
 

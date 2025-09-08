@@ -134,41 +134,50 @@ const submitRecipe = async () => {
     </div>
 
     <!-- 레시피 제목 -->
-    <input v-model="recipe.title" placeholder="제목을 입력해주세요." />
+    <div class="recipe-write-label-container">
+      <label class="recipe-write-label">레시피 제목</label>
+      <input v-model="recipe.title" placeholder="제목을 입력해주세요." />
+    </div>
 
     <!-- 레시피 소개 -->
-    <textarea
-      v-model="recipe.description"
-      placeholder="레시피와 관련된 소개를 작성해주세요."
-    ></textarea>
+    <div class="recipe-write-label-container">
+      <label class="recipe-write-label">레시피 소개</label>
+      <textarea
+        v-model="recipe.description"
+        placeholder="레시피와 관련된 소개를 작성해주세요."
+      ></textarea>
+    </div>
 
     <!-- 카테고리/방법/인분 -->
-    <div class="select-row">
-      <select v-model="recipe.category">
-        <option disabled value="">카테고리 선택</option>
-        <option>한식</option>
-        <option>중식</option>
-        <option>양식</option>
-      </select>
+    <div class="recipe-category-and-cook-info recipe-write-label-container">
+      <label class="recipe-write-label">카테고리 / 요리정보</label>
+      <div class="select-row">
+        <select v-model="recipe.category">
+          <option disabled value="">카테고리 선택</option>
+          <option>한식</option>
+          <option>중식</option>
+          <option>양식</option>
+        </select>
 
-      <select v-model="recipe.method">
-        <option disabled value="">방법 선택</option>
-        <option>볶음</option>
-        <option>찜</option>
-        <option>구이</option>
-      </select>
+        <select v-model="recipe.method">
+          <option disabled value="">방법 선택</option>
+          <option>볶음</option>
+          <option>찜</option>
+          <option>구이</option>
+        </select>
 
-      <select v-model="recipe.nation">
+        <select v-model="recipe.nation">
         <option disabled value="">인분 선택</option>
         <option>1인분</option>
         <option>2인분</option>
         <option>3인분+</option>
       </select>
+      </div>
     </div>
 
     <!-- 재료 -->
-    <div class="ingredients">
-      <h3>레시피 재료</h3>
+    <div class="ingredients recipe-write-label-container">
+      <label class="recipe-write-label">재료 정보</label>
       <div v-for="(ing, index) in recipe.ingredients" :key="index" class="ingredient-row">
         <input v-model="ing.name" placeholder="재료명" />
         <input v-model="ing.amount" placeholder="수량" />
@@ -184,8 +193,8 @@ const submitRecipe = async () => {
     </div>
 
     <!-- 조리 과정 -->
-    <div class="steps">
-      <h3>레시피 과정</h3>
+    <div class="steps recipe-write-label-container">
+      <label class="recipe-write-label">요리 순서</label>
       <div v-for="(step, index) in recipe.steps" :key="index" class="step-row">
         <textarea
           v-model="step.description"
@@ -217,10 +226,16 @@ const submitRecipe = async () => {
     </div>
 
     <!-- 요리 팁 -->
-    <textarea v-model="recipe.tip" placeholder="요리 팁을 입력해주세요."></textarea>
+    <div class="recipe-write-label-container">
+      <label class="recipe-write-label">요리팁 / 주의사항</label>
+      <textarea v-model="recipe.tip" placeholder="요리 팁을 입력해주세요."></textarea>
+    </div>
 
     <!-- 해시태그 -->
+     <div class="recipe-write-label-container">
+      <label class="recipe-write-label">해시태그</label>
     <input v-model="recipe.hashtags" placeholder="#해시태그" />
+    </div>
 
     <!-- 제출 버튼 -->
     <button @click="submitRecipe" class="upload-btn">레시피 등록</button>
@@ -228,18 +243,35 @@ const submitRecipe = async () => {
 </template>
 
 <style scoped>
-.recipe-write {
-  max-width: 800px;
-  margin: 0 auto;
+.recipe-write-label-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 4px;
+}
+
+.recipe-write-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.recipe-write {
+  max-width: 800px;
+  margin: 20px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  background-color: white;
+  padding: 30px 25px 25px;
+  border-radius: 10px;
 }
 
 .thumbnail-upload {
   border-radius: 8px;
   text-align: center;
   padding: 80px 20px;
+  background-color: #f7f7f7;
+  margin-bottom: 10px;
 }
 
 .upload-btn {
@@ -264,12 +296,11 @@ const submitRecipe = async () => {
 .step-row {
   display: flex;
   gap: 10px;
-  margin-bottom: 8px;
 }
 
 input,
 textarea {
-  padding: 6px;
+  padding: 8px 10px;
   border: 1px solid lightgray;
   border-radius: 4px;
   font-family: 'Arial', sans-serif;
@@ -278,6 +309,11 @@ textarea {
 input::placeholder,
 textarea::placeholder {
   color: lightgray;
+}
+
+textarea { 
+  resize: none;
+  min-height: 80px;
 }
 
 textarea:focus {
@@ -293,29 +329,51 @@ select {
 
 .recipe-step-description {
   flex-grow: 1;
+  max-height: 108px;
 }
 
 .step-image-wrapper img {
   border: 1px solid lightgray;
   border-radius: 4px;
-  height: 100px;
+  height: 108px;
+  max-width: 108px;
 }
 
 .recipe-remove-btn {
-  height: 24px;
-  width: 24px;
-  align-self: center;
-  border: 1px solid lightgray;
-  background: white;
-  color: var(--color-primary);
-  border-radius: 4px;
+      height: 33px;
+    width: 33px;
+    align-self: center;
+    border: 1px solid lightgray;
+    background: white;
+    color: var(--color-primary);
+    border-radius: 4px;
+    font-size: 22px;
+    padding-bottom: 3px;
+    cursor: pointer;
 }
 
 .recipe-add-btn {
-  padding: 6px;
+  padding: 8px;
   background-color: white;
   color: gray;
   border: 1px solid lightgray;
   border-radius: 4px;
+  margin-top: 5px;
+}
+
+.upload-placeholder > p {
+  font-size: 15px;
+}
+
+.ingredient-row > input {
+  flex: 2;
+}
+
+select, button {
+  cursor: pointer;
+}
+
+.recipe-add-btn:hover {
+  background-color: #f5f5f5;
 }
 </style>

@@ -10,8 +10,9 @@ const route = useRoute()
 
 const recipe = reactive({
   title: '',
-  time: '',
-  difficulty: '',
+  time_taken: '',
+  difficulty_level: '',
+  serving_size: '',
   thumbnail: '',
   ingredients: {
     main: [],
@@ -87,10 +88,10 @@ onMounted(async () => {
       <img :src="recipe.image_large_url" alt="레시피 이미지" />
       <h2 class="recipe-title">{{ recipe.title }}</h2>
       <p class="recipe-description">{{ recipe.description }}</p>
-      <div>
-        <span>⏱️ {{ recipe.time }}</span>
-        <span>&nbsp;&nbsp;&nbsp;</span>
-        <span>👤 {{ recipe.difficulty }}</span>
+      <div class="recipe-detaile-serving-time-level">
+        <span><img src="/assets/icons/ic-time.png" alt="소요시간"/> {{ recipe.time_taken }}</span>
+        <span><img src="/assets/icons/ic-level.png" alt="난이도"/> {{ recipe.difficulty_level }}</span>
+        <span><img src="/assets/icons/ic-qnt.png" alt="인분"/> {{ recipe.serving_size }}</span>
       </div>
     </section>
 
@@ -180,12 +181,12 @@ onMounted(async () => {
 }
 
 .rd-container section {
-  padding: 24px;
+  padding: 35px 30px;
   background-color: white;
   border-radius: 10px;
 }
 .recipe-title {
-  padding: 12px;
+  padding: 12px 0 36px;
 }
 .recipe-image {
   text-align: center;
@@ -194,6 +195,25 @@ onMounted(async () => {
 .recipe-image img {
   width: 60%;
   border-radius: 8px;
+}
+
+.recipe-detaile-serving-time-level {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+}
+
+.recipe-detaile-serving-time-level > span {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--color-dark-strong);
+  font-size: 15px;
+}
+
+.recipe-detaile-serving-time-level img {
+  width: 20px;
 }
 
 .rd-ingredients-section {
@@ -210,8 +230,9 @@ onMounted(async () => {
 
 .rd-ingredients-group h3 {
   margin-bottom: 12px;
-  font-size: 1.1rem;
-  font-weight: bold;
+  font-size: 16px;
+  color: #212121;
+  font-weight: 500;
 }
 
 .rd-ingredients-table {
@@ -288,5 +309,10 @@ onMounted(async () => {
   color: white;
   background-color: var(--color-primary);
   align-self: right;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 </style>

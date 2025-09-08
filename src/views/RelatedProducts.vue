@@ -111,7 +111,7 @@ onMounted(() => {
         @click="goToPreviousPage"
         :disabled="!showLeftButton"
       >
-        ‹
+        <img src="/assets/icons/ic-arrow-left.png" alt="왼쪽"/>
       </button>
 
       <div class="product-grid">
@@ -134,7 +134,7 @@ onMounted(() => {
         @click="goToNextPage"
         :disabled="!showRightButton"
       >
-        ›
+        <img src="/assets/icons/ic-arrow-right.png" alt="오른쪽"/>
       </button>
     </div>
 
@@ -158,7 +158,9 @@ onMounted(() => {
 .related-products h3 {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
+  margin-bottom: 20px;
+  font-size: 18px;
 }
 
 .related-products h3 .highlight {
@@ -184,9 +186,9 @@ onMounted(() => {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4열 그리드 */
   grid-template-rows: repeat(2, 1fr); /* 2행 그리드 */
-  gap: 16px;
+  gap: 25px 16px;
   width: 100%;
-  padding: 10px 40px; /* 좌우 버튼 공간 확보 */
+  padding: 20px 40px; /* 좌우 버튼 공간 확보 */
   min-height: 120px;
 }
 
@@ -214,6 +216,9 @@ onMounted(() => {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   z-index: 10;
   transition: all 0.2s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .nav-button:hover:not(:disabled) {
@@ -276,5 +281,9 @@ onMounted(() => {
   padding: 5px;
   background-color: #f9f9f9;
   border-radius: 4px;
+}
+
+.nav-button > img {
+  width: 20px;
 }
 </style>

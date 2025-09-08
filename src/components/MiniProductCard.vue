@@ -105,6 +105,22 @@ const goToProductDetail = () => {
   background-color: var(--color-gray);
 }
 
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 10px;
+}
+
+.product-info > p:first-child {
+  font-size: 15px;
+}
+
+.product-info > p:last-child {
+  font-size: 14px;
+  color: var(--color-dark-strong);
+}
+
 .price-text {
   font-size: 12px;
   font-weight: bold;

@@ -26,6 +26,8 @@ const closeDropdown = () => {
 const selectOption = (option) => {
   selected.value = option
   isOpen.value = false
+  page.value = 0
+  loadPosts(true)
 }
 
 const loadPosts = async (reset = false) => {

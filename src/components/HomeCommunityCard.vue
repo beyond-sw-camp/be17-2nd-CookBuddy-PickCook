@@ -1,6 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import likeAPI from '@/api/like'
+import scrapAPI from '@/api/scrap'
 
 const router = useRouter()
 
@@ -11,48 +13,73 @@ const props = defineProps({
   },
 })
 
+const likeAnimating = ref(false)
+const scrapAnimating = ref(false)
+
+// 로컬 상태
 const isLiked = ref(props.community.hasLiked)
 const likeCount = ref(props.community.likeCount)
-const likeAnimating = ref(false)
-
-const likeSrc = computed(() =>
-  isLiked.value ? '/assets/icons/ic-full-like.png' : '/assets/icons/ic-empty-like.png',
-)
-
-const toggleLike = () => {
-  if (isLiked.value) {
-    likeCount.value--
-  } else {
-    likeCount.value++
-  }
-  isLiked.value = !isLiked.value
-
-  likeAnimating.value = true
-  setTimeout(() => {
-    likeAnimating.value = false
-  }, 300)
-}
 
 const isScrapped = ref(props.community.hasScrapped)
 const scrapCount = ref(props.community.scrapCount)
-const scrapAnimating = ref(false)
+
+// 아이콘 경로
+const likeSrc = computed(() =>
+  isLiked.value ? '/assets/icons/ic-full-like.png' : '/assets/icons/ic-empty-like.png',
+)
 
 const scrapSrc = computed(() =>
   isScrapped.value ? '/assets/icons/ic-full-scrap.png' : '/assets/icons/ic-gray-empty-scrap.png',
 )
 
-const toggleScrap = () => {
-  if (isScrapped.value) {
-    scrapCount.value--
-  } else {
-    scrapCount.value++
+// 좋아요 토글
+const toggleLike = async (event) => {
+  event.stopPropagation()
+  event.preventDefault()
+
+  // UI 업데이트
+  isLiked.value = !isLiked.value
+  likeCount.value += isLiked.value ? 1 : -1
+
+  likeAnimating.value = true
+  setTimeout(() => {
+    likeAnimating.value = false
+  }, 300)
+
+  try {
+    await likeAPI.toggleLike('POST', props.community.id)
+    // 성공 → 그대로 유지
+  } catch (err) {
+    console.error('좋아요 실패', err)
+    // 실패 → 원래 상태로 롤백
+    isLiked.value = !isLiked.value
+    likeCount.value += isLiked.value ? 1 : -1
   }
+}
+
+// 스크랩 토글
+const toggleScrap = async (event) => {
+  event.stopPropagation()
+  event.preventDefault()
+
+  // UI 업데이트
   isScrapped.value = !isScrapped.value
+  scrapCount.value += isScrapped.value ? 1 : -1
 
   scrapAnimating.value = true
   setTimeout(() => {
     scrapAnimating.value = false
   }, 300)
+
+  try {
+    await scrapAPI.toggleScrap('POST', props.community.id)
+    // 성공 → 그대로 유지
+  } catch (err) {
+    console.error('스크랩 실패', err)
+    // 실패 → 원래 상태로 롤백
+    isScrapped.value = !isScrapped.value
+    scrapCount.value += isScrapped.value ? 1 : -1
+  }
 }
 
 const formatRelativeTime = (isoTime) => {

@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import MyPagePostItemMenuModal from './MyPagePostItemMenuModal.vue'
+import { useRouter } from 'vue-router'
 
 const props = defineProps({
   post: Object,
@@ -13,6 +14,7 @@ const props = defineProps({
 
 const showActions = computed(() => !props.isMobileOrTablet)
 const showMoreMenus = ref(false)
+const router = useRouter()
 
 // 모바일&태블릿 화면일 때 사용하는 메뉴 모달 토글
 const PostMoreMenuModalToggle = () => {
@@ -44,10 +46,14 @@ const formatRelativeTime = (isoString) => {
   // 너무 오래된 글은 날짜 표시
   return `${past.getFullYear()}.${(past.getMonth() + 1).toString().padStart(2,'0')}.${past.getDate().toString().padStart(2,'0')}`
 }
+
+const goToDetail = () => {
+  router.push(`/community/${props.post.id}`)
+}
 </script>
 
 <template>
-  <div class="mypage-main-my-activity-boards">
+  <div class="mypage-main-my-activity-boards" @click="goToDetail">
     <div class="mypage-my-activity-boards-el">
       <div class="mypage-my-activity-boards-left">
         <img :src="post.postImage" alt="커뮤니티 대표 이미지" />
@@ -61,8 +67,8 @@ const formatRelativeTime = (isoString) => {
         </div>
       </div>
       <div v-if="showActions" class="mypage-my-activity-boards-right">
-        <div class="mypage-my-activity-boards-edit-button">수정</div>
-        <div class="mypage-my-activity-boards-delete-button">삭제</div>
+        <div class="mypage-my-activity-boards-edit-button" @click.stop>수정</div>
+        <div class="mypage-my-activity-boards-delete-button" @click.stop>삭제</div>
       </div>
 
       <div v-else class="mypage-my-activity-board-more-menu-button">

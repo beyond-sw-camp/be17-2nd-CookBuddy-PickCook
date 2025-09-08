@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import api from '@/api/recipe'
 import { useRouter } from 'vue-router'
+import CustomDropdown from '@/components/CustomDropdown.vue'
 
 const router = useRouter()
 
@@ -12,16 +13,24 @@ const recipe = ref({
   description: '',
   category: '',
   method: '',
-  nation: '',
   ingredients: [{ name: '', amount: '' }],
   steps: [{ description: '', image: null, preview: null }],
   tip: '',
   hashtags: '',
+  time_taken: '',
+  serving_size: '',
+  difficulty_level: '',
 })
 
 const coverPreview = ref(null)
 const coverInput = ref(null)
 const fileInputs = ref([]) // step별 file input refs
+const categories = ['한식', '중식', '양식']
+const methods = ['볶음', '찜', '구이']
+const nations = ['1인분', '2인분', '3인분+']
+const times = ['5분', '10분', '20분', '30분', '40분', '50분', '1시간', '2시간', '3시간+']
+const servings = ['1인분', '2인분', '3인분+']
+const difficulties = ['어려움', '보통', '쉬움']
 
 // 커버 파일 선택 버튼 클릭
 const triggerCoverSelect = () => {
@@ -64,12 +73,13 @@ const handleImageUpload = (event, index) => {
 
 // 제출
 const submitRecipe = async () => {
-  console.log('submit recipe')
   const recipeDto = {
     title: recipe.value.title,
     cooking_method: recipe.value.method,
     category: recipe.value.category,
     serving_size: recipe.value.nation,
+    time_taken: recipe.value.time_taken,
+    difficulty_level: recipe.value.difficulty_level,
     hashtags: recipe.value.hashtags,
     tip: recipe.value.tip,
     steps: recipe.value.steps.map((s, idx) => ({
@@ -97,8 +107,7 @@ const submitRecipe = async () => {
     if (s.image) formData.append('files', s.image)
   })
 
-  const result = await api.registerRecipe(formData)
-  console.log(result)
+  await api.registerRecipe(formData)
   router.push('/recipe')
 }
 </script>
@@ -148,30 +157,41 @@ const submitRecipe = async () => {
       ></textarea>
     </div>
 
+    <!-- 조리시간 -->
+    <div class="recipe-write-label-container">
+      <label class="recipe-write-label">조리시간 / 인분 / 난이도</label>
+      <div class="time-taken-and-level-and-amount">
+        <!-- 조리시간 드롭다운 -->
+        <CustomDropdown :options="times" v-model="recipe.time_taken" placeholder="조리시간" />
+
+        <!-- 인분 드롭다운 -->
+        <CustomDropdown :options="servings" v-model="recipe.serving_size" placeholder="인분" />
+
+        <!-- 난이도 드롭다운 -->
+        <CustomDropdown
+          :options="difficulties"
+          v-model="recipe.difficulty_level"
+          placeholder="난이도"
+        />
+      </div>
+    </div>
+
     <!-- 카테고리/방법/인분 -->
     <div class="recipe-category-and-cook-info recipe-write-label-container">
       <label class="recipe-write-label">카테고리 / 요리정보</label>
       <div class="select-row">
-        <select v-model="recipe.category">
-          <option disabled value="">카테고리 선택</option>
-          <option>한식</option>
-          <option>중식</option>
-          <option>양식</option>
-        </select>
+        <!-- 카테고리 드롭다운 -->
+        <CustomDropdown
+          :options="categories"
+          v-model="recipe.category"
+          placeholder="카테고리 선택"
+        />
 
-        <select v-model="recipe.method">
-          <option disabled value="">방법 선택</option>
-          <option>볶음</option>
-          <option>찜</option>
-          <option>구이</option>
-        </select>
+        <!-- 방법 드롭다운 -->
+        <CustomDropdown :options="methods" v-model="recipe.method" placeholder="방법 선택" />
 
-        <select v-model="recipe.nation">
-        <option disabled value="">인분 선택</option>
-        <option>1인분</option>
-        <option>2인분</option>
-        <option>3인분+</option>
-      </select>
+        <!-- 인분 드롭다운 -->
+        <CustomDropdown :options="nations" v-model="recipe.nation" placeholder="인분 선택" />
       </div>
     </div>
 
@@ -232,9 +252,9 @@ const submitRecipe = async () => {
     </div>
 
     <!-- 해시태그 -->
-     <div class="recipe-write-label-container">
+    <div class="recipe-write-label-container">
       <label class="recipe-write-label">해시태그</label>
-    <input v-model="recipe.hashtags" placeholder="#해시태그" />
+      <input v-model="recipe.hashtags" placeholder="#해시태그" />
     </div>
 
     <!-- 제출 버튼 -->
@@ -246,7 +266,7 @@ const submitRecipe = async () => {
 .recipe-write-label-container {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .recipe-write-label {
@@ -262,7 +282,7 @@ const submitRecipe = async () => {
   flex-direction: column;
   gap: 25px;
   background-color: white;
-  padding: 30px 25px 25px;
+  padding: 30px 25px 40px;
   border-radius: 10px;
 }
 
@@ -288,10 +308,6 @@ const submitRecipe = async () => {
   max-width: 100%;
 }
 
-.select-row {
-  display: flex;
-  gap: 10px;
-}
 .ingredient-row,
 .step-row {
   display: flex;
@@ -311,7 +327,7 @@ textarea::placeholder {
   color: lightgray;
 }
 
-textarea { 
+textarea {
   resize: none;
   min-height: 80px;
 }
@@ -340,16 +356,16 @@ select {
 }
 
 .recipe-remove-btn {
-      height: 33px;
-    width: 33px;
-    align-self: center;
-    border: 1px solid lightgray;
-    background: white;
-    color: var(--color-primary);
-    border-radius: 4px;
-    font-size: 22px;
-    padding-bottom: 3px;
-    cursor: pointer;
+  height: 33px;
+  width: 33px;
+  align-self: center;
+  border: 1px solid lightgray;
+  background: white;
+  color: var(--color-primary);
+  border-radius: 4px;
+  font-size: 22px;
+  padding-bottom: 3px;
+  cursor: pointer;
 }
 
 .recipe-add-btn {
@@ -369,11 +385,26 @@ select {
   flex: 2;
 }
 
-select, button {
+select,
+button {
   cursor: pointer;
 }
 
 .recipe-add-btn:hover {
   background-color: #f5f5f5;
+}
+
+.time-taken-and-level-and-amount {
+  display: flex;
+  gap: 10px;
+}
+
+.time-taken-and-level-and-amount > input {
+  flex: 1;
+}
+
+.select-row {
+  display: flex;
+  gap: 10px;
 }
 </style>

@@ -19,8 +19,8 @@ const recipeList = async () => {
 const communityList = async () => {
   let data = {}
 
-  let url = '/api/community_home.json'
-
+  // 수정된 URL
+  let url = '/api/posts/mplist?page=0&size=4&sortType=latest&filterType=all'
 
   await api
     .get(url)
@@ -28,7 +28,8 @@ const communityList = async () => {
       data = res.data.results.content
     })
     .catch((error) => {
-      data = error.data.results
+      console.error('커뮤니티 목록 조회 실패:', error)
+      data = [] // 에러 시 빈 배열 반환
     })
 
   return data

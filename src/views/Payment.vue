@@ -130,6 +130,9 @@ onMounted(async () => {
 
     if (userAddressData[0]) {
       userAddress.value = userAddressData[0]
+      postalCode.value = userAddressData[0].postalCode
+      roadAddress.value = userAddressData[0].roadAddress
+      detailAddress.value = userAddressData[0].detailAddress
     }
   } catch (error) {
     console.error('유저 정보 가져오기 실패', error)

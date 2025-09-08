@@ -36,4 +36,19 @@ defineProps({
   </RouterLink>
 </template>
 
-<style lang=""></style>
+<style>
+.c-board {
+  /* background-color: white; */
+  /* padding: 12px 18px; */
+  margin: 10px 5px;
+}
+
+.title {
+  font-size: 14px;
+}
+
+.c-board-content > span {
+  font-size: 14px;
+  color: var(--color-dark-strong);
+}
+</style>

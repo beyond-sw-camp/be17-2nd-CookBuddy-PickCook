@@ -153,17 +153,11 @@ onMounted(() => {
     <!-- 액션 바 -->
     <div class="cd-action-bar">
       <button class="cd-action-btn" @click="toggleLike">
-        <img
-          :src="likeSrc"
-          :class="{ 'icon-pop': likeAnimating }"
-        />
+        <img :src="likeSrc" :class="{ 'icon-pop': likeAnimating }" />
         좋아요 {{ likeCount }}
       </button>
       <button class="cd-action-btn" @click="toggleScrap">
-        <img
-          :src="scrapSrc"
-          :class="{ 'icon-pop': scrapAnimating }"
-        />
+        <img :src="scrapSrc" :class="{ 'icon-pop': scrapAnimating }" />
         스크랩 {{ scrapCount }}
       </button>
     </div>
@@ -186,7 +180,7 @@ onMounted(() => {
           placeholder="칭찬과 격려의 댓글은 작성자에게 큰 힘이 됩니다 :)"
           class="comment-input"
         ></textarea>
-        <button @click="submitComment" class="comment-submit-btn">댓글 작성</button>
+        <button @click="submitComment" class="comment-submit-btn">작성</button>
       </div>
 
       <!-- 댓글 리스트 -->
@@ -204,13 +198,14 @@ onMounted(() => {
   </main>
 </template>
 
-<style scoped>
+<style>
 /* 메인 컨테이너 */
 .cd-main-container {
   max-width: 720px;
-  margin: 0 auto;
+  margin: 20px auto 0;
   padding: 40px 20px;
   background-color: white;
+  border-radius: 10px;
 }
 
 /* 제목 섹션 */
@@ -220,7 +215,7 @@ onMounted(() => {
 
 .cd-post-title {
   font-size: 20px;
-  margin-bottom: 12px;
+  margin-bottom: 4px;
 }
 
 .cd-post-info {
@@ -228,9 +223,22 @@ onMounted(() => {
   color: #515151;
 }
 
-/* 이미지 섹션 */
 .cd-post-content {
   font-size: 16px;
+  max-width: 680px;      /* 전체 콘텐츠 최대 너비 */
+  word-wrap: break-word; /* 텍스트 줄바꿈 강제 */
+  overflow-wrap: break-word; /* 긴 단어도 줄바꿈 */
+}
+
+.cd-post-content img {
+  max-width: 100%;   /* 부모 div 너비를 넘어가지 않도록 */
+  height: auto;      /* 이미지 비율 유지 */
+  display: block;    /* 이미지 주변 줄바꿈 문제 방지 */
+  margin: 10px auto;    /* 가운데 정렬 (원하면) */
+}
+
+.cd-post-content p {
+  word-break: break-word; /* 문단 안 긴 단어 줄바꿈 */
 }
 
 /* 텍스트 콘텐츠 */
@@ -258,7 +266,7 @@ onMounted(() => {
   gap: 6px;
   background: none;
   border: none;
-  font-size: 14px;
+  font-size: 12px;
   color: #424242;
   cursor: pointer;
 }
@@ -294,13 +302,14 @@ onMounted(() => {
   padding-top: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 5px;
 }
 
 .cd-comment-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  font-size: 13px;
 }
 
 .cd-comment-sort {
@@ -429,12 +438,13 @@ onMounted(() => {
 }
 
 .comment-submit-btn {
-  padding: 6px;
+  padding: 6px 12px;
   border: none;
   border-radius: 4px;
+  font-size: 13px;
   color: white;
   background-color: var(--color-primary);
-  align-self: right;
+  cursor: pointer;
 }
 
 /* 반응형 */

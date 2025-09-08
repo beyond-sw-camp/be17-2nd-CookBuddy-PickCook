@@ -47,9 +47,7 @@
 }
 
 .c-board {
-  gap: 8px;
-  margin-bottom: 8px;
-  margin-top: 16px;
+  gap: 3px;
   display: flex;
   flex-direction: column;
 }
@@ -98,7 +96,7 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   word-break: break-all;
-  height: 48px;
+  height: 28px;
   -webkit-line-clamp: 2;
 }
 

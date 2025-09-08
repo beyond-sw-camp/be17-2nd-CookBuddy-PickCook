@@ -133,4 +133,9 @@ watch(
 .dropdown-item:hover {
   background-color: rgb(244, 244, 244);
 }
+
+.c-posts-count {
+  margin-bottom: 10px;
+  font-size: 14px;
+}
 </style>

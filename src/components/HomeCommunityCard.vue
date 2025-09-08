@@ -130,6 +130,10 @@ const goToDetail = () => {
           <span class="author-name">{{ props.community.authorName }}</span>
         </div>
         <div class="community-stats card-stats">
+        <span>
+          <img class="icon reply-icon" src="/assets/icons/ic-reply-count.png" alt="댓글 수" />
+          {{ props.community.commentCount }}
+        </span>
           <span @click.stop="toggleLike" style="cursor: pointer">
             <img class="icon" :class="{ 'icon-pop': likeAnimating }" :src="likeSrc" alt="좋아요" />
             {{ likeCount }}
@@ -149,4 +153,8 @@ const goToDetail = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.reply-icon {
+  width: 18px;
+}
+</style>

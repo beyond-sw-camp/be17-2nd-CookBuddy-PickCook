@@ -49,6 +49,24 @@ const toggleCart = async (event) => {
     inCart.value = !inCart.value
   }
 }
+
+// 평균 별점 - 백엔드에서 받은 실제 데이터 사용
+const averageRating = computed(() => {
+  if (!props.product.average_rating || props.product.average_rating === 0) {
+    return '0.0'
+  }
+  return Number(props.product.average_rating).toFixed(1)
+})
+
+// 리뷰 개수 - 백엔드에서 받은 실제 데이터 사용
+const reviewCount = computed(() => {
+  return props.product.review_count || 0
+})
+
+// 별점이 있는지 확인 (0보다 큰 경우에만 별 아이콘 표시)
+const hasRating = computed(() => {
+  return props.product.average_rating && props.product.average_rating > 0
+})
 </script>
 
 <template>
@@ -70,15 +88,30 @@ const toggleCart = async (event) => {
           </div>
         </div>
         <div class="ingredients-stats card-stats">
-          <!-- TODO: 백엔드 리뷰 기능 완성 후 평점과 리뷰 수 받아와 적용하기 -->
-          <!-- <span><img src="/assets/icons/ic-stars.png" alt="평점" />{{ product.rating }}</span>
-          <span><img src="/assets/icons/ic-review.png" alt="리뷰" />{{ product.reviewCount }}</span> -->
-          <span><img src="/assets/icons/ic-stars.png" alt="평점" />4.3</span>
-          <span><img src="/assets/icons/ic-review.png" alt="리뷰" />32</span>
+          <!-- 별점이 있을 때만 표시 -->
+          <span v-if="hasRating">
+            <img src="/assets/icons/ic-stars.png" alt="평점" />
+            {{ averageRating }}
+          </span>
+          <!-- 별점이 없을 때는 대체 텍스트 -->
+          <span v-else class="no-rating">
+            <img src="/assets/icons/ic-stars.png" alt="평점" style="opacity: 0.3" />
+            평점 없음
+          </span>
+
+          <span>
+            <img src="/assets/icons/ic-review.png" alt="리뷰" />
+            {{ reviewCount }}
+          </span>
         </div>
       </div>
     </div>
   </router-link>
 </template>
 
-<style scoped></style>
+<style scoped>
+.no-rating {
+  color: #999;
+  font-size: 12px;
+}
+</style>

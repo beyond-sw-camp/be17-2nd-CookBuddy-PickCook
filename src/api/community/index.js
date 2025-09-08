@@ -3,7 +3,9 @@ import axios from 'axios'
 
 const getPostList = async (page, direction, keyword) => {
   let data = {}
-  let url = `api/posts/list?page=${page}&size=10&dir=${direction}&keyword=${keyword}`
+
+  let url = `/api/posts/list?page=${page}&size=10&dir=${direction}&keyword=${keyword}`
+
 
   await api
     .get(url)
@@ -19,7 +21,9 @@ const getPostList = async (page, direction, keyword) => {
 
 const getPostDetail = async (id) => {
   let data = {}
-  let url = `api/posts/${id}`
+
+  let url = `/api/posts/${id}`
+
 
   await api
     .get(url)
@@ -35,7 +39,9 @@ const getPostDetail = async (id) => {
 
 const addComment = async (payload) => {
   let data = {}
-  let url = 'api/comments'
+
+  let url = '/api/comments'
+
 
   await api
     .post(url, payload)
@@ -49,7 +55,9 @@ const addComment = async (payload) => {
 
 const getComments = async (postId) => {
   let data = {}
-  let url = `api/comments?postId=${postId}`
+
+  let url = `/api/comments?postId=${postId}`
+
 
   await api
     .get(url)
@@ -65,7 +73,9 @@ const getComments = async (postId) => {
 
 const like = async (payload) => {
   let data = {}
-  let url = 'api/like'
+
+  let url = '/api/like'
+
 
   await api
     .post(url, payload)
@@ -81,7 +91,9 @@ const like = async (payload) => {
 
 const scrap = async (payload) => {
   let data = {}
-  let url = 'api/scrap'
+
+  let url = '/api/scrap'
+
 
   await api
     .post(url, payload)
@@ -97,7 +109,9 @@ const scrap = async (payload) => {
 
 const getPresignedUrl = async (formData) => {
   let data = {}
-  let url = 'api/image-upload'
+
+  let url = '/api/image-upload'
+
   await api
     .post(url, formData, {
       headers: {
@@ -134,7 +148,9 @@ const uploadImage = async (presigedUrl, file) => {
 
 const postUpload = async (payload) => {
   let data = {}
-  let url = `api/posts`
+
+  let url = `/api/posts`
+
   await api
     .post(url, payload)
     .then((res) => {

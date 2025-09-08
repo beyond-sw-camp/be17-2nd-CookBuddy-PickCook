@@ -5,11 +5,11 @@ import api from '@/plugins/axiosinterceptor'
  */
 
 /**
- * 모든 상품 목록 조회
+ * 모든 상품 목록 조회 (정렬 파라미터 추가)
  */
-const getAllProducts = async (page, size) => {
+const getAllProducts = async (page, size, sort = 'id', dir = 'ASC') => {
   try {
-    const response = await api.get(`/api/products?page=${page}&size=${size}&sort=id&dir=ASC`)
+    const response = await api.get(`/api/products?page=${page}&size=${size}&sort=${sort}&dir=${dir}`)
     return response.data.results || []
   } catch (error) {
     console.error('상품 목록 조회 실패:', error)
@@ -74,11 +74,11 @@ export const getProductReviews = async (productId, filterRequest) => {
 }
 
 /**
- * 카테고리별 상품 조회 (✅ 새로 추가)
+ * 카테고리별 상품 조회 (정렬 파라미터 추가)
  */
-const getProductsByCategory = async (categoryId) => {
+const getProductsByCategory = async (categoryId, page = 0, size = 10, sort = 'id', dir = 'ASC') => {
   try {
-    const response = await api.get(`/api/products/category/${categoryId}`)
+    const response = await api.get(`/api/products/category/${categoryId}?page=${page}&size=${size}&sort=${sort}&dir=${dir}`)
     return response.data.results || []
   } catch (error) {
     console.error('카테고리별 상품 조회 실패:', error)
@@ -87,12 +87,12 @@ const getProductsByCategory = async (categoryId) => {
 }
 
 /**
- * 상품 검색 (✅ 새로 추가)
+ * 상품 검색 (정렬 파라미터 추가)
  */
-const searchProducts = async (keyword) => {
+const searchProducts = async (keyword, page = 0, size = 10, sort = 'id', dir = 'ASC') => {
   try {
     const response = await api.get('/api/products/search', {
-      params: { keyword }
+      params: { keyword, page, size, sort, dir }
     })
     return response.data.results || []
   } catch (error) {

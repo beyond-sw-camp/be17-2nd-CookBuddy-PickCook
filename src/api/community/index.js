@@ -163,7 +163,26 @@ const postUpload = async (payload) => {
   return data
 }
 
+const communityList = async () => {
+  let data = {}
+
+  let url = '/api/posts/mplist?page=0&size=4&sortType=latest&filterType=all'
+
+  await api
+    .get(url)
+    .then((res) => {
+      data = res.data
+    })
+    .catch((error) => {
+      console.error('커뮤니티 목록 조회 실패:', error)
+      data = { success: false, results: { content: [] } }
+    })
+
+  return data
+}
+
 export default {
+  communityList,
   getPostList,
   getPostDetail,
   addComment,

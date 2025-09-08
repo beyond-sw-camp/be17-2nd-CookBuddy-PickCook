@@ -15,7 +15,7 @@ import api from '@/plugins/axiosinterceptor'
  */
 const getCategories = async () => {
   try {
-    const response = await api.get('/api/categories')
+    const response = await api.get('api/categories')
     return response.data.results || []
   } catch (error) {
     console.error('카테고리 조회 실패:', error)
@@ -28,7 +28,7 @@ const getCategories = async () => {
  */
 const getActiveCategories = async () => {
   try {
-    const response = await api.get('/api/categories/active')
+    const response = await api.get('api/categories/active')
     return response.data.results || []
   } catch (error) {
     console.error('활성 카테고리 조회 실패:', error)
@@ -41,7 +41,7 @@ const getActiveCategories = async () => {
  */
 const getCategorySummary = async () => {
   try {
-    const response = await api.get('/api/categories/summary')
+    const response = await api.get('api/categories/summary')
     return response.data.results || []
   } catch (error) {
     console.error('카테고리 통계 조회 실패:', error)
@@ -58,7 +58,7 @@ const getCategorySummary = async () => {
  */
 const getIngredients = async () => {
   try {
-    const response = await api.get('/api/refrigerator/items')
+    const response = await api.get('api/refrigerator/items')
     return response.data.results || []
   } catch (error) {
     console.error('냉장고 아이템 조회 실패:', error)
@@ -71,7 +71,7 @@ const getIngredients = async () => {
  */
 const getIngredient = async (itemId) => {
   try {
-    const response = await api.get(`/api/refrigerator/items/${itemId}`)
+    const response = await api.get(`api/refrigerator/items/${itemId}`)
     return response.data.results
   } catch (error) {
     console.error('냉장고 아이템 상세 조회 실패:', error)
@@ -84,7 +84,7 @@ const getIngredient = async (itemId) => {
  */
 const addIngredient = async (ingredientData) => {
   try {
-    const response = await api.post('/api/refrigerator/items', ingredientData)
+    const response = await api.post('api/refrigerator/items', ingredientData)
     return response.data.results
   } catch (error) {
     console.error('냉장고 아이템 추가 실패:', error)
@@ -97,7 +97,7 @@ const addIngredient = async (ingredientData) => {
  */
 const updateIngredient = async (itemId, ingredientData) => {
   try {
-    const response = await api.put(`/api/refrigerator/items/${itemId}`, ingredientData)
+    const response = await api.put(`api/refrigerator/items/${itemId}`, ingredientData)
     return response.data.results
   } catch (error) {
     console.error('냉장고 아이템 수정 실패:', error)
@@ -110,7 +110,7 @@ const updateIngredient = async (itemId, ingredientData) => {
  */
 const deleteIngredient = async (itemId) => {
   try {
-    const response = await api.delete(`/api/refrigerator/items/${itemId}`)
+    const response = await api.delete(`api/refrigerator/items/${itemId}`)
     return response.data
   } catch (error) {
     console.error('냉장고 아이템 삭제 실패:', error)
@@ -123,7 +123,7 @@ const deleteIngredient = async (itemId) => {
  */
 const undoDeleteIngredient = async (itemId) => {
   try {
-    const response = await api.post(`/api/refrigerator/items/${itemId}/undo`)
+    const response = await api.post(`api/refrigerator/items/${itemId}/undo`)
     return response.data
   } catch (error) {
     console.error('냉장고 아이템 복원 실패:', error)
@@ -140,8 +140,8 @@ const undoDeleteIngredient = async (itemId) => {
  */
 const searchIngredients = async (keyword) => {
   try {
-    const response = await api.get('/api/refrigerator/items/search', {
-      params: { keyword }
+    const response = await api.get('api/refrigerator/items/search', {
+      params: { keyword },
     })
     return response.data.results || []
   } catch (error) {
@@ -155,7 +155,7 @@ const searchIngredients = async (keyword) => {
  */
 const filterIngredients = async (filterData) => {
   try {
-    const response = await api.post('/api/refrigerator/items/filter', filterData)
+    const response = await api.post('api/refrigerator/items/filter', filterData)
     return response.data.results || []
   } catch (error) {
     console.error('냉장고 아이템 필터링 실패:', error)
@@ -168,7 +168,7 @@ const filterIngredients = async (filterData) => {
  */
 const getIngredientsByLocation = async (location) => {
   try {
-    const response = await api.get(`/api/refrigerator/items/location/${location}`)
+    const response = await api.get(`api/refrigerator/items/location/${location}`)
     return response.data.results || []
   } catch (error) {
     console.error('위치별 아이템 조회 실패:', error)
@@ -181,7 +181,7 @@ const getIngredientsByLocation = async (location) => {
  */
 const getIngredientsByCategory = async (categoryId) => {
   try {
-    const response = await api.get(`/api/refrigerator/items/category/${categoryId}`)
+    const response = await api.get(`api/refrigerator/items/category/${categoryId}`)
     return response.data.results || []
   } catch (error) {
     console.error('카테고리별 아이템 조회 실패:', error)
@@ -198,7 +198,7 @@ const getIngredientsByCategory = async (categoryId) => {
  */
 const addBulkIngredients = async (itemsData) => {
   try {
-    const response = await api.post('/api/refrigerator/items/bulk', { items: itemsData })
+    const response = await api.post('api/refrigerator/items/bulk', { items: itemsData })
     return response.data.results || []
   } catch (error) {
     console.error('일괄 아이템 추가 실패:', error)
@@ -211,8 +211,8 @@ const addBulkIngredients = async (itemsData) => {
  */
 const getExpiringIngredients = async (days = 3) => {
   try {
-    const response = await api.get('/api/refrigerator/items/expiring', {
-      params: { days }
+    const response = await api.get('api/refrigerator/items/expiring', {
+      params: { days },
     })
     return response.data.results || []
   } catch (error) {
@@ -226,7 +226,7 @@ const getExpiringIngredients = async (days = 3) => {
  */
 const getExpiredIngredients = async () => {
   try {
-    const response = await api.get('/api/refrigerator/items/expired')
+    const response = await api.get('api/refrigerator/items/expired')
     return response.data.results || []
   } catch (error) {
     console.error('만료된 아이템 조회 실패:', error)
@@ -236,7 +236,7 @@ const getExpiredIngredients = async () => {
 
 const getSyncPrompt = async () => {
   try {
-    const response = await api.get('/api/refrigerator/items/sync-prompt')
+    const response = await api.get('api/refrigerator/items/sync-prompt')
     return response.data.results
   } catch (error) {
     console.error('동기화 메시지 조회 실패:', error)
@@ -253,7 +253,7 @@ export default {
   getCategories,
   getActiveCategories,
   getCategorySummary,
-  
+
   // 기본 CRUD
   getIngredients,
   getIngredient,
@@ -261,16 +261,16 @@ export default {
   updateIngredient,
   deleteIngredient,
   undoDeleteIngredient,
-  
+
   // 검색/필터링
   searchIngredients,
   filterIngredients,
   getIngredientsByLocation,
   getIngredientsByCategory,
-  
+
   // 특수 기능
   addBulkIngredients,
   getExpiringIngredients,
   getExpiredIngredients,
-  getSyncPrompt
+  getSyncPrompt,
 }

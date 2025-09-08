@@ -22,10 +22,10 @@ const getOrderList = async () => {
   }
 }
 
-// 내 게시글 관련
-const getMyPosts = async () => {
+// 내가 작성한 게시글
+const getMyPosts = async (page, size, sort) => {
   try {
-    const response = await api.get('/api/user/posts')
+    const response = await api.get(`/api/posts/mplist?page=${page}&size=${size}&sortType=${sort}&filterType=my`)
     return response.data.results || []
   } catch (error) {
     console.error('내 게시글 조회 실패:', error)
@@ -34,9 +34,11 @@ const getMyPosts = async () => {
 }
 
 // 좋아요한 게시글
-const getLikedPosts = async () => {
+const getLikedPosts = async (page, size, sort) => {
   try {
-    const response = await api.get('/api/user/liked-posts')
+    const response = await api.get(
+      `/api/posts/mplist?page=${page}&size=${size}&sortType=${sort}&filterType=liked`,
+    )
     return response.data.results || []
   } catch (error) {
     console.error('좋아요한 게시글 조회 실패:', error)
@@ -45,9 +47,11 @@ const getLikedPosts = async () => {
 }
 
 // 스크랩한 게시글
-const getScrappedPosts = async () => {
+const getScrappedPosts = async (page, size, sort) => {
   try {
-    const response = await api.get('/api/user/scrapped-posts')
+    const response = await api.get(
+      `/api/posts/mplist?page=${page}&size=${size}&sortType=${sort}&filterType=scrapped`,
+    )
     return response.data.results || []
   } catch (error) {
     console.error('스크랩한 게시글 조회 실패:', error)
@@ -56,9 +60,11 @@ const getScrappedPosts = async () => {
 }
 
 // 댓글 단 게시글
-const getCommentedPosts = async () => {
+const getCommentedPosts = async (page, size, sort) => {
   try {
-    const response = await api.get('/api/user/commented-posts')
+    const response = await api.get(
+      `/api/posts/mplist?page=${page}&size=${size}&sortType=${sort}&filterType=replied`,
+    )
     return response.data.results || []
   } catch (error) {
     console.error('댓글 단 게시글 조회 실패:', error)

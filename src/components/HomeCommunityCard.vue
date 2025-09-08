@@ -1,5 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const props = defineProps({
   community: {
@@ -8,8 +11,8 @@ const props = defineProps({
   },
 })
 
-const isLiked = ref(false)
-const likeCount = ref(props.community.board_like_count)
+const isLiked = ref(props.community.hasLiked)
+const likeCount = ref(props.community.likeCount)
 const likeAnimating = ref(false)
 
 const likeSrc = computed(() =>
@@ -30,8 +33,8 @@ const toggleLike = () => {
   }, 300)
 }
 
-const isScrapped = ref(false)
-const scrapCount = ref(props.community.board_scrap_count)
+const isScrapped = ref(props.community.hasScrapped)
+const scrapCount = ref(props.community.scrapCount)
 const scrapAnimating = ref(false)
 
 const scrapSrc = computed(() =>
@@ -68,31 +71,43 @@ const formatRelativeTime = (isoTime) => {
     day: '2-digit',
   })
 }
+
+const goToDetail = () => {
+  router.push(`/community/${props.community.id}`)
+}
 </script>
 
 <template>
-  <div class="community-card content-card">
+  <div class="community-card content-card" @click="goToDetail">
     <div class="card-image">
-      <img :src="props.community.board_img" alt="게시글 대표 이미지" />
+      <img :src="props.community.postImage" alt="게시글 대표 이미지" />
       <span class="community-view-count card-badge">
         <img src="/assets/icons/ic-view.png" alt="조회수" />
-        {{ props.community.view_count }}
+        {{ props.community.viewCount }}
       </span>
     </div>
     <div class="card-content">
       <h3 class="card-title">{{ props.community.title }}</h3>
-      <p class="community-created">{{ formatRelativeTime(props.community.created_at) }}</p>
+      <!-- <p class="community-created">{{ formatRelativeTime(props.community.created_at) }}</p> -->
       <div class="community-card-content">
         <div class="card-author">
-          <img class="author-avatar" :src="props.community.writer_profile_img" alt="프로필 사진" />
-          <span class="author-name">{{ props.community.writer_nickname }}</span>
+          <img
+            class="author-avatar"
+            :src="
+              props.community.authorProfileImage
+                ? props.community.authorProfileImage
+                : 'https://i.namu.wiki/i/Bge3xnYd4kRe_IKbm2uqxlhQJij2SngwNssjpjaOyOqoRhQlNwLrR2ZiK-JWJ2b99RGcSxDaZ2UCI7fiv4IDDQ.webp'
+            "
+            alt="프로필 사진"
+          />
+          <span class="author-name">{{ props.community.authorName }}</span>
         </div>
         <div class="community-stats card-stats">
-          <span @click="toggleLike" style="cursor: pointer">
+          <span @click.stop="toggleLike" style="cursor: pointer">
             <img class="icon" :class="{ 'icon-pop': likeAnimating }" :src="likeSrc" alt="좋아요" />
             {{ likeCount }}
           </span>
-          <span @click="toggleScrap" style="cursor: pointer">
+          <span @click.stop="toggleScrap" style="cursor: pointer">
             <img
               class="icon"
               :class="{ 'icon-pop': scrapAnimating }"

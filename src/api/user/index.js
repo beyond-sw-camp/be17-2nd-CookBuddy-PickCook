@@ -67,7 +67,7 @@ const addCacheBuster = (url) => {
 // 인증 관련 API
 const login = async (email, password) => {
   return apiCall(
-    () => api.post('/api/auth/login', { email, password }),
+    () => api.post('api/auth/login', { email, password }),
     ERROR_MESSAGES.LOGIN
   )
 }

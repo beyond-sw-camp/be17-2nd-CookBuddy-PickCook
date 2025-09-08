@@ -42,7 +42,7 @@ function handleDeleteClick(event) {
         </div>
       </div>
 
-      <div class="mypage-address-delete-and-edit-container">
+      <div class="mypage-address-delete-and-edit-container" :class="{ 'default-address': isDefault, 'normal-address': !isDefault }">
         <p v-if="!isDefault" @click="handleDeleteClick" class="mypage-address-delete-button">
           삭제
         </p>
@@ -53,4 +53,17 @@ function handleDeleteClick(event) {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.mypage-user-address-text {
+  max-width: 330px;
+}
+
+.mypage-address-delete-and-edit-container {
+  display: flex;
+  align-items: center;
+}
+
+.default-address > p {
+  margin-top: 10px;
+}
+</style>

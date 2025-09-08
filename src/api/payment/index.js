@@ -1,9 +1,9 @@
 import api from '@/plugins/axiosinterceptor'
 
 // 결제 시작 요청 → 백엔드에서 uuid(payment_id) 받아오기
-const startPayment = async (totalPrice, orderItems, orderType, shippingInfo, user) => {
+const startPayment = async (totalPrice, orderItems, orderType, shippingInfo, user, postalCode, roadAddress, detailAddress) => {
   let data = {}
-  const url = '/order/start'
+  const url = 'api/order/start'
 
   await api
     .post(url, {
@@ -18,9 +18,9 @@ const startPayment = async (totalPrice, orderItems, orderType, shippingInfo, use
       orderDelivery: {
         receiverName: shippingInfo.receiverName,
         receiverPhone: shippingInfo.receiverPhone,
-        zipCode: user.zipCode,
-        address: user.address,
-        detailAddress: user.detailAddress,
+        zipCode: postalCode,
+        address: roadAddress,
+        detailAddress: detailAddress,
         deliveryPlace: shippingInfo.deliveryPlace,
         requestMessage: shippingInfo.requestMessage,
       },
@@ -39,7 +39,7 @@ const startPayment = async (totalPrice, orderItems, orderType, shippingInfo, use
 // 결제 검증 요청
 const validatePayment = async (paymentId) => {
   let data = {}
-  const url = '/order/validation'
+  const url = 'api/order/validation'
 
   await api
     .post(url, { paymentId }, { timeout: 15000 })
@@ -56,7 +56,7 @@ const validatePayment = async (paymentId) => {
 
 const orderList = async (period, page, size) => {
   let data = {}
-  let url = `/order/history?period=${period}&page=${page}&size=${size}`
+  let url = `api/order/history?period=${period}&page=${page}&size=${size}`
 
   await api
     .get(url)
@@ -72,7 +72,7 @@ const orderList = async (period, page, size) => {
 
 const orderDetail = async (orderId) => {
   let data = {}
-  let url = `/order/details?orderId=${orderId}`
+  let url = `api/order/details?orderId=${orderId}`
 
   await api
     .get(url)
@@ -88,7 +88,7 @@ const orderDetail = async (orderId) => {
 
 const userInfo = async () => {
   let data = {}
-  let url = '/api/user/me'
+  let url = 'api/api/user/me'
 
   await api
     .get(url)
@@ -102,4 +102,20 @@ const userInfo = async () => {
   return data
 }
 
-export default { startPayment, validatePayment, orderList, orderDetail, userInfo }
+const userAddress = async () => {
+  let data = {}
+  let url = '/api/user/addresses'
+
+  await api
+    .get(url)
+    .then((res) => {
+      data = res.data.results
+    })
+    .catch((error) => {
+      data = error.data
+    })
+
+  return data
+}
+
+export default { startPayment, validatePayment, orderList, orderDetail, userInfo, userAddress }

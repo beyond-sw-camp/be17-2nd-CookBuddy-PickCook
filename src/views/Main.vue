@@ -29,8 +29,8 @@ const getHomeData = async () => {
     state.recipes.push(...recipeData)
   }
 
-  if (communityData?.success && communityData.results) {
-    state.communities.push(...communityData.results)
+  if (communityData.length) {
+    state.communities.push(...communityData)
   }
 
   if (productData.length) {

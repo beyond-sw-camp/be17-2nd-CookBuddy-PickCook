@@ -10,7 +10,7 @@ const pageResponse = reactive({
   currentPage: 0,
   totalPages: 0,
   totalElements: 0,
-  size: 10,
+  size: 12,
 })
 
 // 페이지 이동 시 실행

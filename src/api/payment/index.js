@@ -30,6 +30,9 @@ const startPayment = async (
         zipCode: postalCode,
         address: roadAddress,
         detailAddress: detailAddress,
+        zipCode: postalCode,
+        address: roadAddress,
+        detailAddress: detailAddress,
         deliveryPlace: shippingInfo.deliveryPlace,
         requestMessage: shippingInfo.requestMessage,
       },
@@ -110,6 +113,7 @@ const userInfo = async () => {
 
   return data
 }
+
 
 const userAddress = async () => {
   let data = {}

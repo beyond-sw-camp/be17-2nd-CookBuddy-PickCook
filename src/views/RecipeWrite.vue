@@ -73,6 +73,19 @@ const handleImageUpload = (event, index) => {
 
 // 제출
 const submitRecipe = async () => {
+  if (!recipe.value.title?.trim()) {
+    alert('레시피 제목을 입력해주세요.')
+    return
+  }
+  if (!recipe.value.steps.length || !recipe.value.steps.some((s) => s.description?.trim())) {
+    alert('조리 단계를 최소 1개 이상 입력해주세요.')
+    return
+  }
+  if (!recipe.value.ingredients.length) {
+    alert('재료를 최소 1개 이상 입력해주세요.')
+    return
+  }
+
   const recipeDto = {
     title: recipe.value.title,
     cooking_method: recipe.value.method,
@@ -189,9 +202,6 @@ const submitRecipe = async () => {
 
         <!-- 방법 드롭다운 -->
         <CustomDropdown :options="methods" v-model="recipe.method" placeholder="방법 선택" />
-
-        <!-- 인분 드롭다운 -->
-        <CustomDropdown :options="nations" v-model="recipe.nation" placeholder="인분 선택" />
       </div>
     </div>
 

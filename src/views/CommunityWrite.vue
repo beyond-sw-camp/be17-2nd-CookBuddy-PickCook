@@ -51,13 +51,24 @@ const showImageUI = () => {
 }
 
 const handleSubmit = async () => {
+  if (!boardForm.title.trim() && !boardForm.content.trim()) {
+    alert('제목과 내용을 입력해주세요.')
+    return
+  }
+
   const payload = {
     title: boardForm.title,
     content: boardForm.content,
     imageList: boardForm.imageList.map((url) => ({ imageUrl: url })),
   }
-  await api.postUpload(payload)
-  router.push('/community')
+
+  try {
+    await api.postUpload(payload)
+    router.push('/community')
+  } catch (err) {
+    console.error('게시글 등록 실패:', err)
+    alert('게시글 등록에 실패했습니다.')
+  }
 }
 
 onMounted(() => {

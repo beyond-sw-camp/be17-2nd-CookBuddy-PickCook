@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import MyWritePostItemCard from './MyPagePostItemCard.vue'
 import api from '@/api/mypage'
 
@@ -8,6 +8,7 @@ const page = ref(0)
 const size = ref(6)
 const totalPages = ref(1)
 const loading = ref(false)
+const scrollContainer = ref(null)
 
 const options = ['최신순', '오래된 순']
 const selected = ref('최신순')
@@ -49,8 +50,29 @@ const loadPosts = async (reset = false) => {
   }
 }
 
+// 무한 스크롤
+const handleScroll = async () => {
+  const el = scrollContainer.value
+  if (!el || loading.value) return
+
+  if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50 && page.value + 1 < totalPages.value) {
+    page.value += 1
+    await loadPosts()
+  }
+}
+
 onMounted(async () => {
-  loadPosts()
+  await loadPosts()
+
+  if (scrollContainer.value) {
+    scrollContainer.value.addEventListener('scroll', handleScroll)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (scrollContainer.value) {
+    scrollContainer.value.removeEventListener('scroll', handleScroll)
+  }
 })
 </script>
 
@@ -80,13 +102,15 @@ onMounted(async () => {
     </div>
 
     <div class="mypage-body-box">
-      <div class="mypage-main-content-scroll">
+      <div class="mypage-main-content-scroll" ref="scrollContainer">
         <MyWritePostItemCard
           v-for="post in posts"
           :key="post.id"
           :post="post"
           :showActions="false"
         />
+        <div v-if="loading" class="loading-text">로딩 중...</div>
+        <div v-if="!loading && posts.length === 0" class="empty-text">게시글이 없습니다.</div>
       </div>
     </div>
   </div>

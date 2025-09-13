@@ -21,6 +21,10 @@ const PostMoreMenuModalToggle = () => {
   showMoreMenus.value = !showMoreMenus.value
 }
 
+const getImageSrc = (postImage) => {
+  return postImage || '/assets/images/no-image.png'
+}
+
 const truncateContent = (html, maxLength) => {
   // HTML 태그 제거 후 글자수 제한
   const div = document.createElement('div')
@@ -56,7 +60,7 @@ const goToDetail = () => {
   <div class="mypage-main-my-activity-boards" @click="goToDetail">
     <div class="mypage-my-activity-boards-el">
       <div class="mypage-my-activity-boards-left">
-        <img :src="post.postImage" alt="커뮤니티 대표 이미지" />
+        <img :src="getImageSrc(post.postImage)" alt="커뮤니티 대표 이미지" />
         <div class="mypage-my-activity-boards-content">
           <p>{{ post.title }}</p>
           <p v-html="truncateContent(post.content, 200)"></p>

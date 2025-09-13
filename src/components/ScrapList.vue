@@ -10,7 +10,6 @@ const totalPages = ref(1)
 const loading = ref(false)
 const scrollContainer = ref(null)
 
-
 const options = ['최신순', '오래된 순']
 const selected = ref('최신순')
 const isOpen = ref(false)
@@ -48,6 +47,17 @@ const loadPosts = async (reset = false) => {
     console.error('내 게시글 조회 실패:', error)
   } finally {
     loading.value = false
+  }
+}
+
+// 무한 스크롤
+const handleScroll = async () => {
+  const el = scrollContainer.value
+  if (!el || loading.value) return
+
+  if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50 && page.value + 1 < totalPages.value) {
+    page.value += 1
+    await loadPosts()
   }
 }
 
@@ -92,13 +102,15 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="mypage-body-box">
-      <div class="mypage-main-content-scroll">
+      <div class="mypage-main-content-scroll" ref="scrollContainer">
         <MyWritePostItemCard
           v-for="post in posts"
           :key="post.id"
           :post="post"
           :showActions="false"
         />
+        <div v-if="loading" class="loading-text">로딩 중...</div>
+        <div v-if="!loading && posts.length === 0" class="empty-text">게시글이 없습니다.</div>
       </div>
     </div>
   </div>

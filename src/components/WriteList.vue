@@ -62,7 +62,7 @@ const handleScroll = async () => {
 
   if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50 && page.value + 1 < totalPages.value) {
     page.value += 1
-    await loadPosts()  
+    await loadPosts()
   }
 }
 

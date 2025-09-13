@@ -156,7 +156,7 @@ function getCategoryIdByName(categoryName) {
           </select>
         </div>
         <div class="ingredient-edit-modal-button-container">
-          <button type="button" id="deleteBtn" class="ingredient-add-btn" @click="$emit('delete')">
+          <button type="button" id="deleteBtn" class="ingredient-add-btn" @click="$emit('delete', ingredient.id)">
             삭제
           </button>
           <button type="submit" class="ingredient-add-btn">수정 완료</button>

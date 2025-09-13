@@ -427,22 +427,17 @@ const submitEdit = async () => {
  */
 const deleteIngredient = async (itemId) => {
   try {
-    // 삭제된 아이템 정보 저장 (실행 취소용)
+    // 서버 삭제 요청
+    await refrigeratorApi.deleteIngredient(itemId)
+
+    // UI 반응성 업데이트
     const deletedItem = items.value.find((item) => item.id === itemId)
-    if (deletedItem) {
-      lastDeletedItem.value = deletedItem
-    }
+    if (deletedItem) lastDeletedItem.value = deletedItem
 
-    // 목록에서 즉시 제거 (UI 반응성)
     items.value = items.value.filter((item) => item.id !== itemId)
-
-    // 실행 취소 스낵바 표시
     showSnackbar.value = true
 
-    // 5초 후 자동으로 스낵바 숨김
-    if (undoTimer.value) {
-      clearTimeout(undoTimer.value)
-    }
+    if (undoTimer.value) clearTimeout(undoTimer.value)
     undoTimer.value = setTimeout(() => {
       showSnackbar.value = false
       lastDeletedItem.value = null
@@ -451,8 +446,7 @@ const deleteIngredient = async (itemId) => {
     closeEditModal()
   } catch (error) {
     console.error('삭제 처리 실패:', error)
-    // 삭제 실패 시 목록 다시 불러오기
-    await getIngredients()
+    await getIngredients()  // 실패하면 목록 다시 불러오기
   }
 }
 

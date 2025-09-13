@@ -165,4 +165,11 @@ onMounted(() => {
 .mypage-my-address-list-container {
   padding: 30px 0;
 }
+
+@media (max-width: 1023px) {
+  .mypage-content-container {
+    width: 500px;
+    gap: 8px;
+  }
+}
 </style>

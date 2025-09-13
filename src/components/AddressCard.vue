@@ -71,4 +71,14 @@ function handleDeleteClick(event) {
   width: 85px;
   text-align: right;
 }
+
+@media (max-width: 1023px) {
+  .mypage-user-address-text {
+    font-size: 14px;
+  }
+
+  .mypage-address-delete-and-edit-container > p {
+    font-size: 12px;
+  }
+}
 </style>

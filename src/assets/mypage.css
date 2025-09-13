@@ -79,7 +79,8 @@
   gap: 26px;
 }
 
-.loading-text, .empty-text {
+.loading-text,
+.empty-text {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -481,13 +482,13 @@
 
 .mypage-my-order-boards-product-content p {
   display: inline-block;
-  max-width: 650px; 
+  max-width: 650px;
   font-size: 15px;
   font-weight: 500;
   cursor: pointer;
-  white-space: nowrap;       /* 한 줄로 제한 */
-  overflow: hidden;          /* 넘치는 내용 숨김 */
-  text-overflow: ellipsis; 
+  white-space: nowrap; /* 한 줄로 제한 */
+  overflow: hidden; /* 넘치는 내용 숨김 */
+  text-overflow: ellipsis;
 }
 
 .mypage-my-order-boards-product-content > span {
@@ -569,7 +570,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 500px;
+  max-width: 500px;
+  width: 100%;
 }
 
 .mypage-my-profile-info-input-el > label {
@@ -584,12 +586,20 @@
   margin-top: 4px;
 }
 
+@media (max-width: 1023px) {
+  .mypage-my-profile-info-input-el > label,
+.mypage-my-address-input-boxes > label {
+  font-size: 14px;
+}
+}
+
 .mypage-my-profile-info-input-el > input,
 .mypage-my-address-input-boxes > input {
   border: 0.5px solid var(--color-light-gray);
   border-radius: 3px;
   padding: 10px 12px;
-  width: 430px;
+  max-width: 430px;
+  width: 100%;
 }
 
 .mypage-my-address-input-boxes {
@@ -650,6 +660,18 @@
   .mypage-sub-menu-bar {
     width: 210px;
     padding: 20px 16px 45px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .dropdown-toggle,
+  .dropdown-item {
+    font-size: 14px;
+  }
+
+  .dropdown-toggle {
+    width: 90px !important;
+    padding: 8px 12px !important;
   }
 }
 

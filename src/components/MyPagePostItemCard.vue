@@ -12,7 +12,7 @@ const props = defineProps({
   isMobileOrTablet: Boolean,
 })
 
-const showActions = computed(() => !props.isMobileOrTablet)
+const actionStyle = computed(() => !props.isMobileOrTablet)
 const showMoreMenus = ref(false)
 const router = useRouter()
 
@@ -30,7 +30,7 @@ const truncateContent = (html, maxLength) => {
   const div = document.createElement('div')
   div.innerHTML = html
   let text = div.textContent || div.innerText || ''
-  
+
   if (text.length > maxLength) {
     text = text.slice(0, maxLength) + '...'
   }
@@ -48,7 +48,16 @@ const formatRelativeTime = (isoString) => {
   if (diff < 604800) return `${Math.floor(diff / 86400)}일 전`
 
   // 너무 오래된 글은 날짜 표시
-  return `${past.getFullYear()}.${(past.getMonth() + 1).toString().padStart(2,'0')}.${past.getDate().toString().padStart(2,'0')}`
+  return `${past.getFullYear()}.${(past.getMonth() + 1).toString().padStart(2, '0')}.${past.getDate().toString().padStart(2, '0')}`
+}
+
+const goToEdit = (post) => {
+  router.push(`/community/${post.id}/edit`)
+}
+
+const handleDelete = (post) => {
+  // 삭제 API 호출 or 모달 띄우기
+  console.log('삭제할 글:', post)
 }
 
 const goToDetail = () => {
@@ -65,20 +74,32 @@ const goToDetail = () => {
           <p>{{ post.title }}</p>
           <p v-html="truncateContent(post.content, 200)"></p>
           <span
-            >{{ formatRelativeTime(post.updatedAt) }} · 조회 {{ post.viewCount }} · 좋아요 {{ post.likeCount }}개 ·
-            스크랩 {{ post.scrapCount }}개 · 댓글 {{ post.commentCount }}개</span
+            >{{ formatRelativeTime(post.updatedAt) }} · 조회 {{ post.viewCount }} · 좋아요
+            {{ post.likeCount }}개 · 스크랩 {{ post.scrapCount }}개 · 댓글
+            {{ post.commentCount }}개</span
           >
         </div>
       </div>
-      <div v-if="showActions" class="mypage-my-activity-boards-right">
-        <div class="mypage-my-activity-boards-edit-button" @click.stop>수정</div>
-        <div class="mypage-my-activity-boards-delete-button" @click.stop>삭제</div>
-      </div>
+      <div v-if="showActions">
+        <div v-if="actionStyle" class="mypage-my-activity-boards-right">
+          <div class="mypage-my-activity-boards-edit-button" @click.stop>수정</div>
+          <div class="mypage-my-activity-boards-delete-button" @click.stop>삭제</div>
+        </div>
 
-      <div v-else class="mypage-my-activity-board-more-menu-button">
-        <!-- 모바일/태블릿에서 보여줄 다른 버튼 UI -->
-        <img src="/public/assets/icons/ic-more.png" alt="더보기" @click="PostMoreMenuModalToggle" />
-        <MyPagePostItemMenuModal v-if="showMoreMenus" class="post-more-menu-modal" />
+        <div v-else class="mypage-my-activity-board-more-menu-button">
+          <!-- 모바일/태블릿에서 보여줄 다른 버튼 UI -->
+          <img
+            src="/public/assets/icons/ic-more.png"
+            alt="더보기"
+            @click.stop="PostMoreMenuModalToggle"
+          />
+          <MyPagePostItemMenuModal
+            v-if="showMoreMenus"
+            class="post-more-menu-modal"
+            @edit="goToEdit(post)"
+            @delete="handleDelete(post)"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -94,5 +115,22 @@ const goToDetail = () => {
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1023px) {
+  .mypage-my-activity-boards-content > p {
+    font-size: 14px;
+  }
+
+  .mypage-my-activity-boards-content > span {
+    font-size: 12px;
+  }
+
+  .mypage-my-activity-boards-left > img {
+    width: 70px;
+    height: 70px;
+  }
+
+  
 }
 </style>

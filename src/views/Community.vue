@@ -94,7 +94,7 @@ watch(
 
   <!-- 컨텐츠 섹션 -->
   <div class="content-section">
-    <div class="c-content-container">
+    <div class="c-content-container community-content-container">
       <p class="c-posts-count">전체 {{ pageResponse.totalElements }}개</p>
       <p v-if="pageResponse.totalElements == 0" class="c-no-result">검색 결과가 없습니다.</p>
       <PostListCard v-for="post in posts" :key="post.id" :post="post" />
@@ -137,5 +137,11 @@ watch(
 .c-posts-count {
   margin-bottom: 10px;
   font-size: 14px;
+  padding: 6px 4px;
+  border-bottom: 2px solid #eaedef;
+}
+
+.community-content-container {
+  margin-top: 20px;
 }
 </style>

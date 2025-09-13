@@ -54,7 +54,7 @@ const handleSubmit = async () => {
   const payload = {
     title: boardForm.title,
     content: boardForm.content,
-    imageList: boardForm.imageList.map(url => ({ imageUrl: url })),
+    imageList: boardForm.imageList.map((url) => ({ imageUrl: url })),
   }
   await api.postUpload(payload)
   router.push('/community')
@@ -72,13 +72,16 @@ onMounted(() => {
   <div class="content-section">
     <div class="c-content-container">
       <div class="title-input">
-        <input
-          type="text"
-          v-model="boardForm.title"
-          placeholder="제목을 입력해주세요."
-          maxlength="80"
-        />
-        <span class="char-count">{{ titleLength }}/80</span>
+        <label class="community-write-page-input-label">게시글 제목</label>
+        <div>
+          <input
+            type="text"
+            v-model="boardForm.title"
+            placeholder="제목을 입력해주세요."
+            maxlength="80"
+          />
+          <span class="char-count">{{ titleLength }}/80</span>
+        </div>
       </div>
 
       <QuillEditor
@@ -96,7 +99,7 @@ onMounted(() => {
         ]"
       />
 
-      <button @click="handleSubmit">작성 완료</button>
+      <button class="community-write-page-complete-button" @click="handleSubmit">작성 완료</button>
     </div>
   </div>
 </template>
@@ -107,18 +110,19 @@ onMounted(() => {
 }
 
 .title-input {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   margin-bottom: 20px;
   position: relative;
 }
 
 .title-input input {
+  padding: 8px 45px 8px 10px;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  font-family: 'Arial', sans-serif;
   width: 100%;
-  border: none;
-  border-bottom: 1px solid #ccc;
-  font-size: 16px;
-  padding: 10px 0;
-  padding-right: 50px;
-  box-sizing: border-box;
 }
 
 .char-count {
@@ -140,5 +144,22 @@ onMounted(() => {
   padding: 12px;
   font-size: 16px;
   line-height: 1.6;
+}
+
+.community-write-page-input-label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.community-write-page-complete-button {
+  text-align: center;
+  background-color: #333;
+  border-radius: 4px;
+  width: 100%;
+  padding: 10px 20px;
+  color: white;
+  margin-top: 20px;
+  cursor: pointer;
 }
 </style>

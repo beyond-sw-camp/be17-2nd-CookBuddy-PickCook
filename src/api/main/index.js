@@ -2,7 +2,7 @@ import api from '@/plugins/axiosinterceptor'
 
 const recipeList = async () => {
   let data = {}
-  let url = 'api/recipe?page=0&size=4'
+  let url = 'api/recipe?page=0&size=6'
 
   await api
     .get(url)
@@ -20,7 +20,7 @@ const communityList = async () => {
   let data = {}
 
   // 수정된 URL
-  let url = '/api/posts/mplist?page=0&size=4&sortType=latest&filterType=all'
+  let url = '/api/posts/mplist?page=0&size=6&sortType=latest&filterType=all'
 
   await api
     .get(url)
@@ -37,7 +37,7 @@ const communityList = async () => {
 
 const productList = async () => {
   let data = {}
-  let url = '/api/products?page=0&size=4&sort=id&dir=ASC'
+  let url = '/api/products?page=0&size=6&sort=id&dir=ASC'
 
   await api
     .get(url)

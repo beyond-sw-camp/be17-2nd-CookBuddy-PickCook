@@ -82,6 +82,10 @@ const toggleScrap = async (event) => {
   }
 }
 
+const getImageSrc = (postImage) => {
+  return postImage || '/assets/images/no-image.png'
+}
+
 const formatRelativeTime = (isoTime) => {
   const now = new Date()
   const date = new Date(isoTime)
@@ -107,7 +111,7 @@ const goToDetail = () => {
 <template>
   <div class="community-card content-card" @click="goToDetail">
     <div class="card-image">
-      <img :src="props.community.postImage" alt="게시글 대표 이미지" />
+      <img :src="getImageSrc(props.community.postImage)" alt="게시글 대표 이미지" />
       <span class="community-view-count card-badge">
         <img src="/assets/icons/ic-view.png" alt="조회수" />
         {{ props.community.viewCount }}
@@ -115,7 +119,7 @@ const goToDetail = () => {
     </div>
     <div class="card-content">
       <h3 class="card-title">{{ props.community.title }}</h3>
-      <!-- <p class="community-created">{{ formatRelativeTime(props.community.created_at) }}</p> -->
+      <p class="community-created">{{ formatRelativeTime(props.community.updatedAt) }}</p>
       <div class="community-card-content">
         <div class="card-author">
           <img

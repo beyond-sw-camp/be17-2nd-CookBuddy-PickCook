@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import HomeBanner from '@/components/HomeBanner.vue'
 import RecipeCard from '@/components/RecipeCard.vue'
@@ -7,16 +7,21 @@ import api from '@/api/main'
 import HomeCommunityCard from '@/components/HomeCommunityCard.vue'
 import ProductItemCard from '@/components/ProductItemCard.vue'
 import { useUserStore } from '@/store/useUserStore'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
+const { isTablet } = useBreakpoints()
 
 const state = reactive({
   recipes: [],
   communities: [],
   products: [],
 })
+
+// 화면 크기에 따라 보여줄 개수 결정
+const visibleCount = computed(() => (isTablet.value ? 6 : 4))
 
 const getHomeData = async () => {
   const [recipeData, communityData, productData] = await Promise.all([
@@ -122,7 +127,7 @@ onMounted(async () => {
       <RouterLink to="/recipe" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">
-      <RecipeCard v-for="(item, idx) in state.recipes.slice(0, 4)" :key="idx" :recipe="item" />
+      <RecipeCard v-for="(item, idx) in state.recipes.slice(0, visibleCount)" :key="idx" :recipe="item" />
     </div>
   </div>
 
@@ -134,7 +139,7 @@ onMounted(async () => {
     </div>
     <div class="content-grid">
       <HomeCommunityCard
-        v-for="(item, idx) in state.communities.slice(0, 4)"
+        v-for="(item, idx) in state.communities.slice(0, visibleCount)"
         :key="idx"
         :community="item"
       />
@@ -149,7 +154,7 @@ onMounted(async () => {
     </div>
     <div class="content-grid">
       <ProductItemCard
-        v-for="(item, idx) in state.products.slice(0, 4)"
+        v-for="(item, idx) in state.products.slice(0, visibleCount)"
         :key="idx"
         :product="item"
       />
@@ -164,7 +169,7 @@ onMounted(async () => {
     </div>
     <div class="content-grid">
       <ProductItemCard
-        v-for="(item, idx) in state.products.slice(0, 4)"
+        v-for="(item, idx) in state.products.slice(0, visibleCount)"
         :key="idx"
         :product="item"
       />

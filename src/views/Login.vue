@@ -198,7 +198,7 @@ onUnmounted(() => {
   <div class="login-and-signup-body">
     <div class="login-container">
       <a class="logo-text" href="/">PickCook</a>
-      <span id="title">로그인</span>
+      <!-- <span id="title">로그인</span> -->
 
       <form ref="formRef" action="/login" method="post" @submit.prevent="login">
         <div class="form-items">
@@ -262,8 +262,9 @@ onUnmounted(() => {
         <div></div>
       </div>
       <div class="sns-icons">
-        <a :href="kakaoLoginUrl">
-          <img src="/assets/icons/ic-kakao-login.png" alt="카카오 로그인" />
+        <a :href="kakaoLoginUrl" class="kakao-login-button">
+          <img src="/assets/icons/ic-kakao-signup.png" alt="카카오" />
+          카카오로 로그인
         </a>
       </div>
     </div>
@@ -271,6 +272,28 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+
+.kakao-login-button {
+  color: #3f1010;
+  background-color: #f9e000;
+  position: relative;
+  border-radius: 5px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.kakao-login-button > img {
+  position: absolute;
+  top: 12px;
+  left: 15px;
+  width: 20px;
+  height: 20px;
+}
+
 .error-message {
   color: #dc3545;
   font-size: 12px;

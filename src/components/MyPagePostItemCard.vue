@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue'
 import MyPagePostItemMenuModal from './MyPagePostItemMenuModal.vue'
 import { useRouter } from 'vue-router'
+import api from '@/api/community'
 
 const props = defineProps({
   post: Object,
@@ -15,6 +16,7 @@ const props = defineProps({
 const actionStyle = computed(() => !props.isMobileOrTablet)
 const showMoreMenus = ref(false)
 const router = useRouter()
+const emit = defineEmits(['delete'])
 
 // 모바일&태블릿 화면일 때 사용하는 메뉴 모달 토글
 const PostMoreMenuModalToggle = () => {
@@ -51,13 +53,17 @@ const formatRelativeTime = (isoString) => {
   return `${past.getFullYear()}.${(past.getMonth() + 1).toString().padStart(2, '0')}.${past.getDate().toString().padStart(2, '0')}`
 }
 
-const goToEdit = (post) => {
-  router.push(`/community/${post.id}/edit`)
+const goToEdit = () => {
+  router.push(`/community/edit/${props.post.id}`)
 }
 
-const handleDelete = (post) => {
-  // 삭제 API 호출 or 모달 띄우기
-  console.log('삭제할 글:', post)
+const handleDelete = async () => {
+  try {
+    await api.deletePost(props.post.id)
+    emit('delete', props.post.id) // 부모에게 삭제 사실 전달
+  } catch (error) {
+    console.error('삭제 실패:', error)
+  }
 }
 
 const goToDetail = () => {
@@ -82,8 +88,8 @@ const goToDetail = () => {
       </div>
       <div v-if="showActions">
         <div v-if="actionStyle" class="mypage-my-activity-boards-right">
-          <div class="mypage-my-activity-boards-edit-button" @click.stop>수정</div>
-          <div class="mypage-my-activity-boards-delete-button" @click.stop>삭제</div>
+          <div class="mypage-my-activity-boards-edit-button" @click.stop="goToEdit">수정</div>
+          <div class="mypage-my-activity-boards-delete-button" @click.stop="handleDelete(post)">삭제</div>
         </div>
 
         <div v-else class="mypage-my-activity-board-more-menu-button">

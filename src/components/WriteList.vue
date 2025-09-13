@@ -55,6 +55,11 @@ const loadPosts = async (reset = false) => {
   }
 }
 
+const handlePostDelete = (postId) => {
+  // 부모 배열에서 삭제
+  posts.value = posts.value.filter(post => post.id !== postId)
+}
+
 // 무한 스크롤
 const handleScroll = async () => {
   const el = scrollContainer.value
@@ -113,6 +118,7 @@ onBeforeUnmount(() => {
           :key="post.id"
           :post="post"
           :is-mobile-or-tablet="isMobileOrTablet"
+          @delete="handlePostDelete"
         />
         <div v-if="loading" class="loading-text">로딩 중...</div>
         <div v-if="!loading && posts.length === 0" class="empty-text">게시글이 없습니다.</div>

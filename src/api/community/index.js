@@ -146,6 +146,19 @@ const uploadImage = async (presigedUrl, file) => {
   return data
 }
 
+const deletePost = async (postId) => {
+  try {
+    const res = await api.delete(`/api/posts/${postId}`)
+    return res.data
+  } catch (error) {
+    if (error.response) {
+      return error.response.data
+    }
+    console.error(error)
+    return { success: false, message: '알 수 없는 오류 발생' }
+  }
+}
+
 const postUpload = async (payload) => {
   let data = {}
 
@@ -181,6 +194,19 @@ const communityList = async () => {
   return data
 }
 
+const updatePost = async (postId, payload) => {
+  try {
+    const res = await api.put(`/api/posts/${postId}`, payload)
+    return res.data
+  } catch (error) {
+    if (error.response) {
+      return error.response.data
+    }
+    console.error(error)
+    return { success: false, message: '알 수 없는 오류 발생' }
+  }
+}
+
 export default {
   communityList,
   getPostList,
@@ -192,4 +218,6 @@ export default {
   getPresignedUrl,
   uploadImage,
   postUpload,
+  updatePost,
+  deletePost,
 }

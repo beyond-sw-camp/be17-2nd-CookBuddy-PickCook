@@ -184,7 +184,7 @@ const onSubmitPayment = async () => {
 
       if (result?.status === 'PAID') {
         const orderId = result?.order_id
-        router.push(`/payment/complete/${orderId}`)
+        router.replace(`/payment/complete/${orderId}`)
       } else {
         alert(`결제 실패`)
         router.push('/payment')

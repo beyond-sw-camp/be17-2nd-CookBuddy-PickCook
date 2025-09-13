@@ -19,13 +19,13 @@ onMounted(() => {
 
 // 쇼핑 페이지로 이동
 const goToShopping = () => {
-  router.push('/products')
+  router.replace('/products')
 }
 
 function goOrderDetail() {
   const pathParts = route.path.split('/')
   const orderId = pathParts[pathParts.length - 1]
-  router.push(`/order/details/${orderId}`)
+  router.replace(`/order/details/${orderId}`)
 }
 </script>
 

@@ -28,10 +28,17 @@ import RecipeWrite from '@/views/RecipeWrite.vue'
 import Payment from '@/views/Payment.vue'
 import PaymentComplete from '@/views/PaymentComplete.vue'
 import OrderDetailInfo from '@/views/OrderDetailInfo.vue'
+import CommunityEdit from '@/views/CommunityEdit.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/community/edit/:communityId',
+      name: 'community-edit',
+      component: CommunityEdit,
+      meta: { requiresAuth: true },
+    },
     {
       path: '/order/details/:orderId',
       name: 'order-detail',

@@ -3,18 +3,26 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css'
 import api from '@/api/community'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const router = useRouter()
+const route = useRoute()
 const editorRef = ref(null)
+const titleLength = computed(() => post.title.length)
 
-const boardForm = reactive({
+const post = reactive({
+  id: null,
   title: '',
   content: '',
   imageList: [],
+  authorName: '',
+  likeCount: 0,
+  hasLiked: false,
+  scrapCount: 0,
+  hasScrapped: false,
+  updatedAt: '',
+  tags: [],
 })
-
-const titleLength = computed(() => boardForm.title.length)
 
 const showImageUI = () => {
   const input = document.createElement('input')
@@ -50,28 +58,39 @@ const showImageUI = () => {
   }
 }
 
+// 게시글 불러오기
+const getPostDetail = async () => {
+  const id = route.params.communityId
+  const data = await api.getPostDetail(id)
+  if (data.success && data.results) {
+    Object.assign(post, data.results)
+  }
+}
+
 const handleSubmit = async () => {
-  if (!boardForm.title.trim() && !boardForm.content.trim()) {
+  if (!post.title.trim() || !post.content.trim()) {
     alert('제목과 내용을 입력해주세요.')
     return
   }
 
   const payload = {
-    title: boardForm.title,
-    content: boardForm.content,
-    imageList: boardForm.imageList.map((url) => ({ imageUrl: url })),
+    title: post.title,
+    content: post.content,
+    imageList: post.imageList.map((url) => ({ imageUrl: url })),
   }
 
   try {
-    await api.postUpload(payload)
-    router.replace('/community')
+    await api.updatePost(post.id, payload)
+    router.replace(`/community/${post.id}`)
   } catch (err) {
-    console.error('게시글 등록 실패:', err)
-    alert('게시글 등록에 실패했습니다.')
+    console.error('게시글 수정 실패:', err)
+    alert('게시글 수정에 실패했습니다.')
   }
 }
 
 onMounted(() => {
+  getPostDetail()
+
   const quill = editorRef.value?.getQuill()
   if (quill) {
     quill.getModule('toolbar').addHandler('image', showImageUI)
@@ -87,7 +106,7 @@ onMounted(() => {
         <div>
           <input
             type="text"
-            v-model="boardForm.title"
+            v-model="post.title"
             placeholder="제목을 입력해주세요."
             maxlength="80"
           />
@@ -97,7 +116,7 @@ onMounted(() => {
 
       <QuillEditor
         ref="editorRef"
-        v-model:content="boardForm.content"
+        v-model:content="post.content"
         contentType="html"
         class="quill-editor"
         :toolbar="[
@@ -110,7 +129,7 @@ onMounted(() => {
         ]"
       />
 
-      <button class="community-write-page-complete-button" @click="handleSubmit">작성 완료</button>
+      <button class="community-write-page-complete-button" @click="handleSubmit">수정 완료</button>
     </div>
   </div>
 </template>

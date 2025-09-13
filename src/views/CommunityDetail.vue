@@ -1,12 +1,14 @@
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import api from '@/api/community'
 import likeAPI from '@/api/like'
 import scrapAPI from '@/api/scrap'
 import Comment from '@/components/Comment.vue'
+import MyPagePostItemMenuModal from '@/components/MyPagePostItemMenuModal.vue'
 
 const route = useRoute()
+const router = useRouter()
 const post = reactive({
   id: null,
   title: '',
@@ -28,6 +30,7 @@ const isLiked = ref(post.isLiked)
 const likeCount = ref(post.likes)
 const isScrapped = ref(post.isScrapped)
 const scrapCount = ref(post.scraps)
+const showMoreMenus = ref(false)
 
 // 아이콘 경로
 const likeSrc = computed(() =>
@@ -131,6 +134,19 @@ const toggleScrap = async (event) => {
   }
 }
 
+const PostMoreMenuModalToggle = () => {
+  showMoreMenus.value = !showMoreMenus.value
+}
+
+const goToEdit = () => {
+  router.push(`/community/edit/${post.id}`)
+}
+
+const handleDelete = () => {
+  // 삭제 API 호출 or 모달 띄우기
+  console.log('삭제할 글:', post)
+}
+
 onMounted(() => {
   getPostDetail()
   getComments()
@@ -141,9 +157,20 @@ onMounted(() => {
   <main class="cd-main-container">
     <!-- 제목 섹션 -->
     <div class="cd-title-section">
-      <p class="cd-post-title">{{ post.title }}</p>
-      <div class="cd-post-info">
-        <p>{{ post.authorName }} • {{ post.updatedAt }}</p>
+      <div>
+        <p class="cd-post-title">{{ post.title }}</p>
+        <div class="cd-post-info">
+          <p>{{ post.authorName }} • {{ post.updatedAt }}</p>
+        </div>
+      </div>
+      <div class="cd-title-section-in-more-button-container">
+        <img @click="PostMoreMenuModalToggle" src="/assets/icons/ic-more.png" alt="더보기" />
+        <MyPagePostItemMenuModal
+          v-if="showMoreMenus"
+          class="post-more-menu-modal"
+          @edit="goToEdit(post)"
+          @delete="handleDelete(post)"
+        />
       </div>
     </div>
 
@@ -210,7 +237,25 @@ onMounted(() => {
 
 /* 제목 섹션 */
 .cd-title-section {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 24px;
+  padding: 0 4px 10px;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.cd-title-section-in-more-button-container {
+  position: relative;
+  text-align: right;
+  width: 80px;
+}
+
+.cd-title-section-in-more-button-container > img {
+  margin-top: 4px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 }
 
 .cd-post-title {
@@ -225,20 +270,33 @@ onMounted(() => {
 
 .cd-post-content {
   font-size: 16px;
-  max-width: 680px;      /* 전체 콘텐츠 최대 너비 */
+  padding: 0 4px;
+  max-width: 680px; /* 전체 콘텐츠 최대 너비 */
   word-wrap: break-word; /* 텍스트 줄바꿈 강제 */
   overflow-wrap: break-word; /* 긴 단어도 줄바꿈 */
 }
 
 .cd-post-content img {
-  max-width: 100%;   /* 부모 div 너비를 넘어가지 않도록 */
-  height: auto;      /* 이미지 비율 유지 */
-  display: block;    /* 이미지 주변 줄바꿈 문제 방지 */
-  margin: 10px auto;    /* 가운데 정렬 (원하면) */
+  max-width: 100%; /* 부모 div 너비를 넘어가지 않도록 */
+  height: auto; /* 이미지 비율 유지 */
+  display: block; /* 이미지 주변 줄바꿈 문제 방지 */
+  margin: 10px auto; /* 가운데 정렬 (원하면) */
 }
 
 .cd-post-content p {
   word-break: break-word; /* 문단 안 긴 단어 줄바꿈 */
+}
+
+.post-more-menu-modal {
+  position: absolute;
+  top: 25px;
+  right: 0;
+  width: 80px;
+  height: fit-content;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
 }
 
 /* 텍스트 콘텐츠 */

@@ -5,6 +5,10 @@ defineProps({
   address: String,
   isDefault: Boolean, // 기본배송지 여부 (태그에만 사용)
   isSelected: Boolean, // 클릭되어 선택된 항목 (뱃지에만 사용)
+  showButton: {
+    type: Boolean,
+    default: true
+  }
 })
 
 const emit = defineEmits(['click', 'edit'])
@@ -26,7 +30,7 @@ function handleDeleteClick(event) {
 
 <template>
   <div class="mypage-address-card-container">
-    <div class="mypage-address-button-container" @click="handleClick">
+    <div v-if="showButton" class="mypage-address-button-container" @click="handleClick">
       <div v-if="isSelected" class="mypage-address-box-red-circle">
         <div></div>
       </div>
@@ -54,16 +58,17 @@ function handleDeleteClick(event) {
 </template>
 
 <style scoped>
-.mypage-user-address-text {
-  max-width: 330px;
-}
 
 .mypage-address-delete-and-edit-container {
   display: flex;
+  justify-content: right;
   align-items: center;
+  width: 97px;
 }
 
 .default-address > p {
   margin-top: 10px;
+  width: 85px;
+  text-align: right;
 }
 </style>

@@ -99,35 +99,43 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="mypage-address-body">
-    <!-- 로딩 상태 -->
-    <div v-if="state.loading" class="loading-container">
-      <p>배송지 목록을 불러오는 중...</p>
-    </div>
+  <div class="mypage-content-container">
+    <div class="mypage-header-box">
+      <div class="mypage-header-box-title">배송지 관리</div>
 
-    <!-- 배송지 목록 -->
-    <div v-else-if="state.addresses.length > 0" class="mypage-main-content-scroll">
-      <AddressCard
-        v-for="item in state.addresses"
-        :key="item.addressId"
-        :address="item.fullAddress"
-        :isDefault="item.isDefault"
-        :isSelected="item.addressId === state.selectedId"
-        @click="onSelect(item.addressId)"
-        @edit="onEditAddress(item)"
-        @delete="onDeleteAddress(item.addressId)"
-      />
-    </div>
+      <div class="mypage-address-body">
+        <!-- 배송지 목록 -->
+        <div class="mypage-my-address-list-container">
+          <!-- 로딩 상태 -->
+          <div v-if="state.loading" class="loading-container">
+            <p>배송지 목록을 불러오는 중...</p>
+          </div>
+          <div v-else-if="state.addresses.length > 0" class="mypage-main-content-scroll">
+            <AddressCard
+              v-for="item in state.addresses"
+              :key="item.addressId"
+              :address="item.fullAddress"
+              :isDefault="item.isDefault"
+              :isSelected="item.addressId === state.selectedId"
+              :showButton="false"
+              @click="onSelect(item.addressId)"
+              @edit="onEditAddress(item)"
+              @delete="onDeleteAddress(item.addressId)"
+            />
+          </div>
 
-    <!-- 배송지 없음 -->
-    <div v-else class="empty-address-container">
-      <p>등록된 배송지가 없습니다.</p>
-      <p>새 배송지를 추가해보세요.</p>
-    </div>
-  </div>
+          <!-- 배송지 없음 -->
+          <div v-else class="empty-address-container">
+            <p>등록된 배송지가 없습니다.</p>
+            <p>새 배송지를 추가해보세요.</p>
+          </div>
+        </div>
+      </div>
 
-  <div class="mypage-address-button-container-parents">
-    <button class="mypage-address-add" @click="openAddressPopup">배송지 추가</button>
+      <div class="mypage-address-button-container-parents">
+        <button class="mypage-address-add" @click="openAddressPopup">배송지 추가</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -152,5 +160,9 @@ onMounted(() => {
 
 .empty-address-container p {
   margin: 8px 0;
+}
+
+.mypage-my-address-list-container {
+  padding: 30px 0;
 }
 </style>

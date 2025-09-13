@@ -490,15 +490,10 @@ onUnmounted(() => {
 }
 
 .shopping-category-grid {
-  display: grid;
-  grid-template-columns: repeat(5, 115px);
-  row-gap: 10px;
-  column-gap: 100px;
-  text-align: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  display: flex;
+  padding: 0 20px;
+  justify-content: space-between;
 }
 
 .all-category-icon {
@@ -520,6 +515,7 @@ onUnmounted(() => {
 }
 
 .shopping-category {
+  width: 110px;
   font-weight: 450;
   color: #929596;
   /* padding: 5px; */
@@ -530,6 +526,19 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   justify-content: start;
+}
+
+@media screen and (max-width: 1023px) and (min-width: 768px) {
+  .shopping-category {
+    font-size: 16px;
+  }
+}
+
+/* 모바일 (767px 이하) */
+@media screen and (max-width: 767px) {
+  .shopping-category {
+    font-size: 14px;
+  }
 }
 
 /* 활성 카테고리 스타일 - 기존 c-hover-2 색상 사용 */

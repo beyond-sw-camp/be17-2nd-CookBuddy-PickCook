@@ -82,8 +82,10 @@ onMounted(() => {
   <!-- 컨텐츠 섹션 -->
   <div class="content-section">
     <div class="content-header">
-      <p class="result-count">전체 {{pageResponse.totalElements.toLocaleString()}}개</p>
-    </div>
+    <!-- 키워드가 있을 때만 h2 보여주기 -->
+    <h2 v-if="route.query.keyword"><span>'{{ route.query.keyword }}'</span>에 대한 검색 결과</h2>
+    <p class="result-count">전체 {{pageResponse.totalElements.toLocaleString()}}개</p>
+  </div>
 
     <!-- 레시피 그리드 -->
     <div class="content-grid">
@@ -134,6 +136,15 @@ onMounted(() => {
 
 .content-grid {
   margin-top: 8px;
+}
+
+.content-header > h2 {
+  margin-bottom: 15px;
+  font-weight: 400;
+}
+
+.content-header span {
+  font-weight: 600;
 }
 
 /* 반응형 */

@@ -16,6 +16,22 @@ const recipeList = async (page, size) => {
   return data
 }
 
+const searchRecipe = async (keyword, page, size, dir) => {
+  let data = {}
+  let url = `api/recipe/search?keyword=${keyword}&page=${page}&size=${size}&dir=${dir}`
+
+  await api
+    .get(url)
+    .then((res) => {
+      data = res.data
+    })
+    .catch((error) => {
+      data = error.data
+    })
+
+  return data
+}
+
 const getRecipe = async (id) => {
   let data = {}
   let url = `api/recipe/${id}`
@@ -88,4 +104,11 @@ const addRecipeComment = async (formData) => {
   return data
 }
 
-export default { recipeList, getRecipe, registerRecipe, getRecipeComments, addRecipeComment }
+export default {
+  recipeList,
+  getRecipe,
+  registerRecipe,
+  getRecipeComments,
+  addRecipeComment,
+  searchRecipe,
+}

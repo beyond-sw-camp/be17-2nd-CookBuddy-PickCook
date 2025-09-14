@@ -1,8 +1,12 @@
 <script setup>
 import api from '@/api/recipe'
-import { onMounted, reactive } from 'vue'
+import { onMounted, reactive, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import RecipeCard from '@/components/RecipeCard.vue'
 import Pagination from '@/components/Pagination.vue'
+
+const route = useRoute()
+const router = useRouter()
 
 const recipeList = reactive([])
 const pageResponse = reactive({
@@ -15,20 +19,27 @@ const pageResponse = reactive({
 
 // 페이지 이동 시 실행
 const loadPage = (newPage) => {
-  getRecipeList(newPage)
+  const keyword = route.query.keyword || ''
+  getRecipeList(newPage, keyword)
 }
 
-const getRecipeList = async (page = 0) => {
-  const data = await api.recipeList(page, pageResponse.size)
-  if (data && data.success) {
-    if (data.results) {
-      recipeList.splice(0, recipeList.length, ...data.results.content)
-      pageResponse.content = data.results.content
-      pageResponse.currentPage = data.results.currentPage
-      pageResponse.totalPages = data.results.totalPages
-      pageResponse.totalElements = data.results.totalElements
-      pageResponse.size = data.results.size
-    }
+// 레시피 목록 가져오기
+const getRecipeList = async (page = 0, keyword = '') => {
+  let data = {}
+
+  if (keyword) {
+    data = await api.searchRecipe(keyword, page, pageResponse.size, 'DESC')
+  } else {
+    data = await api.recipeList(page, pageResponse.size)
+  }
+
+  if (data && data.success && data.results) {
+    recipeList.splice(0, recipeList.length, ...data.results.content)
+    pageResponse.content = data.results.content
+    pageResponse.currentPage = data.results.currentPage
+    pageResponse.totalPages = data.results.totalPages
+    pageResponse.totalElements = data.results.totalElements
+    pageResponse.size = data.results.size
   } else {
     recipeList.splice(0)
     pageResponse.content = []
@@ -37,10 +48,21 @@ const getRecipeList = async (page = 0) => {
   }
 }
 
+// URL query가 바뀔 때마다 자동으로 반영
+watch(
+  () => route.query.keyword,
+  (newKeyword) => {
+    getRecipeList(0, newKeyword || '')
+  }
+)
+
+// 초기 마운트 시 실행
 onMounted(() => {
-  getRecipeList()
+  const keyword = route.query.keyword || ''
+  getRecipeList(0, keyword)
 })
 </script>
+
 
 <template>
   <!-- 필터 섹션 -->

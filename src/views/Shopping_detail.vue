@@ -1627,6 +1627,7 @@ onUnmounted(() => {
    ================================================================= */
 
 .slider-container {
+  display: none;
   position: relative;
   width: 100%;
   margin: 20px 0;

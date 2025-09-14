@@ -1,14 +1,24 @@
 <script setup>
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { computed } from 'vue'
 
 const router = useRouter()
+const route = useRoute()
+
+const orderId = route.params.orderId
 const props = defineProps({
   order: Object,
   showHeader: {
     type: Boolean,
     default: true,
   },
+  showButtons: {
+    type: Boolean,
+    default: true,
+  },
 })
+
+console.log(props.order)
 
 function statusClass(status) {
   switch (status) {
@@ -43,29 +53,33 @@ function statusText(status) {
 }
 
 function formatDateTime(isoString) {
-  const date = new Date(isoString);
+  const date = new Date(isoString)
 
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
-  const day = String(date.getDate()).padStart(2, '0');
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0') // 월은 0부터 시작
+  const day = String(date.getDate()).padStart(2, '0')
 
-  return `${year}-${month}-${day}`;
+  return `${year}-${month}-${day}`
 }
 
 const discountedPrice = (product) => {
-  return Math.round(product.original_price * (100 - product.discount_rate) / 100);
-};
+  return Math.round((product.original_price * (100 - product.discount_rate)) / 100)
+}
 
 const goDetailInfo = () => {
   if (!props.order) return
   router.push({
     name: 'order-detail',
-    params: { orderId: props.order.orderId } 
+    params: { orderId: props.order.orderId },
   })
 }
 
 const goProductDetail = (productId) => {
   router.push(`/products/detail/${productId}`)
+}
+
+const goToReview = (productId) => {
+  router.push(`/product/review/${productId}/${orderId}`)
 }
 </script>
 
@@ -81,9 +95,17 @@ const goProductDetail = (productId) => {
     </div>
 
     <div class="mypage-my-order-boards-mid">
-      <div class="mypage-my-order-boards-el" v-for="product in order.orderItems" :key="product.product_id">
+      <div
+        class="mypage-my-order-boards-el"
+        v-for="product in order.orderItems"
+        :key="product.product_id"
+      >
         <div class="mypage-my-order-boards-el-left">
-          <img :src="product.product_image" alt="상품 이미지" @click="goProductDetail(product.product_id)"/>
+          <img
+            :src="product.product_image"
+            alt="상품 이미지"
+            @click="goProductDetail(product.product_id)"
+          />
           <div class="mypage-my-order-boards-product-content">
             <div class="mypage-my-order-boards-product-name-and-status">
               <p @click="goProductDetail(product.product_id)">{{ product.product_name }}</p>
@@ -101,10 +123,34 @@ const goProductDetail = (productId) => {
               {{ discountedPrice(product).toLocaleString() }}원
             </div>
           </div>
+          <div v-if="showButtons" class="mypage-my-order-boards-buttons-container">
+            <!-- hasReview가 false일 때만 리뷰 작성 버튼 표시 -->
+            <button v-if="!product.hasReview" @click="goToReview(product.product_id)">
+              리뷰작성
+            </button>
+            <button>반품신청</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.mypage-my-order-boards-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mypage-my-order-boards-buttons-container > button {
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.mypage-my-order-boards-buttons-container > button:hover {
+  background-color: #dcdcdc;
+}
+</style>

@@ -462,6 +462,10 @@
   align-items: center;
 }
 
+.mypage-my-order-boards-el-left > div:nth-child(2) {
+  flex: 2;
+}
+
 .mypage-my-order-boards-el-left > img {
   width: 85px;
   height: 85px;

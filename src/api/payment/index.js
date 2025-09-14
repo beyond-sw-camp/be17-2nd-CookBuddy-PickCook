@@ -114,7 +114,6 @@ const userInfo = async () => {
   return data
 }
 
-
 const userAddress = async () => {
   let data = {}
   let url = '/api/user/addresses'
@@ -131,4 +130,28 @@ const userAddress = async () => {
   return data
 }
 
-export default { startPayment, validatePayment, orderList, orderDetail, userInfo, userAddress }
+const orderProductInfo = async (productId, orderId) => {
+  let data = {}
+  let url = `/api/order/product?productId=${productId}&orderId=${orderId}`
+
+  await api
+    .get(url)
+    .then((res) => {
+      data = res.data.results
+    })
+    .catch((error) => {
+      data = error.data
+    })
+
+  return data
+}
+
+export default {
+  startPayment,
+  validatePayment,
+  orderList,
+  orderDetail,
+  userInfo,
+  userAddress,
+  orderProductInfo,
+}

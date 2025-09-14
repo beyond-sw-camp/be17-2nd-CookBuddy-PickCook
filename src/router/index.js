@@ -29,10 +29,17 @@ import Payment from '@/views/Payment.vue'
 import PaymentComplete from '@/views/PaymentComplete.vue'
 import OrderDetailInfo from '@/views/OrderDetailInfo.vue'
 import CommunityEdit from '@/views/CommunityEdit.vue'
+import Review from '@/views/Review.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/product/review/:productId/:orderId',
+      name: 'product-review',
+      component: Review,
+      meta: { requiresAuth: true },
+    },
     {
       path: '/community/edit/:communityId',
       name: 'community-edit',

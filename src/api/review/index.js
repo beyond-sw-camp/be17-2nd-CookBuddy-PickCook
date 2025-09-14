@@ -27,9 +27,66 @@ const getAllReviews = async () => {
   return response.data
 }
 
+const getPresignedUrl = async (formData) => {
+  let data = {}
+
+  let url = '/api/image-upload'
+
+  await api
+    .post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    .then((res) => {
+      data = res.data
+    })
+    .catch((error) => {
+      data = error.data
+    })
+
+  return data
+}
+
+const uploadImage = async (presigedUrl, file) => {
+  let data = {}
+  await api
+    .put(presigedUrl, file, {
+      headers: {
+        'Content-Type': file.type,
+      },
+      withCredentials: false,
+    })
+    .then((res) => {
+      data = res.data
+    })
+    .catch((error) => {
+      data = error.data
+    })
+
+  return data
+}
+
+const reviewWrite = async (orderId, productId, payload) => {
+  try {
+    const url = `/api/reviews/orders/${orderId}/products/${productId}`
+    const res = await api.post(url, payload)
+    return res.data
+  } catch (error) {
+    console.error('리뷰 작성 API 에러:', error)
+    return error.response?.data || { success: false, message: 'API 요청 실패' }
+  }
+}
+
+
+
+
 const reviewAPI = {
   getProductReviews,
   getAllReviews,
+  getPresignedUrl,
+  uploadImage,
+  reviewWrite,
 }
 
 export default reviewAPI

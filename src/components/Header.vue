@@ -2,7 +2,7 @@
 import { useUserStore } from '@/store/useUserStore'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import ProfileModal from './ProfileModal.vue'
-import { ref, computed, defineEmits } from 'vue'
+import { ref, computed, defineEmits, onMounted, onBeforeUnmount } from 'vue'
 import { useBreakpoints } from '@/composables/useBreakpoints.js'
 
 const router = useRouter()
@@ -31,6 +31,28 @@ const profileModalToggle = () => {
 const writeModalToggle = () => {
   showWriteModal.value = !showWriteModal.value
 }
+
+// 모달 외부 클릭 감지
+const handleClickOutside = (event) => {
+  const profileEl = document.getElementById('header-profile-img-container')
+  const writeEl = document.querySelector('.write-btn')
+
+  if (showProfileModal.value && profileEl && !profileEl.contains(event.target)) {
+    showProfileModal.value = false
+  }
+
+  if (showWriteModal.value && writeEl && !writeEl.contains(event.target)) {
+    showWriteModal.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 const search = () => {
   if (!keyword.value.trim()) return

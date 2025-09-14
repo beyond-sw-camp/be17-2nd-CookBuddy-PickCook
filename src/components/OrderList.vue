@@ -106,7 +106,7 @@ const goToShopping = () => {
     <div class="mypage-body-box">
       <!-- 주문내역 리스트 -->
       <div class="mypage-main-content-scroll">
-        <OderProductItemCard v-for="order in orders" :key="order.orderNumber" :order="order" />
+        <OderProductItemCard v-for="order in orders" :key="order.orderNumber" :order="order" :show-buttons="false"/>
       </div>
     </div>
   </div>

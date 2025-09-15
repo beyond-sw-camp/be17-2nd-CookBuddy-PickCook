@@ -17,9 +17,10 @@ const logout = async () => {
     const isAuthRequired = route.meta?.requiresAuth
 
     if (isAuthRequired) {
-      router.push('/login')
+      router.replace('/login')
     } else {
       console.log('현재 위치에서 로그아웃 완료')
+      router.replace('/')
     }
   }
 }

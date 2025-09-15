@@ -1,15 +1,17 @@
 <script setup>
 import { reactive, ref, onMounted, onUnmounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import api from '@/api/shopping'
 import ProductItemCard from '@/components/ProductItemCard.vue'
 import Pagination from '@/components/Pagination.vue'
 
 const route = useRoute()
+const router = useRouter()
 const products = reactive([])
 const selectedCategoryId = ref(null)
 const isFiltering = ref(false)
 const getKeyword = () => route.query.keyword || ''
+const getPageFromQuery = () => parseInt(route.query.page || '0')
 
 const pageResponse = reactive({
   content: [],
@@ -27,13 +29,18 @@ const filterState = reactive({
 // ==============================
 // 페이지 이동
 // ==============================
-const loadPage = (newPage) => {
+const loadPage = (newPage = null) => {
   const keyword = getKeyword()
+  const page = newPage !== null ? newPage : getPageFromQuery()
+
   if (selectedCategoryId.value) {
-    loadCategoryPage(newPage, selectedCategoryId.value, keyword)
+    loadCategoryPage(page, selectedCategoryId.value, keyword)
   } else {
-    getProductList(newPage, keyword)
+    getProductList(page, keyword)
   }
+
+  const query = { ...route.query, page }
+  router.replace({ query })
 }
 
 // ==============================
@@ -210,14 +217,14 @@ const getCurrentFilterLabel = (filterKey) => {
 // ==============================
 watch(
   () => route.query.keyword,
-  () => loadPage(0),
+  () => loadPage(getPageFromQuery()),
 )
 
 // ==============================
 // 초기 마운트
 // ==============================
 onMounted(() => {
-  loadPage(0)
+  loadPage(getPageFromQuery())
   document.addEventListener('click', closeAllDropdowns)
 })
 
@@ -296,6 +303,9 @@ onUnmounted(() => {
 
     <!-- 기존 필터 섹션 그대로 -->
     <div class="shopping-filter-section" @click.stop>
+      <h2 :class="{ invisible: !getKeyword() }">
+        <span class="shopping-search-result-bold-font">'{{ getKeyword() }}'</span>에 대한 검색 결과
+      </h2>
       <div class="filter-container">
         <!-- 신제품 필터 -->
         <div class="filter-dropdown">
@@ -414,6 +424,23 @@ onUnmounted(() => {
 <style scoped>
 .shopping-filter-section {
   padding-bottom: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.shopping-filter-section > h2 {
+  font-weight: 400;
+  font-size: 21px;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.shopping-search-result-bold-font {
+  font-weight: 600;
 }
 
 .shopping-category-section {
@@ -509,6 +536,7 @@ onUnmounted(() => {
   display: flex;
   margin-bottom: 10px;
   gap: 10px;
+  margin: 7px 0;
 }
 
 .filter-tag {

@@ -12,7 +12,7 @@ defineProps({
     <div class="step-content">
       <p>{{ text }}</p>
     </div>
-    <img v-show="image" :src="image" alt="요리 이미지" />
+    <img :src="image || '/assets/images/no-image.png'" alt="요리 이미지" />
   </div>
 </template>
 
@@ -40,7 +40,13 @@ defineProps({
 }
 .step img {
   width: 120px;
+  height: 120px;
+  object-fit: cover;
   margin-left: 20px;
   border-radius: 6px;
+}
+
+.step-content > p {
+  margin-top: 8px;
 }
 </style>

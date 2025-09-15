@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import api from '@/api/community'
+import likeApi from '@/api/like'
 
 const { comment, replyId } = defineProps({
   comment: Object,
@@ -13,10 +14,7 @@ const replyText = ref('')
 const hasLiked = ref(comment.hasLiked)
 
 const toggleLike = async () => {
-  const data = await api.like({
-    targetType: 'COMMENT',
-    targetId: comment.id,
-  })
+  const data = await likeApi.toggleLike('COMMENT', comment.id)
   if (data.success && data.results) {
     hasLiked.value = !hasLiked.value
   }
@@ -55,7 +53,7 @@ const submitReply = async () => {
           />
           <img
             v-if="comment.parentCommentId == null"
-            src="/public/assets/icons/ic-comment.png"
+            src="/public/assets/icons/ic-reply-count.png"
             @click="toggleReply"
           />
           <img src="/public/assets/icons/ic-more.png" />
@@ -87,7 +85,7 @@ const submitReply = async () => {
 
 <style scoped>
 .cd-comment-item {
-  padding-bottom: 20px;
+  padding: 10px 4px;
   border-bottom: 0.5px solid #ececec;
 }
 .cd-comment-info {
@@ -99,7 +97,7 @@ const submitReply = async () => {
 
 .cd-comment-author {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .cd-comment-action {
@@ -113,24 +111,45 @@ const submitReply = async () => {
 }
 
 .cd-comment-action img {
-  height: 10px;
+  width: 12px;
+  height: 12px;
 }
 
 .cd-comment-text {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .cd-reply-input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #dadce0;
-  border-radius: 4px;
-  font-size: 14px;
+  height: 70px;
   resize: none;
+  font-family: inherit;
+  padding: 10px;
+  border: 1px solid #bcbbbd;
+  border-radius: 4px;
   outline: none;
 }
 
 .cd-children {
-  padding-left: 24px;
+  padding-left: 15px;
+}
+
+.cd-reply-form {
+  margin-top: 10px;
+  margin-left: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: end;
+}
+
+.cd-reply-form > button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  color: white;
+  background-color: var(--color-primary);
+  cursor: pointer;
 }
 </style>

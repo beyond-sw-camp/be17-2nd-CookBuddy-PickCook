@@ -14,15 +14,16 @@ const props = defineProps({
   },
 })
 
+// 상태 관리
 const state = reactive({
   products: [],
   loading: false,
   error: null,
-  currentPage: 0, // 0부터 시작 (0페이지, 1페이지)
+  currentPage: 0,
   itemsPerPage: 8,
 })
 
-// 전체 페이지 수 계산
+// 전체 페이지 수
 const totalPages = computed(() => {
   return Math.ceil(state.products.length / state.itemsPerPage)
 })
@@ -38,6 +39,28 @@ const currentProducts = computed(() => {
 const showLeftButton = computed(() => state.currentPage > 0)
 const showRightButton = computed(() => state.currentPage < totalPages.value - 1)
 
+// matchedIngredient 처리
+const formatMatchedIngredient = (matchedStr) => {
+  if (!matchedStr) return ''
+
+  // 괄호가 없는 경우 그냥 반환
+  if (!matchedStr.includes('(')) return matchedStr.trim()
+
+  // 괄호 안 내용 제거
+  const cleaned = matchedStr.replace(/\(.*?\)/g, '').trim()
+
+  // 공백으로 분리
+  const parts = cleaned.split(/\s+/).filter(p => p)
+
+  if (parts.length === 0) return ''
+  const first = parts[0]
+  const othersCount = parts.length - 1
+
+  return othersCount > 0 ? `${first} 외 ${othersCount}` : first
+}
+
+
+// 연관 상품 조회
 const fetchRelatedProducts = async () => {
   if (!props.recipeId) return
 
@@ -47,7 +70,7 @@ const fetchRelatedProducts = async () => {
   try {
     const data = await shoppingAPI.getRelatedProductsByRecipe(props.recipeId)
     state.products = data
-    state.currentPage = 0 // 첫 페이지로 리셋
+    state.currentPage = 0
     console.log('🔍 총 상품 개수:', state.products.length)
     console.log('🔍 총 페이지 수:', totalPages.value)
   } catch (err) {
@@ -59,20 +82,20 @@ const fetchRelatedProducts = async () => {
   }
 }
 
+// 페이지 이동
 const goToPreviousPage = () => {
   if (state.currentPage > 0) {
     state.currentPage--
-    console.log('🔍 이전 페이지:', state.currentPage + 1)
   }
 }
 
 const goToNextPage = () => {
   if (state.currentPage < totalPages.value - 1) {
     state.currentPage++
-    console.log('🔍 다음 페이지:', state.currentPage + 1)
   }
 }
 
+// props.recipeId 변경 시 새로 조회
 watch(
   () => props.recipeId,
   (newId) => {
@@ -97,11 +120,7 @@ onMounted(() => {
     </h3>
 
     <div v-if="state.loading" class="loading-message">상품을 불러오는 중...</div>
-
-    <div v-else-if="state.error" class="error-message">
-      {{ state.error }}
-    </div>
-
+    <div v-else-if="state.error" class="error-message">{{ state.error }}</div>
     <div v-else-if="state.products.length === 0" class="empty-message">추천할 상품이 없습니다.</div>
 
     <div v-else class="carousel-wrapper">
@@ -111,7 +130,7 @@ onMounted(() => {
         @click="goToPreviousPage"
         :disabled="!showLeftButton"
       >
-        <img src="/assets/icons/ic-arrow-left.png" alt="왼쪽"/>
+        <img src="/assets/icons/ic-arrow-left.png" alt="왼쪽" />
       </button>
 
       <div class="product-grid">
@@ -124,7 +143,7 @@ onMounted(() => {
           :discount-rate="product.discountRate"
           :main-image-url="product.mainImageUrl"
           :match-type="product.matchType"
-          :matched-ingredient="product.matchedIngredient"
+          :matched-ingredient="formatMatchedIngredient(product.matchedIngredient)"
         />
       </div>
 
@@ -134,7 +153,7 @@ onMounted(() => {
         @click="goToNextPage"
         :disabled="!showRightButton"
       >
-        <img src="/assets/icons/ic-arrow-right.png" alt="오른쪽"/>
+        <img src="/assets/icons/ic-arrow-right.png" alt="오른쪽" />
       </button>
     </div>
 

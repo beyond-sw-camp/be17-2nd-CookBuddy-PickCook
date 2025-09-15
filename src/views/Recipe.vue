@@ -1,11 +1,12 @@
 <script setup>
 import api from '@/api/recipe'
 import { onMounted, reactive, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import RecipeCard from '@/components/RecipeCard.vue'
 import Pagination from '@/components/Pagination.vue'
 
 const route = useRoute()
+const router = useRouter()
 
 const recipeList = reactive([])
 const pageResponse = reactive({
@@ -19,6 +20,7 @@ const pageResponse = reactive({
 // 페이지 이동 시 실행
 const loadPage = (newPage) => {
   const keyword = route.query.keyword || ''
+  router.replace({ query: { ...route.query, page: newPage } })
   getRecipeList(newPage, keyword)
 }
 
@@ -47,19 +49,19 @@ const getRecipeList = async (page = 0, keyword = '') => {
   }
 }
 
-// URL query가 바뀔 때마다 자동으로 반영
+onMounted(() => {
+  const keyword = route.query.keyword || ''
+  const page = parseInt(route.query.page || '0') // query에서 페이지 번호 가져오기
+  getRecipeList(page, keyword)
+})
+
 watch(
   () => route.query.keyword,
   (newKeyword) => {
-    getRecipeList(0, newKeyword || '')
+    const page = parseInt(route.query.page || '0')
+    getRecipeList(page, newKeyword || '')
   }
 )
-
-// 초기 마운트 시 실행
-onMounted(() => {
-  const keyword = route.query.keyword || ''
-  getRecipeList(0, keyword)
-})
 </script>
 
 
@@ -140,6 +142,7 @@ onMounted(() => {
 .content-header > h2 {
   margin-bottom: 15px;
   font-weight: 400;
+  font-size: 21px;
 }
 
 .content-header span {

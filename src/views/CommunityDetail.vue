@@ -428,7 +428,8 @@ onMounted(() => {
 .cd-comment-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  margin-top: 20px;
+  padding: 0 4px;
 }
 
 .cd-comment-avatar {

@@ -85,7 +85,10 @@ const toggleScrap = async (event) => {
   <RouterLink :to="`/recipe/detail/${recipe.idx}`">
     <div class="recipe-card content-card">
       <div class="recipe-rep-image card-image">
-        <img :src="props.recipe.image_large_url" :alt="props.recipe.title" />
+        <img
+          :src="props.recipe.image_large_url || '/assets/images/no-image.png'"
+          :alt="props.recipe.title"
+        />
         <img
           class="recipe-scrap-icon scrap-js"
           :src="scrapSrc"
@@ -110,15 +113,15 @@ const toggleScrap = async (event) => {
         </div>
 
         <div class="recipe-card-stats card-stats">
-          <span class="recipe-stats-items">
+          <span class="recipe-stats-items" v-if="props.recipe.time_taken">
             <img src="/assets/icons/ic-time.png" alt="조리시간" />
             {{ props.recipe.time_taken }}
           </span>
-          <span class="recipe-stats-items">
+          <span class="recipe-stats-items" v-if="props.recipe.difficulty_level">
             <img src="/assets/icons/ic-level.png" alt="난이도" />
             {{ props.recipe.difficulty_level }}
           </span>
-          <span class="recipe-stats-items">
+          <span class="recipe-stats-items" v-if="props.recipe.serving_size">
             <img src="/assets/icons/ic-qnt.png" alt="인분" />
             {{ props.recipe.serving_size }}
           </span>

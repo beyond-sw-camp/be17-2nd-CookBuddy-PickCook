@@ -2,7 +2,7 @@
 import { useUserStore } from '@/store/useUserStore'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import ProfileModal from './ProfileModal.vue'
-import { ref, computed, defineEmits, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, defineEmits, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useBreakpoints } from '@/composables/useBreakpoints.js'
 
 const router = useRouter()
@@ -86,6 +86,14 @@ function openMenu() {
 function openSearchSlide() {
   emit('open-search-slide')
 }
+
+watch(
+  () => route.fullPath,
+  () => {
+    keyword.value = ''
+  }
+)
+
 </script>
 
 <template>

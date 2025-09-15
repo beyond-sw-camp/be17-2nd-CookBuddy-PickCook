@@ -3,79 +3,142 @@ import RecipeStep from '@/components/RecipeStep.vue'
 import RelatedProducts from './RelatedProducts.vue'
 import RecipeComment from '@/components/RecipeComment.vue'
 import api from '@/api/recipe'
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
 const recipe = reactive({
   title: '',
+  description: '',
+  cooking_method: '',
+  category: '',
   time_taken: '',
   difficulty_level: '',
   serving_size: '',
-  thumbnail: '',
-  ingredients: {
-    main: [],
-    seasoning: [],
-  },
+  hashtags: '',
+  tip: '',
+  image_small_url: null,
+  image_large_url: null,
+  ingredients: [],
   steps: [],
   comments: [],
 })
 
-const newComment = ref('')
-const newCommentImage = ref(null)
-const newCommentImagePreview = ref(null)
-const fileInput = ref(null)
-const activeReplyId = ref(null)
+
+// 문자열 재료를 객체 배열로 변환
+const parseIngredientString  = (rawStr) => {
+  if (!rawStr) return []
+
+  const ingredients = []
+  let buffer = ''
+  let inParen = false
+
+  for (let i = 0; i < rawStr.length; i++) {
+    const char = rawStr[i]
+    buffer += char
+
+    if (char === '(') inParen = true
+    if (char === ')') {
+      inParen = false
+      // 괄호 닫힌 후 다음이 공백이면 한 덩어리 완성
+      if (rawStr[i + 1] === ' ' || i + 1 === rawStr.length) {
+        // ingredient_name: 괄호 전까지
+        const match = buffer.match(/^([^(]+)\(([^)]+)\)/)
+        if (match) {
+          ingredients.push({
+            ingredient_name: match[1].trim(),
+            quantity: match[2].trim(),
+            isMainIngredient: true, // 기본값
+          })
+        }
+        buffer = ''
+        i++ // 공백 스킵
+      }
+    }
+  }
+
+  // 혹시 마지막에 남은 텍스트 처리
+  if (buffer.trim()) {
+    ingredients.push({
+      ingredient_name: buffer.trim(),
+      quantity: '',
+      isMainIngredient: true,
+    })
+  }
+
+  return ingredients
+}
+
+// 재료 데이터 처리 (배열/문자열 두 경우 처리)
+const processIngredients = (rawIngredients) => {
+  if (!rawIngredients) return []
+
+  // 배열이면
+  if (Array.isArray(rawIngredients)) {
+    // 배열 안에 문자열이 합쳐진 하나의 ingredient가 있으면 분리
+    if (
+      rawIngredients.length === 1 &&
+      rawIngredients[0].quantity === '' &&
+      rawIngredients[0].isMainIngredient
+    ) {
+      return parseIngredientString(rawIngredients[0].ingredient_name)
+    } else {
+      // 일반 배열이면 그대로 반환
+      return rawIngredients
+    }
+  }
+
+  // 문자열이면 분리
+  if (typeof rawIngredients === 'string') {
+    return parseIngredientString(rawIngredients)
+  }
+
+  return []
+}
+
+// 주재료 / 양념 분리
+const mainIngredients = computed(() => recipe.ingredients.filter((i) => i.isMainIngredient))
+const seasoningIngredients = computed(() => recipe.ingredients.filter((i) => !i.isMainIngredient))
+
+
+// RelatedProducts에 넘겨줄 매치 재료 계산
+const matchedIngredient = computed(() => {
+  if (!recipe.ingredients || !recipe.ingredients.length) return ''
+  // 첫 번째 주재료 이름
+  const firstMain = recipe.ingredients.find((i) => i.isMainIngredient)
+  return firstMain ? firstMain.ingredient_name : ''
+})
+
 
 // 레시피 정보 가져오기
 const getRecipe = async () => {
   const id = route.params.id
   const data = await api.getRecipe(id)
-  if (data) Object.assign(recipe, data)
+  if (data) {
+    recipe.title = data.title
+    recipe.description = data.description
+    recipe.cooking_method = data.cooking_method
+    recipe.category = data.category
+    recipe.time_taken = data.time_taken
+    recipe.difficulty_level = data.difficulty_level
+    recipe.serving_size = data.serving_size
+    recipe.hashtags = data.hashtags
+    recipe.tip = data.tip
+    recipe.image_small_url = data.image_small_url
+    recipe.image_large_url = data.image_large_url
+    recipe.steps = data.steps
+    // 재료 처리
+    recipe.ingredients = processIngredients(data.ingredients)
+  }
 }
 
-// 레시피 댓글 가져오기
 const getComments = async () => {
   const id = route.params.id
   const data = await api.getRecipeComments(id)
   if (data.success) recipe.comments = data.results
 }
 
-// 댓글 새로고침
-const refreshComments = async () => {
-  await getComments()
-  activeReplyId.value = null
-}
-
-const updateNewCommentImage = (e) => {
-  newCommentImage.value = e.target.files[0]
-  newCommentImagePreview.value = URL.createObjectURL(newCommentImage.value)
-}
-
-// 최상위 댓글 등록
-const submitComment = async () => {
-  if (!newComment.value.trim() && !newCommentImage.value) return
-
-  const formData = new FormData()
-  const requestData = {
-    content: newComment.value,
-    recipeId: route.params.id,
-  }
-  formData.append('data', new Blob([JSON.stringify(requestData)], { type: 'application/json' }))
-
-  if (newCommentImage.value) formData.append('image', newCommentImage.value)
-
-  const data = await api.addRecipeComment(formData)
-  if (data.success) {
-    newComment.value = ''
-    newCommentImage.value = null
-    newCommentImagePreview.value = null
-    await refreshComments()
-  }
-}
-
-// 페이지 로드 시 데이터 불러오기
 onMounted(async () => {
   await getRecipe()
   await getComments()
@@ -85,42 +148,52 @@ onMounted(async () => {
 <template>
   <div class="rd-container">
     <section class="recipe-image">
-      <img :src="recipe.image_large_url" alt="레시피 이미지" />
+      <img :src="recipe.image_large_url || '/assets/images/no-image.png'" alt="레시피 이미지" />
       <h2 class="recipe-title">{{ recipe.title }}</h2>
       <p class="recipe-description">{{ recipe.description }}</p>
       <div class="recipe-detaile-serving-time-level">
-        <span><img src="/assets/icons/ic-time.png" alt="소요시간"/> {{ recipe.time_taken }}</span>
-        <span><img src="/assets/icons/ic-level.png" alt="난이도"/> {{ recipe.difficulty_level }}</span>
-        <span><img src="/assets/icons/ic-qnt.png" alt="인분"/> {{ recipe.serving_size }}</span>
+        <span v-if="recipe.time_taken">
+          <img src="/assets/icons/ic-time.png" alt="소요시간" />
+          {{ recipe.time_taken }}
+        </span>
+        <span v-if="recipe.difficulty_level">
+          <img src="/assets/icons/ic-level.png" alt="난이도" />
+          {{ recipe.difficulty_level }}
+        </span>
+        <span v-if="recipe.serving_size">
+          <img src="/assets/icons/ic-qnt.png" alt="인분" />
+          {{ recipe.serving_size }}
+        </span>
       </div>
     </section>
 
     <section class="rd-ingredients-section">
-      <div class="rd-ingredients-group">
+      <div class="rd-ingredients-group" v-if="mainIngredients.length">
         <h3>[주재료]</h3>
         <table class="rd-ingredients-table">
           <tbody>
-            <tr v-for="(item, i) in recipe.ingredients" :key="'main-' + i">
+            <tr v-for="(item, i) in mainIngredients" :key="'main-' + i">
               <td class="rd-td">{{ item.ingredient_name }}</td>
               <td class="rd-td">{{ item.quantity }}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="rd-ingredients-group">
+
+      <div class="rd-ingredients-group" v-if="seasoningIngredients.length">
         <h3>[양념]</h3>
         <table class="rd-ingredients-table">
           <tbody>
-            <tr v-for="(item, i) in recipe.ingredients.seasoning" :key="'seasoning-' + i">
-              <td class="rd-td">{{ item.name }}</td>
-              <td class="rd-td">{{ item.amount }}</td>
+            <tr v-for="(item, i) in seasoningIngredients" :key="'seasoning-' + i">
+              <td class="rd-td">{{ item.ingredient_name }}</td>
+              <td class="rd-td">{{ item.quantity }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <RelatedProducts :recipe-id="Number(route.params.id)" :title="recipe.title" />
+    <RelatedProducts :recipe-id="Number(route.params.id)" :title="recipe.title" :matched-ingredient="matchedIngredient"/>
 
     <section class="recipe-steps">
       <h2>요리 순서</h2>
@@ -186,7 +259,8 @@ onMounted(async () => {
   border-radius: 10px;
 }
 .recipe-title {
-  padding: 12px 0 36px;
+  padding: 20px 0 10px;
+  font-size: 20px;
 }
 .recipe-image {
   text-align: center;
@@ -277,6 +351,10 @@ onMounted(async () => {
   flex-direction: row;
   align-items: center;
   width: 100%;
+}
+
+.recipe-description {
+  margin-bottom: 50px;
 }
 
 .comment-input {

@@ -592,9 +592,9 @@
 
 @media (max-width: 1023px) {
   .mypage-my-profile-info-input-el > label,
-.mypage-my-address-input-boxes > label {
-  font-size: 14px;
-}
+  .mypage-my-address-input-boxes > label {
+    font-size: 14px;
+  }
 }
 
 .mypage-my-profile-info-input-el > input,
@@ -760,7 +760,7 @@
   }
 }
 
-.mypage-my-order-list-container {
+.mypage-my-order-list-container, .empty-order-list-message {
   width: 927px;
   display: flex;
   flex-direction: column;
@@ -768,7 +768,7 @@
 }
 
 @media (max-width: 1023px) {
-  .mypage-my-order-list-container {
+  .mypage-my-order-list-container, .empty-order-list-message {
     width: 500px;
     gap: 8px;
   }
@@ -843,7 +843,8 @@
   border-radius: 12px;
 }
 
-.mypage-my-cart-items-list-container, .empty-cart-message {
+.mypage-my-cart-items-list-container,
+.empty-cart-message {
   width: 927px;
   display: flex;
   flex-direction: column;
@@ -851,7 +852,8 @@
 }
 
 @media (max-width: 1023px) {
-  .mypage-my-cart-items-list-container, .empty-cart-message {
+  .mypage-my-cart-items-list-container,
+  .empty-cart-message {
     width: 500px;
     gap: 8px;
   }

@@ -405,10 +405,7 @@ const signup = async () => {
       nickname: form.nickname,
       password: form.password,
       name: form.name,
-      phone: form.phone,
-      zipCode: form.zipCode,
-      address: form.address,
-      detailAddress: form.detailAddress,
+      phone: form.phone
     }
 
     const result = await auth.signup(signupData)
@@ -439,7 +436,7 @@ const signup = async () => {
         router.push('/login')
       }, 2000)
     } else {
-      alert('회원가입 중 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.')
+      alert('존재하지 않는 메일입니다. 다른 메일로 다시 시도해주세요.')
     }
   } finally {
     loading.value = false

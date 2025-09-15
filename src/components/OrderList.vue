@@ -96,10 +96,10 @@ const goToShopping = () => {
             </div>
           </div>
         </div>
-        <div class="mypage-my-order-list-search-bar-container">
+        <!-- <div class="mypage-my-order-list-search-bar-container">
           <img src="/public/assets/icons/ic-search.png" alt="돋보기" />
           <input type="text" placeholder="상품명으로 검색해보세요." />
-        </div>
+        </div> -->
       </div>
     </div>
 

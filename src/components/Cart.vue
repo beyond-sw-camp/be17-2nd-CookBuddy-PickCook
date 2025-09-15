@@ -77,7 +77,7 @@ const deleteSelected = async () => {
 
   try {
     // product_id 배열을 API에 전송
-    await api.addToCart(selectedProductIds)
+    await api.removeFromCart(selectedProductIds)
 
     // 삭제 후 프론트에서도 제거
     cartItems.value = cartItems.value.filter(

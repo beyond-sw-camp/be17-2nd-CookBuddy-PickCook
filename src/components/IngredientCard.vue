@@ -88,7 +88,7 @@ function getExpiryClass() {
   background-color: #fff5f5 !important;
 }
 
-.ingredient-card-container[data-expiry='EXPIRING_SOON'] {
+/* .ingredient-card-container[data-expiry='EXPIRING_SOON'] {
   border-color: #ffcc00 !important;
   background-color: #fffdf0 !important;
 }
@@ -96,7 +96,7 @@ function getExpiryClass() {
 .ingredient-card-container[data-expiry='FRESH'] {
   border-color: #45da00 !important;
   background-color: #f8fff0 !important;
-}
+} */
 
 /* 🆕 유통기한 텍스트 색상 */
 .expiry-expired {
@@ -107,12 +107,12 @@ function getExpiryClass() {
   color: #ff4444 !important;
   font-weight: 600;
 }
-.expiry-soon {
+/* .expiry-soon {
   color: #ffcc00 !important;
   font-weight: 600;
 }
 .expiry-fresh {
   color: #45da00 !important;
   font-weight: 600;
-}
+} */
 </style>

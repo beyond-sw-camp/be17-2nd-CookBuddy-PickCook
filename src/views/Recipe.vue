@@ -1,12 +1,11 @@
 <script setup>
 import api from '@/api/recipe'
 import { onMounted, reactive, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import RecipeCard from '@/components/RecipeCard.vue'
 import Pagination from '@/components/Pagination.vue'
 
 const route = useRoute()
-const router = useRouter()
 
 const recipeList = reactive([])
 const pageResponse = reactive({

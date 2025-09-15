@@ -843,7 +843,7 @@
   border-radius: 12px;
 }
 
-.mypage-my-cart-items-list-container {
+.mypage-my-cart-items-list-container, .empty-cart-message {
   width: 927px;
   display: flex;
   flex-direction: column;
@@ -851,7 +851,7 @@
 }
 
 @media (max-width: 1023px) {
-  .mypage-my-cart-items-list-container {
+  .mypage-my-cart-items-list-container, .empty-cart-message {
     width: 500px;
     gap: 8px;
   }
@@ -859,8 +859,6 @@
 
 .empty-cart-message,
 .empty-order-list-message {
-  max-width: 927px;
-  width: 100%;
   margin: 0 auto;
   min-height: 723px;
   background-color: white;

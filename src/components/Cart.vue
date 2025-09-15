@@ -200,6 +200,7 @@ const goToShopping = () => {
 </template>
 
 <style scoped>
+
 .mypage-cart-in-items-total-price-container {
   background-color: #f8f8f8;
   margin: 30px 15px 20px;

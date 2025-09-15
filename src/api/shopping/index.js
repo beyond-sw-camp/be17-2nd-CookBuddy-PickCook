@@ -40,6 +40,23 @@ const getProductDetail = async (productId) => {
 }
 
 
+const searchProducts = async (keyword, page, size, dir) => {
+  let data = {}
+  let url = `api/products/search?keyword=${keyword}&page=${page}&size=${size}&dir=${dir}`
+
+  await api
+    .get(url)
+    .then((res) => {
+      data = res.data.results
+    })
+    .catch((error) => {
+      data = error.data
+    })
+
+  return data
+}
+
+
 /**
  * 상품 리뷰 조회 (✅ 새로 추가)
  */
@@ -82,21 +99,6 @@ const getProductsByCategory = async (categoryId, page = 0, size = 10, sort = 'id
     return response.data.results || []
   } catch (error) {
     console.error('카테고리별 상품 조회 실패:', error)
-    throw error
-  }
-}
-
-/**
- * 상품 검색 (정렬 파라미터 추가)
- */
-const searchProducts = async (keyword, page = 0, size = 10, sort = 'id', dir = 'ASC') => {
-  try {
-    const response = await api.get('/api/products/search', {
-      params: { keyword, page, size, sort, dir }
-    })
-    return response.data.results || []
-  } catch (error) {
-    console.error('상품 검색 실패:', error)
     throw error
   }
 }

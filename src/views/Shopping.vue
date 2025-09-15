@@ -1,13 +1,15 @@
 <script setup>
-import { reactive, ref, onMounted, onUnmounted } from 'vue'
+import { reactive, ref, onMounted, onUnmounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import api from '@/api/shopping'
 import ProductItemCard from '@/components/ProductItemCard.vue'
 import Pagination from '@/components/Pagination.vue'
 
+const route = useRoute()
 const products = reactive([])
-const originalProducts = ref([])
 const selectedCategoryId = ref(null)
 const isFiltering = ref(false)
+const getKeyword = () => route.query.keyword || ''
 
 const pageResponse = reactive({
   content: [],
@@ -19,42 +21,48 @@ const pageResponse = reactive({
 
 const filterState = reactive({
   openDropdown: null,
-  currentSort: { field: 'id', direction: 'ASC', label: '기본 정렬' }, // 기본 정렬로 변경
+  currentSort: { field: 'id', direction: 'ASC', label: '기본 정렬' },
 })
 
+// ==============================
+// 페이지 이동
+// ==============================
 const loadPage = (newPage) => {
+  const keyword = getKeyword()
   if (selectedCategoryId.value) {
-    // 카테고리가 선택된 상태에서 페이지 이동
-    loadCategoryPage(newPage, selectedCategoryId.value)
+    loadCategoryPage(newPage, selectedCategoryId.value, keyword)
   } else {
-    // 전체 상품에서 페이지 이동 (현재 정렬 유지)
-    getProductListWithSort(newPage)
+    getProductList(newPage, keyword)
   }
 }
 
-// 정렬이 적용된 전체 상품 페이지 로드
-const getProductListWithSort = async (page = 0) => {
-  const data = await api.getAllProducts(
-    page,
-    pageResponse.size,
-    filterState.currentSort.field,
-    filterState.currentSort.direction,
-  )
-
-  if (data && data.content) {
-    Object.assign(products, data.content)
-    Object.assign(pageResponse, {
-      content: data.content,
-      currentPage: data.currentPage,
-      totalPages: data.totalPages,
-      totalElements: data.totalElements,
-      size: data.size,
-    })
+// ==============================
+// 전체 상품 + 검색어
+// ==============================
+const getProductList = async (page = 0, keyword = '') => {
+  let data = {}
+  if (keyword) {
+    data = await api.searchProducts(
+      keyword,
+      page,
+      pageResponse.size,
+      filterState.currentSort.direction,
+    )
+  } else {
+    data = await api.getAllProducts(
+      page,
+      pageResponse.size,
+      filterState.currentSort.field,
+      filterState.currentSort.direction,
+    )
   }
+  updateProductsAndPagination(data)
 }
 
-// 새로 추가할 함수
-const loadCategoryPage = async (page, categoryId) => {
+// ==============================
+// 카테고리 + 검색어 + 페이지
+// ==============================
+const loadCategoryPage = async (page, categoryId, keyword = '') => {
   try {
     const data = await api.getProductsByCategory(
       categoryId,
@@ -62,64 +70,40 @@ const loadCategoryPage = async (page, categoryId) => {
       pageResponse.size,
       filterState.currentSort.field,
       filterState.currentSort.direction,
+      keyword,
     )
-
-    products.splice(0)
-    const productList = data.content || data
-    Object.assign(products, productList)
-
-    Object.assign(pageResponse, {
-      content: data.content || data,
-      currentPage: page,
-      totalPages: data.totalPages || 1,
-      totalElements: data.totalElements || productList.length,
-      size: data.size || 10,
-    })
+    updateProductsAndPagination(data)
   } catch (error) {
     console.error('카테고리 페이지 로드 실패:', error)
   }
 }
 
-const getProductList = async (page = 0) => {
-  // 기본 정렬이지만 실제로는 신제품순으로 로드
-  const data = await api.getAllProducts(page, pageResponse.size, 'createdAt', 'DESC')
-  if (data && data.content) {
-    Object.assign(products, data.content)
-    originalProducts.value = data.content
-    Object.assign(pageResponse, {
-      content: data.content,
-      currentPage: data.currentPage,
-      totalPages: data.totalPages,
-      totalElements: data.totalElements,
-      size: data.size,
-    })
-  } else {
-    products.splice(0)
-    Object.assign(pageResponse, {
-      content: [],
-      totalPages: 0,
-      totalElements: 0,
-    })
-  }
+// ==============================
+// 상품 목록 + 페이지네이션 업데이트
+// ==============================
+const updateProductsAndPagination = (data) => {
+  products.splice(0)
+  const productList = data.content || data
+  products.splice(0, products.length, ...productList)
+
+  Object.assign(pageResponse, {
+    content: data.content || data,
+    currentPage: data.currentPage || 0,
+    totalPages: data.totalPages || 1,
+    totalElements: data.totalElements || productList.length,
+    size: data.size || 12,
+  })
 }
 
+// ==============================
+// 카테고리 선택
+// ==============================
 const filterByCategory = async (categoryId) => {
   isFiltering.value = true
   selectedCategoryId.value = categoryId
-
   try {
     const data = await api.getProductsByCategory(categoryId)
-    products.splice(0)
-
-    const productList = data.content || data
-    Object.assign(products, productList)
-
-    // 페이지네이션 완전 초기화
-    pageResponse.content = data.content || data
-    pageResponse.currentPage = 0 // 첫 페이지로 강제 리셋
-    pageResponse.totalPages = data.totalPages || 1
-    pageResponse.totalElements = data.totalElements || productList.length
-    pageResponse.size = data.size || 10
+    updateProductsAndPagination(data)
   } catch (error) {
     console.error('카테고리 필터링 실패:', error)
   } finally {
@@ -129,9 +113,12 @@ const filterByCategory = async (categoryId) => {
 
 const showAllProducts = async () => {
   selectedCategoryId.value = null
-  await getProductList(0) // 첫 페이지부터 시작
+  await getProductList(0)
 }
 
+// ==============================
+// 정렬 옵션
+// ==============================
 const filterOptions = reactive({
   sales: {
     label: '판매량',
@@ -144,7 +131,7 @@ const filterOptions = reactive({
   rating: {
     label: '상품평',
     options: [
-      { field: 'title', direction: 'ASC', label: '평점 높은순' }, // 다른 필드 사용
+      { field: 'title', direction: 'ASC', label: '평점 높은순' },
       { field: 'title', direction: 'DESC', label: '평점 낮은순' },
       { field: 'id', direction: 'ASC', label: '기본 정렬' },
     ],
@@ -160,7 +147,7 @@ const filterOptions = reactive({
   price: {
     label: '가격',
     options: [
-      { field: 'original_price', direction: 'DESC', label: '가격 높은순' }, // original_price 사용
+      { field: 'original_price', direction: 'DESC', label: '가격 높은순' },
       { field: 'original_price', direction: 'ASC', label: '가격 낮은순' },
       { field: 'id', direction: 'ASC', label: '기본 정렬' },
     ],
@@ -172,117 +159,68 @@ const toggleDropdown = (filterKey) => {
   filterState.openDropdown = filterState.openDropdown === filterKey ? null : filterKey
 }
 
-// 정렬 옵션 선택
+// 정렬 선택
 const selectSortOption = async (option) => {
-  // 깊은 복사로 객체 참조 분리
   Object.assign(filterState.currentSort, {
     field: option.field,
     direction: option.direction,
     label: option.label,
   })
-
   filterState.openDropdown = null
 
   if (selectedCategoryId.value) {
-    await applySortToCategory(selectedCategoryId.value)
+    await loadCategoryPage(0, selectedCategoryId.value, getKeyword())
   } else {
-    await applySortToAllProducts()
+    await getProductList(0, getKeyword())
   }
 }
 
-// 전체 상품에 정렬 적용
-const applySortToAllProducts = async () => {
-  const data = await api.getAllProducts(
-    0,
-    pageResponse.size,
-    filterState.currentSort.field,
-    filterState.currentSort.direction,
-  )
-  updateProductsAndPagination(data)
-}
-
-// 카테고리 상품에 정렬 적용
-const applySortToCategory = async (categoryId) => {
-  const data = await api.getProductsByCategory(
-    categoryId,
-    0,
-    pageResponse.size,
-    filterState.currentSort.field,
-    filterState.currentSort.direction,
-  )
-  updateProductsAndPagination(data)
-}
-
-// 상품 목록과 페이지네이션 업데이트
-const updateProductsAndPagination = (data) => {
-  products.splice(0)
-  const productList = data.content || data
-  Object.assign(products, productList)
-
-  Object.assign(pageResponse, {
-    content: data.content || data,
-    currentPage: 0,
-    totalPages: data.totalPages || 1,
-    totalElements: data.totalElements || productList.length,
-    size: data.size || 10,
-  })
-}
-
+// ==============================
 // 외부 클릭 시 드롭다운 닫기
+// ==============================
 const closeAllDropdowns = () => {
   filterState.openDropdown = null
 }
 
+// 현재 필터 활성화 여부
 const isCurrentFilter = (filterKey) => {
-  // "기본 정렬"일 때는 어떤 필터도 활성화하지 않음
-  if (filterState.currentSort.label === '기본 정렬') {
-    return false
-  }
-
-  const currentField = filterState.currentSort.field
-  const currentDirection = filterState.currentSort.direction
-  const currentLabel = filterState.currentSort.label
-  const options = filterOptions[filterKey].options
-
-  return options.some(
-    (option) =>
-      option.field === currentField &&
-      option.direction === currentDirection &&
-      option.label === currentLabel &&
-      option.label !== '기본 정렬',
+  if (filterState.currentSort.label === '기본 정렬') return false
+  const { field, direction, label } = filterState.currentSort
+  return filterOptions[filterKey].options.some(
+    (opt) =>
+      opt.field === field &&
+      opt.direction === direction &&
+      opt.label === label &&
+      label !== '기본 정렬',
   )
 }
 
-// 현재 필터 라벨 반환
 const getCurrentFilterLabel = (filterKey) => {
-  // 현재 선택된 정렬이 해당 필터 옵션과 정확히 일치하는지 확인
-  const currentField = filterState.currentSort.field
-  const currentDirection = filterState.currentSort.direction
-  const currentLabel = filterState.currentSort.label
+  const { field, direction, label } = filterState.currentSort
   const options = filterOptions[filterKey].options
-
   const matchedOption = options.find(
-    (option) =>
-      option.field === currentField &&
-      option.direction === currentDirection &&
-      option.label === currentLabel, // 라벨까지 정확히 일치해야 함
+    (opt) => opt.field === field && opt.direction === direction && opt.label === label,
   )
-
-  if (matchedOption && matchedOption.label !== '기본 정렬') {
-    return matchedOption.label
-  }
-
+  if (matchedOption && matchedOption.label !== '기본 정렬') return matchedOption.label
   return filterOptions[filterKey].label
 }
 
-onMounted(() => {
-  getProductList()
+// ==============================
+// URL query 변화 감지 -> 검색
+// ==============================
+watch(
+  () => route.query.keyword,
+  () => loadPage(0),
+)
 
-  // 외부 클릭 시 드롭다운 닫기
+// ==============================
+// 초기 마운트
+// ==============================
+onMounted(() => {
+  loadPage(0)
   document.addEventListener('click', closeAllDropdowns)
 })
 
-// 컴포넌트 언마운트 시 이벤트 리스너 제거
 onUnmounted(() => {
   document.removeEventListener('click', closeAllDropdowns)
 })
@@ -547,7 +485,6 @@ onUnmounted(() => {
 }
 
 .c-hover-2:hover {
-  font-weight: 500;
   color: #2e80cd;
 }
 

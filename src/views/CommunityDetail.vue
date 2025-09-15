@@ -163,7 +163,7 @@ onMounted(() => {
           <p>{{ post.authorName }} • {{ post.updatedAt }}</p>
         </div>
       </div>
-      <div class="cd-title-section-in-more-button-container">
+      <div class="cd-title-section-in-more-button-container" v-if="post.isWriter">
         <img @click="PostMoreMenuModalToggle" src="/assets/icons/ic-more.png" alt="더보기" />
         <MyPagePostItemMenuModal
           v-if="showMoreMenus"

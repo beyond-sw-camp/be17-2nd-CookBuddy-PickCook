@@ -23,7 +23,7 @@ jobs:
 
       - name: Build Vue project
         env:
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}   # 런타임 API URL
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
         run: npm run build
 
       - name: Set up Docker Buildx
@@ -93,7 +93,7 @@ spec:
         - containerPort: 80
         env:
         - name: VITE_API_URL
-          value: "https://api.pickcook.com" # 필요 시 secrets로 대체 가능
+          value: "https://api.pickcook.com"
         livenessProbe:
           httpGet:
             path: /index.html
@@ -110,11 +110,11 @@ spec:
       terminationGracePeriodSeconds: 0
 EOF
 
-            # 롤아웃 확인
-            kubectl rollout status deployment/pickcook-frontend-${NEXT_VER} -n kay
+# 롤아웃 확인
+  kubectl rollout status deployment/pickcook-frontend-${NEXT_VER} -n kay
 
-            # Service 업데이트
-            cat <<EOF | kubectl apply -f -
+# Service 업데이트
+cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Service
 metadata:

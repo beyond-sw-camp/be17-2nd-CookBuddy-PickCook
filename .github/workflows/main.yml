@@ -67,68 +67,68 @@ jobs:
 
             # Deployment 생성/업데이트
             cat <<EOF | kubectl apply -f -
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: pickcook-frontend-${NEXT_VER}
-  namespace: kay
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      type: frontend
-      ver: ${NEXT_VER}
-  strategy:
-    type: RollingUpdate
-  template:
-    metadata:
-      labels:
-        type: frontend
-        ver: ${NEXT_VER}
-    spec:
-      containers:
-      - name: container
-        image: ${{ secrets.DOCKERHUB_USERNAME }}/pickcook-frontend:${{ github.run_number }}
-        ports:
-        - containerPort: 80
-        env:
-        - name: VITE_API_URL
-          value: "https://api.pickcook.com"
-        livenessProbe:
-          httpGet:
-            path: /index.html
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /index.html
-            port: 80
-          initialDelaySeconds: 10
-          periodSeconds: 5
-          successThreshold: 1
-      terminationGracePeriodSeconds: 0
-EOF
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: pickcook-frontend-${NEXT_VER}
+              namespace: kay
+            spec:
+              replicas: 1
+              selector:
+                matchLabels:
+                  type: frontend
+                  ver: ${NEXT_VER}
+              strategy:
+                type: RollingUpdate
+              template:
+                metadata:
+                  labels:
+                    type: frontend
+                    ver: ${NEXT_VER}
+                spec:
+                  containers:
+                  - name: container
+                    image: ${{ secrets.DOCKERHUB_USERNAME }}/pickcook-frontend:${{ github.run_number }}
+                    ports:
+                    - containerPort: 80
+                    env:
+                    - name: VITE_API_URL
+                      value: "https://api.pickcook.com"
+                    livenessProbe:
+                      httpGet:
+                        path: /index.html
+                        port: 80
+                      initialDelaySeconds: 10
+                      periodSeconds: 10
+                    readinessProbe:
+                      httpGet:
+                        path: /index.html
+                        port: 80
+                      initialDelaySeconds: 10
+                      periodSeconds: 5
+                      successThreshold: 1
+                  terminationGracePeriodSeconds: 0
+            EOF
 
-# 롤아웃 확인
-  kubectl rollout status deployment/pickcook-frontend-${NEXT_VER} -n kay
+            # 롤아웃 확인
+            kubectl rollout status deployment/pickcook-frontend-${NEXT_VER} -n kay
 
-# Service 업데이트
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  name: pickcook-frontend-svc
-  namespace: kay
-spec:
-  selector:
-    type: frontend
-    ver: ${NEXT_VER}
-  ports:
-    - port: 80
-      targetPort: 80
-  type: LoadBalancer
-EOF
+            # Service 업데이트
+            cat <<EOF | kubectl apply -f -
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: pickcook-frontend-svc
+              namespace: kay
+            spec:
+              selector:
+                type: frontend
+                ver: ${NEXT_VER}
+              ports:
+                - port: 80
+                  targetPort: 80
+              type: LoadBalancer
+            EOF
 
             # 이전 버전 scale down
             kubectl scale deployment pickcook-frontend-${CURRENT_VER} -n kay --replicas=0

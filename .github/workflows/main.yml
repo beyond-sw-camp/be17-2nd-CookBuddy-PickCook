@@ -98,7 +98,7 @@ jobs:
                     - containerPort: 80
                     env:
                     - name: VITE_API_URL
-                      value: "https://api.pickcook.com"
+                      value: ${{ secrets.VITE_API_URL }}
                     livenessProbe:
                       httpGet:
                         path: /index.html

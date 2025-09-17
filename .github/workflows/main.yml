@@ -140,6 +140,10 @@ jobs:
               type: LoadBalancer
             EOF
 
-            # 이전 버전 scale down
-            echo ">>> 이전 버전 scale down: $CURRENT_VER"
-            kubectl scale deployment pickcook-frontend-${CURRENT_VER} -n kay --replicas=0
+            # 이전 버전 scale down (존재할 때만)
+            if kubectl get deployment pickcook-frontend-${CURRENT_VER} -n kay &> /dev/null; then
+              echo ">>> 이전 버전 scale down: $CURRENT_VER"
+              kubectl scale deployment pickcook-frontend-${CURRENT_VER} -n kay --replicas=0
+            else
+              echo ">>> 이전 버전 $CURRENT_VER 존재하지 않음, 스케일 다운 생략"
+            fi

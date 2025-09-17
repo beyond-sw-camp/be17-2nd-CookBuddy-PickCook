@@ -14,7 +14,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-        # 여기서 Dockerfile 존재 확인
       - name: Check files
         run: ls -la
 
@@ -63,12 +62,18 @@ jobs:
           script: |
             # Blue-Green 배포 결정
             if kubectl get svc pickcook-frontend-svc -n kay | grep -q "blue"; then
-              CURRENT_VER="blue"
-              NEXT_VER="green"
+              export CURRENT_VER="blue"
+              export NEXT_VER="green"
             else
-              CURRENT_VER="green"
-              NEXT_VER="blue"
+              export CURRENT_VER="green"
+              export NEXT_VER="blue"
             fi
+
+            echo ">>> CURRENT_VER=$CURRENT_VER"
+            echo ">>> NEXT_VER=$NEXT_VER"
+
+            echo ">>> 현재 kay 네임스페이스의 Deployment 상태"
+            kubectl get deploy -n kay -o wide
 
             # Deployment 생성/업데이트
             cat <<EOF | kubectl apply -f -
@@ -136,4 +141,5 @@ jobs:
             EOF
 
             # 이전 버전 scale down
+            echo ">>> 이전 버전 scale down: $CURRENT_VER"
             kubectl scale deployment pickcook-frontend-${CURRENT_VER} -n kay --replicas=0

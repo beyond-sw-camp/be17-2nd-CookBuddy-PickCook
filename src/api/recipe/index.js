@@ -16,6 +16,22 @@ const recipeList = async (page, size) => {
   return data
 }
 
+const recipeListWithFilter = async (queryParams) => {
+  try {
+    const url = `/api/recipe?${queryParams}`
+    const response = await api.get(url)
+    return response.data
+  } catch (error) {
+    console.error('❌ 필터 API 오류:', error)
+    
+    return {
+      success: false,
+      message: error.response?.data?.message || '레시피 목록을 불러오는데 실패했습니다.',
+      results: { content: [] }
+    }
+  }
+}
+
 const searchRecipe = async (keyword, page, size, dir) => {
   let data = {}
   let url = `api/recipe/search?keyword=${keyword}&page=${page}&size=${size}&dir=${dir}`
@@ -111,4 +127,5 @@ export default {
   getRecipeComments,
   addRecipeComment,
   searchRecipe,
+  recipeListWithFilter
 }

@@ -120,6 +120,25 @@ const addRecipeComment = async (formData) => {
   return data
 }
 
+const uploadImage = async (presigedUrl, file) => {
+  let data = {}
+  await api
+    .put(presigedUrl, file, {
+      headers: {
+        'Content-Type': file.type,
+      },
+      withCredentials: false,
+    })
+    .then((res) => {
+      data = res.data
+    })
+    .catch((error) => {
+      data = error.data
+    })
+
+  return data
+}
+
 export default {
   recipeList,
   getRecipe,
@@ -127,5 +146,6 @@ export default {
   getRecipeComments,
   addRecipeComment,
   searchRecipe,
+  uploadImage,
   recipeListWithFilter
 }

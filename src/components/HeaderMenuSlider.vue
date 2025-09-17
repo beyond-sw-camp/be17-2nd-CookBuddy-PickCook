@@ -39,7 +39,7 @@ watch(
           <img src="/assets/icons/ic-recipe-book.png" alt="레시피" />
           <span>레시피</span>
         </RouterLink>
-        <RouterLink to="shopping" class="menu-items" @click="emit('close')">
+        <RouterLink to="/products" class="menu-items" @click="emit('close')">
           <img src="/assets/icons/ic-shopping.png" alt="쇼핑" />
           <span>쇼핑</span>
         </RouterLink>
@@ -80,7 +80,7 @@ watch(
 
 #modal-top > h4 {
   font-size: 20px;
-  font-weight: 800;
+  font-weight: bold;
   color: var(--color-primary-strong);
 }
 

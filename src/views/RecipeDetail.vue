@@ -7,6 +7,7 @@ import { onMounted, reactive, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
+const uploadedImages = ref([])
 
 const recipe = reactive({
   title: '',
@@ -24,6 +25,41 @@ const recipe = reactive({
   steps: [],
   comments: [],
 })
+
+const showImageUI = () => {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = 'image/*'
+  input.click()
+
+  input.onchange = async () => {
+    const file = input.files?.[0]
+    if (!file) return
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const data = await reviewApi.getPresignedUrl(formData)
+      if (data.success) {
+        const presignedUrl = data.results
+
+        // 실제 업로드
+        await reviewApi.uploadImage(presignedUrl, file)
+
+        // 업로드 완료된 파일 경로 (쿼리스트링 제거)
+        const imagePath = presignedUrl.split('?')[0]
+
+        // ✅ 화면에 표시될 이미지 목록에 추가
+        uploadedImages.value.push(imagePath)
+      } else {
+        console.error('Presigned URL 발급 실패')
+      }
+    } catch (err) {
+      console.error('이미지 업로드 실패:', err)
+    }
+  }
+}
 
 
 // 문자열 재료를 객체 배열로 변환

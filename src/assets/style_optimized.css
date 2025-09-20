@@ -845,6 +845,22 @@ a {
   gap: 5px;
 }
 
+@media (max-width: 768px) {
+  .recipe-card-stats {
+  gap: 4px;
+}
+
+  .recipe-stats-items {
+    font-size: 12px;
+    gap: 2px;
+  }
+
+  .recipe-stats-items > img {
+    width: 8px;
+    height: 8px;
+  }
+}
+
 .recipe-stats-items > img {
   width: 18px;
   height: auto;

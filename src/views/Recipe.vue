@@ -1,6 +1,6 @@
 <script setup>
 import api from '@/api/recipe'
-import { onMounted, reactive, watch } from 'vue'
+import { onMounted, reactive, watch, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RecipeCard from '@/components/RecipeCard.vue'
 import Pagination from '@/components/Pagination.vue'
@@ -30,13 +30,13 @@ const filterOptions = reactive({
     { value: 'scraps', label: '스크랩순' },
   ],
   difficultyOptions: [
-    { value: '', label: '전체' },
+    { value: '', label: '난이도' },
     { value: '쉬움', label: '쉬움' },
     { value: '보통', label: '보통' },
     { value: '어려움', label: '어려움' },
   ],
   categoryOptions: [
-    { value: '', label: '전체' },
+    { value: '', label: '카테고리' },
     { value: '반찬', label: '반찬' },
     { value: '국&찌개', label: '국&찌개' },
     { value: '일품', label: '일품' },
@@ -45,7 +45,7 @@ const filterOptions = reactive({
     { value: '기타', label: '기타' },
   ],
   cookingMethodOptions: [
-    { value: '', label: '전체' },
+    { value: '', label: '조리방법' },
     { value: '끓이기', label: '끓이기' },
     { value: '굽기', label: '굽기' },
     { value: '볶기', label: '볶기' },
@@ -169,6 +169,25 @@ const applyFilters = () => {
   getRecipeList(0)
 }
 
+const handleClickOutside = (event) => {
+  // 드롭다운 영역 이외 클릭 시 닫기
+  const dropdowns = document.querySelectorAll('.filter-dropdown')
+  let clickedInside = false
+
+  dropdowns.forEach((dropdown) => {
+    if (dropdown.contains(event.target)) {
+      clickedInside = true
+    }
+  })
+
+  if (!clickedInside) {
+    // 모든 드롭다운 닫기
+    Object.keys(uiState.dropdownOpen).forEach((key) => {
+      uiState.dropdownOpen[key] = false
+    })
+  }
+}
+
 // 초기 로딩
 onMounted(() => {
   const page = parseInt(route.query.page || '0')
@@ -177,6 +196,11 @@ onMounted(() => {
   filterState.category = route.query.category || ''
   filterState.cookingMethod = route.query.cookingMethod || ''
   getRecipeList(page)
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 
 // 키워드 변경 감지
@@ -191,92 +215,93 @@ watch(
 
 <template>
   <!-- 필터 섹션 -->
-
-  <div class="filter-container">
-    <!-- 정렬 드롭다운 -->
-    <div class="filter-dropdown">
-      <span
-        class="filter-tag"
-        :class="{ active: filterState.sortType !== 'latest' }"
-        @click="filterActions.toggleDropdown('sort')"
-      >
-        {{ filterActions.getFilterLabel('sortType') }} &nbsp;▼
-      </span>
-      <div v-show="uiState.dropdownOpen.sort" class="dropdown-menu">
-        <div
-          v-for="option in filterOptions.sortOptions"
-          :key="option.value"
-          @click="filterActions.selectFilter('sortType', option.value)"
-          class="dropdown-item"
-          :class="{ active: filterState.sortType === option.value }"
+  <div class="filter-section">
+    <div class="filter-container">
+      <!-- 정렬 드롭다운 -->
+      <div class="filter-dropdown">
+        <span
+          class="filter-tag"
+          :class="{ active: filterState.sortType !== 'latest' }"
+          @click="filterActions.toggleDropdown('sort')"
         >
-          {{ option.label }}
+          {{ filterActions.getFilterLabel('sortType') }} &nbsp;▼
+        </span>
+        <div v-show="uiState.dropdownOpen.sort" class="dropdown-menu">
+          <div
+            v-for="option in filterOptions.sortOptions"
+            :key="option.value"
+            @click="filterActions.selectFilter('sortType', option.value)"
+            class="dropdown-item"
+            :class="{ active: filterState.sortType === option.value }"
+          >
+            {{ option.label }}
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 난이도 드롭다운 -->
-    <div class="filter-dropdown">
-      <span
-        class="filter-tag"
-        :class="{ active: filterState.difficulty !== '' }"
-        @click="filterActions.toggleDropdown('difficulty')"
-      >
-        {{ filterActions.getFilterLabel('difficulty') }} &nbsp;▼
-      </span>
-      <div v-show="uiState.dropdownOpen.difficulty" class="dropdown-menu">
-        <div
-          v-for="option in filterOptions.difficultyOptions"
-          :key="option.value"
-          @click="filterActions.selectFilter('difficulty', option.value)"
-          class="dropdown-item"
-          :class="{ active: filterState.difficulty === option.value }"
+      <!-- 난이도 드롭다운 -->
+      <div class="filter-dropdown">
+        <span
+          class="filter-tag"
+          :class="{ active: filterState.difficulty !== '' }"
+          @click="filterActions.toggleDropdown('difficulty')"
         >
-          {{ option.label }}
+          {{ filterActions.getFilterLabel('difficulty') }} &nbsp;▼
+        </span>
+        <div v-show="uiState.dropdownOpen.difficulty" class="dropdown-menu">
+          <div
+            v-for="option in filterOptions.difficultyOptions"
+            :key="option.value"
+            @click="filterActions.selectFilter('difficulty', option.value)"
+            class="dropdown-item"
+            :class="{ active: filterState.difficulty === option.value }"
+          >
+            {{ option.label }}
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 카테고리 드롭다운 -->
-    <div class="filter-dropdown">
-      <span
-        class="filter-tag"
-        :class="{ active: filterState.category !== '' }"
-        @click="filterActions.toggleDropdown('category')"
-      >
-        {{ filterActions.getFilterLabel('category') }} &nbsp;▼
-      </span>
-      <div v-show="uiState.dropdownOpen.category" class="dropdown-menu">
-        <div
-          v-for="option in filterOptions.categoryOptions"
-          :key="option.value"
-          @click="filterActions.selectFilter('category', option.value)"
-          class="dropdown-item"
-          :class="{ active: filterState.category === option.value }"
+      <!-- 카테고리 드롭다운 -->
+      <div class="filter-dropdown">
+        <span
+          class="filter-tag"
+          :class="{ active: filterState.category !== '' }"
+          @click="filterActions.toggleDropdown('category')"
         >
-          {{ option.label }}
+          {{ filterActions.getFilterLabel('category') }} &nbsp;▼
+        </span>
+        <div v-show="uiState.dropdownOpen.category" class="dropdown-menu">
+          <div
+            v-for="option in filterOptions.categoryOptions"
+            :key="option.value"
+            @click="filterActions.selectFilter('category', option.value)"
+            class="dropdown-item"
+            :class="{ active: filterState.category === option.value }"
+          >
+            {{ option.label }}
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 조리방법 드롭다운 -->
-    <div class="filter-dropdown">
-      <span
-        class="filter-tag"
-        :class="{ active: filterState.cookingMethod !== '' }"
-        @click="filterActions.toggleDropdown('cookingMethod')"
-      >
-        {{ filterActions.getFilterLabel('cookingMethod') }} &nbsp;▼
-      </span>
-      <div v-show="uiState.dropdownOpen.cookingMethod" class="dropdown-menu">
-        <div
-          v-for="option in filterOptions.cookingMethodOptions"
-          :key="option.value"
-          @click="filterActions.selectFilter('cookingMethod', option.value)"
-          class="dropdown-item"
-          :class="{ active: filterState.cookingMethod === option.value }"
+      <!-- 조리방법 드롭다운 -->
+      <div class="filter-dropdown">
+        <span
+          class="filter-tag"
+          :class="{ active: filterState.cookingMethod !== '' }"
+          @click="filterActions.toggleDropdown('cookingMethod')"
         >
-          {{ option.label }}
+          {{ filterActions.getFilterLabel('cookingMethod') }} &nbsp;▼
+        </span>
+        <div v-show="uiState.dropdownOpen.cookingMethod" class="dropdown-menu">
+          <div
+            v-for="option in filterOptions.cookingMethodOptions"
+            :key="option.value"
+            @click="filterActions.selectFilter('cookingMethod', option.value)"
+            class="dropdown-item"
+            :class="{ active: filterState.cookingMethod === option.value }"
+          >
+            {{ option.label }}
+          </div>
         </div>
       </div>
     </div>
@@ -309,15 +334,14 @@ watch(
 /* 필터 바 */
 .filter-section {
   background-color: white;
-  padding: 10px 0;
+  padding: 15px 25px;
   border-bottom: 1px solid #eaedef;
 }
 
 .filter-container {
   max-width: 1256px;
-  margin-top: 10px;
   display: flex;
-  gap: 12px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
@@ -388,15 +412,9 @@ watch(
   display: inline-block;
 }
 
-.filter-tag.active {
-  background-color: #4285f4;
-  color: white;
-  border-color: #4285f4;
-}
-
 .dropdown-menu {
   position: absolute;
-  top: 100%;
+  top: 25px;
   left: 0;
   z-index: 1000;
   min-width: 120px;
@@ -420,12 +438,6 @@ watch(
 
 .dropdown-item:hover {
   background-color: #f5f5f5;
-}
-
-.dropdown-item.active {
-  background-color: #e3f2fd;
-  color: #1976d2;
-  font-weight: 500;
 }
 
 .dropdown-item:first-child {

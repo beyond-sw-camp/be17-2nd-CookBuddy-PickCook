@@ -40,7 +40,7 @@ function closeSearchSlide() {
   />
   <HeaderMenuSlider v-if="isMenuOpen" @close="closeMenu" />
   <HeaderSearchSlider v-if="isSearchSlideOpen" @search-close="closeSearchSlide" />
-  <RouterView />
+  <RouterView :key="router.currentRoute.value.fullPath" />
   <Footer v-if="!router.currentRoute.value.meta?.hideLayout" />
 </template>
 

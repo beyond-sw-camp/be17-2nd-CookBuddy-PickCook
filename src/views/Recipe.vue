@@ -4,17 +4,30 @@ import { onMounted, reactive, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import RecipeCard from '@/components/RecipeCard.vue'
 import Pagination from '@/components/Pagination.vue'
+import { cleanQuery } from '../../utils/queryHelper'
 
 const route = useRoute()
 const router = useRouter()
 
+// 레시피 목록
 const recipeList = reactive([])
 
-// 필터 옵션 정의
+// 페이지 응답 데이터
+const pageResponse = reactive({
+  content: [],
+  currentPage: 0,
+  totalPages: 0,
+  totalElements: 0,
+  size: 12,
+})
+
+// 필터 옵션
 const filterOptions = reactive({
   sortOptions: [
     { value: 'latest', label: '최신순' },
     { value: 'oldest', label: '오래된순' },
+    { value: 'likes', label: '좋아요순' },
+    { value: 'scraps', label: '스크랩순' },
   ],
   difficultyOptions: [
     { value: '', label: '전체' },
@@ -42,7 +55,7 @@ const filterOptions = reactive({
   ],
 })
 
-// 필터 상태 관리
+// 필터 상태
 const filterState = reactive({
   sortType: 'latest',
   difficulty: '',
@@ -50,27 +63,7 @@ const filterState = reactive({
   cookingMethod: '',
 })
 
-// 페이지 응답 데이터 관리
-const pageResponse = reactive({
-  totalElements: 0,
-  totalPages: 0,
-  currentPage: 0,
-  size: 20,
-})
-
-// 필터 적용 여부 확인 함수
-const isFilterApplied = reactive({
-  get hasFilter() {
-    return (
-      filterState.sortType !== 'latest' ||
-      filterState.difficulty !== '' ||
-      filterState.category !== '' ||
-      filterState.cookingMethod !== ''
-    )
-  },
-})
-
-// UI 상태 관리
+// UI 상태 (드롭다운 열림 여부)
 const uiState = reactive({
   dropdownOpen: {
     sort: false,
@@ -80,121 +73,118 @@ const uiState = reactive({
   },
 })
 
-// 페이지 이동 시 실행
-const loadPage = (newPage) => {
-  const keyword = route.query.keyword || ''
-  router.replace({ query: { ...route.query, page: newPage } })
-  getRecipeList(newPage, keyword)
+// 필터 관련 액션
+const filterActions = {
+  toggleDropdown(type) {
+    uiState.dropdownOpen[type] = !uiState.dropdownOpen[type]
+  },
+  getFilterLabel(type) {
+    switch (type) {
+      case 'sortType':
+        return (
+          filterOptions.sortOptions.find((o) => o.value === filterState.sortType)?.label || '정렬'
+        )
+      case 'difficulty':
+        return (
+          filterOptions.difficultyOptions.find((o) => o.value === filterState.difficulty)?.label ||
+          '난이도'
+        )
+      case 'category':
+        return (
+          filterOptions.categoryOptions.find((o) => o.value === filterState.category)?.label ||
+          '카테고리'
+        )
+      case 'cookingMethod':
+        return (
+          filterOptions.cookingMethodOptions.find((o) => o.value === filterState.cookingMethod)
+            ?.label || '조리방법'
+        )
+      default:
+        return ''
+    }
+  },
+  selectFilter(type, value) {
+    filterState[type] = value
+    uiState.dropdownOpen[type] = false
+    applyFilters() // 선택 후 바로 목록 갱신
+  },
 }
 
-// 레시피 목록 가져오기
-const getRecipeList = async () => {
-  const params = reactive({
-    page: 0,
-    size: 20,
+// 레시피 조회
+const getRecipeList = async (page = 0) => {
+  const params = cleanQuery({
+    page,
+    size: pageResponse.size,
+    keyword: route.query.keyword || '',
     sortType: filterState.sortType,
+    difficulty: filterState.difficulty,
+    category: filterState.category,
+    cookingMethod: filterState.cookingMethod,
   })
 
-  if (filterState.difficulty) params.difficulty = filterState.difficulty
-  if (filterState.category) params.category = filterState.category
-  if (filterState.cookingMethod) params.cookingMethod = filterState.cookingMethod
+  const data = await api.recipeList(params)
 
-  const queryString = new URLSearchParams(params).toString()
-
-  try {
-    const data = await api.recipeListWithFilter(queryString)
-
-    if (data && data.success) {
-      if (data.results && Array.isArray(data.results.content)) {
-        // 레시피 목록 업데이트
-        recipeList.splice(0)
-        recipeList.push(...data.results.content)
-
-        // 페이지 정보 업데이트
-        pageResponse.totalElements = data.results.totalElements || 0
-        pageResponse.totalPages = data.results.totalPages || 0
-        pageResponse.currentPage = data.results.currentPage || 0
-        pageResponse.size = data.results.size || 20
-      } else {
-        console.error('예상하지 못한 응답 구조:', data)
-        recipeList.splice(0)
-        pageResponse.totalElements = 0
-      }
-    } else {
-      console.error('API 호출 실패:', data)
-      recipeList.splice(0)
-      pageResponse.totalElements = 0
-    }
-  } catch (error) {
-    console.error('API 호출 중 오류:', error)
+  if (data && data.success && data.results) {
+    recipeList.splice(0, recipeList.length, ...data.results.content)
+    pageResponse.content = data.results.content
+    pageResponse.currentPage = data.results.currentPage
+    pageResponse.totalPages = data.results.totalPages
+    pageResponse.totalElements = data.results.totalElements
+    pageResponse.size = data.results.size
+  } else {
     recipeList.splice(0)
+    pageResponse.content = []
+    pageResponse.totalPages = 0
     pageResponse.totalElements = 0
   }
 }
 
-// 필터 관련 함수들
-const filterActions = reactive({
-  toggleDropdown: (filterType) => {
-    // 다른 드롭다운은 모두 닫기
-    Object.keys(uiState.dropdownOpen).forEach((key) => {
-      uiState.dropdownOpen[key] = key === filterType ? !uiState.dropdownOpen[key] : false
-    })
-  },
+// 페이지 이동
+const loadPage = (newPage) => {
+  const query = cleanQuery({
+    ...route.query,
+    page: newPage,
+    keyword: route.query.keyword || '',
+    sortType: filterState.sortType,
+    difficulty: filterState.difficulty,
+    category: filterState.category,
+    cookingMethod: filterState.cookingMethod,
+  })
+  router.replace({ query })
+  getRecipeList(newPage)
+}
 
-  selectFilter: (filterType, value) => {
-    filterState[filterType] = value
+// 필터 적용
+const applyFilters = () => {
+  const query = cleanQuery({
+    ...route.query,
+    page: 0, // 필터 바꾸면 첫 페이지로 이동
+    keyword: route.query.keyword || '',
+    sortType: filterState.sortType,
+    difficulty: filterState.difficulty,
+    category: filterState.category,
+    cookingMethod: filterState.cookingMethod,
+  })
+  router.replace({ query })
+  getRecipeList(0)
+}
 
-    // 드롭다운 닫기 - 키 매핑 수정
-    const dropdownKey = filterType === 'sortType' ? 'sort' : filterType
-    uiState.dropdownOpen[dropdownKey] = false
-  },
-
-  getFilterLabel: (filterType) => {
-    switch (filterType) {
-      case 'sortType':
-        return (
-          filterOptions.sortOptions.find((opt) => opt.value === filterState.sortType)?.label ||
-          '정렬'
-        )
-      case 'difficulty':
-        return filterState.difficulty
-          ? filterOptions.difficultyOptions.find((opt) => opt.value === filterState.difficulty)
-              ?.label
-          : '난이도'
-      case 'category':
-        return filterState.category
-          ? filterOptions.categoryOptions.find((opt) => opt.value === filterState.category)?.label
-          : '종류'
-      case 'cookingMethod':
-        return filterState.cookingMethod
-          ? filterOptions.cookingMethodOptions.find(
-              (opt) => opt.value === filterState.cookingMethod,
-            )?.label
-          : '조리방법'
-      default:
-        return '필터'
-    }
-  },
-})
-
-// 필터 변경 감지
-watch(
-  filterState,
-  () => {
-    getRecipeList()
-  },
-  { deep: true },
-)
-
+// 초기 로딩
 onMounted(() => {
-  getRecipeList()
+  const page = parseInt(route.query.page || '0')
+  filterState.sortType = route.query.sortType || 'latest'
+  filterState.difficulty = route.query.difficulty || ''
+  filterState.category = route.query.category || ''
+  filterState.cookingMethod = route.query.cookingMethod || ''
+  getRecipeList(page)
 })
 
+// 키워드 변경 감지
 watch(
   () => route.query.keyword,
-  (newKeyword) => {
+  () => {
     const page = parseInt(route.query.page || '0')
-    getRecipeList(page, newKeyword || '')
+    getRecipeList(page)
   },
 )
 </script>
@@ -299,9 +289,7 @@ watch(
       <h2 v-if="route.query.keyword">
         <span>'{{ route.query.keyword }}'</span>에 대한 검색 결과
       </h2>
-      <p v-show="isFilterApplied.hasFilter" class="result-count">
-        검색결과 {{ pageResponse.totalElements.toLocaleString() }}개
-      </p>
+      <p class="result-count">검색결과 {{ pageResponse.totalElements.toLocaleString() }}개</p>
     </div>
 
     <!-- 레시피 그리드 -->

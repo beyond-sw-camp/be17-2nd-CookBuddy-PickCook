@@ -3,7 +3,7 @@
 /* filter-section 이건 레시피 목록 페이지 style과 동일 */
 .filter-section {
     background-color: white;
-    padding: 10px 0;
+    padding: 10px 25px;
     border-bottom: 1px solid #eaedef;
 }
 
@@ -111,6 +111,29 @@
     display: flex;
     gap: 27px;
     position: relative;
+    padding: 0 25px;
+}
+
+@media (max-width: 1023px) {
+  .refrigerator-section-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .refrigerator-sections {
+    width: 100%;
+  }
+
+  .refrigerator-item-save-boxes {
+    width: 100% !important;
+    height: 300px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-bar-container {
+    display: none;
+  }
 }
 
 .refrigerator-sections {

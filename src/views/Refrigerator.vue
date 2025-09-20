@@ -55,12 +55,12 @@ const sortOptions = [
 ]
 
 const categoryOptions = computed(() => [
-  { label: '전체', id: null },
+  { label: '카테고리', id: null },
   ...categories.value.map((cat) => ({ label: cat.name, id: cat.id })),
 ])
 
 const expirationOptions = [
-  { label: '전체', status: null },
+  { label: '유통기한', status: null },
   { label: '신선함', status: 'FRESH' },
   { label: '임박(2-3일)', status: 'EXPIRING_SOON' },
   { label: '긴급(1일이내)', status: 'URGENT' },

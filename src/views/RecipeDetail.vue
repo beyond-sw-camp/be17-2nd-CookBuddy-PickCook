@@ -7,7 +7,13 @@ import { onMounted, reactive, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const uploadedImages = ref([])
+const uploadedImage = ref('')
+const newComment = ref('')
+const activeReplyId = ref(null)
+
+const refreshComments = () => {
+  getComments()
+}
 
 const recipe = reactive({
   title: '',
@@ -26,6 +32,27 @@ const recipe = reactive({
   comments: [],
 })
 
+const getComments = async () => {
+  const recipeId = route.params.id
+  const data = await api.getComments(recipeId)
+  if (data.success && data.results) {
+    recipe.comments = data.results
+  }
+}
+
+const submitComment = async () => {
+  if (!newComment.value.trim()) return
+  await api.addComment({
+    content: newComment.value,
+    recipeId: route.params.id,
+    parentCommentId: null,
+    imageUrl: uploadedImage.value || null,
+  })
+  newComment.value = ''
+  uploadedImage.value = ''
+  getComments()
+}
+
 const showImageUI = () => {
   const input = document.createElement('input')
   input.type = 'file'
@@ -40,30 +67,28 @@ const showImageUI = () => {
     formData.append('file', file)
 
     try {
-      const data = await reviewApi.getPresignedUrl(formData)
-      if (data.success) {
-        const presignedUrl = data.results
-
-        // 실제 업로드
-        await reviewApi.uploadImage(presignedUrl, file)
-
-        // 업로드 완료된 파일 경로 (쿼리스트링 제거)
-        const imagePath = presignedUrl.split('?')[0]
-
-        // ✅ 화면에 표시될 이미지 목록에 추가
-        uploadedImages.value.push(imagePath)
-      } else {
+      // 1️⃣ Presigned URL 발급
+      const data = await api.getPresignedUrl(formData)
+      if (!data.success) {
         console.error('Presigned URL 발급 실패')
+        return
       }
+
+      const presignedUrl = data.results
+
+      // 2️⃣ 실제 업로드
+      await api.uploadImage(presignedUrl, file)
+
+      // 3️⃣ 화면에 표시될 경로 (기존 이미지 교체)
+      uploadedImage.value = presignedUrl.split('?')[0]
     } catch (err) {
       console.error('이미지 업로드 실패:', err)
     }
   }
 }
 
-
 // 문자열 재료를 객체 배열로 변환
-const parseIngredientString  = (rawStr) => {
+const parseIngredientString = (rawStr) => {
   if (!rawStr) return []
 
   const ingredients = []
@@ -137,7 +162,6 @@ const processIngredients = (rawIngredients) => {
 const mainIngredients = computed(() => recipe.ingredients.filter((i) => i.isMainIngredient))
 const seasoningIngredients = computed(() => recipe.ingredients.filter((i) => !i.isMainIngredient))
 
-
 // RelatedProducts에 넘겨줄 매치 재료 계산
 const matchedIngredient = computed(() => {
   if (!recipe.ingredients || !recipe.ingredients.length) return ''
@@ -145,7 +169,6 @@ const matchedIngredient = computed(() => {
   const firstMain = recipe.ingredients.find((i) => i.isMainIngredient)
   return firstMain ? firstMain.ingredient_name : ''
 })
-
 
 // 레시피 정보 가져오기
 const getRecipe = async () => {
@@ -167,12 +190,6 @@ const getRecipe = async () => {
     // 재료 처리
     recipe.ingredients = processIngredients(data.ingredients)
   }
-}
-
-const getComments = async () => {
-  const id = route.params.id
-  const data = await api.getRecipeComments(id)
-  if (data.success) recipe.comments = data.results
 }
 
 onMounted(async () => {
@@ -229,7 +246,11 @@ onMounted(async () => {
       </div>
     </section>
 
-    <RelatedProducts :recipe-id="Number(route.params.id)" :title="recipe.title" :matched-ingredient="matchedIngredient"/>
+    <RelatedProducts
+      :recipe-id="Number(route.params.id)"
+      :title="recipe.title"
+      :matched-ingredient="matchedIngredient"
+    />
 
     <section class="recipe-steps">
       <h2>요리 순서</h2>
@@ -253,17 +274,10 @@ onMounted(async () => {
           ></textarea>
 
           <img
-            :src="newCommentImagePreview || '/assets/icons/ic-photo.png'"
+            :src="uploadedImage || '/assets/icons/ic-photo.png'"
             alt="new comment image"
             class="rd-image-placeholder"
-            @click="fileInput.click()"
-          />
-          <input
-            type="file"
-            accept="image/*"
-            style="display: none"
-            :ref="(el) => (fileInput = el)"
-            @change="updateNewCommentImage($event)"
+            @click="showImageUI"
           />
         </div>
         <button @click="submitComment" class="comment-submit-btn">댓글 작성</button>
@@ -273,6 +287,7 @@ onMounted(async () => {
         v-for="comment in recipe.comments"
         :key="comment.id"
         :comment="comment"
+        :recipeId="route.params.id"
         :replyId="activeReplyId"
         @toggle-reply="(id) => (activeReplyId = id)"
         @refresh-comments="refreshComments"
@@ -380,12 +395,13 @@ onMounted(async () => {
   flex-direction: column;
   align-items: flex-end;
   gap: 8px;
+  margin-bottom: 30px;
 }
 
 .new-comment-input-wrapper {
   display: flex;
-  flex-direction: row;
   align-items: center;
+  gap: 10px;
   width: 100%;
 }
 
@@ -396,12 +412,12 @@ onMounted(async () => {
 .comment-input {
   flex-grow: 1;
   width: 100%;
-  height: 6rem;
+  height: 120px;
   resize: none;
   font-family: inherit;
   padding: 10px;
   border: 1px solid #bcbbbd;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .comment-input::placeholder {
@@ -414,15 +430,20 @@ onMounted(async () => {
 
 .rd-image-placeholder {
   height: 8rem;
+  width: 120px;
+  height: 120px;
+  border-radius: 5px;
+  object-fit: cover;
+  border: 1px solid #bcbbbd;
 }
 
 .comment-submit-btn {
-  padding: 6px;
+  padding: 6px 12px;
   border: none;
   border-radius: 4px;
   color: white;
   background-color: var(--color-primary);
-  align-self: right;
+  cursor: pointer;
 }
 
 h2 {

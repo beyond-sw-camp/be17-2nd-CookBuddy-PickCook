@@ -53,10 +53,10 @@ const submitReply = async () => {
           />
           <img
             v-if="comment.parentCommentId == null"
-            src="/public/assets/icons/ic-reply-count.png"
+            src="/assets/icons/ic-reply-count.png"
             @click="toggleReply"
           />
-          <img src="/public/assets/icons/ic-more.png" />
+          <img src="/assets/icons/ic-more.png" />
         </div>
       </div>
 

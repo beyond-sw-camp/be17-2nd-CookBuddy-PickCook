@@ -19,21 +19,16 @@ const recipeList = async (params) => {
 }
 
 const getRecipe = async (id) => {
-  let data = {}
-  let url = `api/recipe/${id}`
-
-  await api
-    .get(url)
-    .then((res) => {
-      data = res.data
-    })
-    .catch((error) => {
-      console.error('❌ API 오류:', error)
-      data = error.response?.data || { success: false }
-    })
-
-  return data
+  try {
+    const res = await api.get(`api/recipe/${id}`)
+    console.log("받은 데이터 ", res)
+    return res.data
+  } catch (error) {
+    console.error('❌ API 오류:', error)
+    return error.response?.data || { success: false }
+  }
 }
+
 
 const registerRecipe = async (payload) => {
   let data = {}
@@ -164,6 +159,31 @@ const getPresignedUrl = async (formData) => {
   return data
 }
 
+const deleteRecipe = async (recipeId) => {
+  try {
+    const res = await api.delete(`/api/recipe/${recipeId}`)
+    return res.data
+  } catch (error) {
+    if (error.response) {
+      return error.response.data
+    }
+    console.error(error)
+    return { success: false, message: '알 수 없는 오류 발생' }
+  }
+}
+
+const recipeUpload = async (recipeId, formData) => {
+  try {
+    const res = await api.put(`/api/recipe/${recipeId}`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    return res.data
+  } catch (error) {
+    console.error(error)
+    return error.response?.data || { success: false }
+  }
+}
+
 export default {
   recipeList,
   getRecipe,
@@ -174,4 +194,6 @@ export default {
   addComment,
   getComments,
   getPresignedUrl,
+  deleteRecipe,
+  recipeUpload,
 }

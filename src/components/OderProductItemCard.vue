@@ -18,7 +18,6 @@ const props = defineProps({
   },
 })
 
-console.log(props.order)
 
 function statusClass(status) {
   switch (status) {

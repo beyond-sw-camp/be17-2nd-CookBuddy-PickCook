@@ -30,10 +30,21 @@ import PaymentComplete from '@/views/PaymentComplete.vue'
 import OrderDetailInfo from '@/views/OrderDetailInfo.vue'
 import CommunityEdit from '@/views/CommunityEdit.vue'
 import Review from '@/views/Review.vue'
+import RecipeWriteList from '@/components/RecipeWriteList.vue'
+import RecipeEdit from '@/views/RecipeEdit.vue'
+import RecipeLikeList from '@/components/RecipeLikeList.vue'
+import RecipeScrapList from '@/components/RecipeScrapList.vue'
+import RecipeReplyList from '@/components/RecipeReplyList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/recipe/edit/:recipeId',
+      name: 'recipe-edit',
+      component: RecipeEdit,
+      meta: { requiresAuth: true },
+    },
     {
       path: '/product/review/:productId/:orderId',
       name: 'product-review',
@@ -122,6 +133,10 @@ const router = createRouter({
         { path: 'reply_list', name: 'mypage-reply', component: ReplyList },
         { path: 'user_info', name: 'mypage-info', component: UserInfo },
         { path: 'write_list', name: 'mypage-write', component: WriteList },
+        { path: 'my_recipe_list', name: 'mypage-recipe-write', component: RecipeWriteList },
+        { path: 'recipe_like_list', name: 'mypage-recipe-like', component: RecipeLikeList },
+        { path: 'recipe_scrap_list', name: 'mypage-recipe-scrap', component: RecipeScrapList },
+        { path: 'recipe_reply_list', name: 'mypage-recipe-reply', component: RecipeReplyList },
         { path: 'address_list', name: 'mypage-address', component: AddressList },
         { path: 'payment_method', name: 'mypage-payment', component: PaymentMethodList },
       ],
@@ -208,7 +223,6 @@ const ensureInitialized = async (auth) => {
 
 // 라우터 가드
 router.beforeEach(async (to, from, next) => {
-
   console.log('Router guard: checking route', to.path)
 
   const auth = useUserStore()

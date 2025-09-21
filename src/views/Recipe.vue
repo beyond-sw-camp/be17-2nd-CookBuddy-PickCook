@@ -37,20 +37,32 @@ const filterOptions = reactive({
   ],
   categoryOptions: [
     { value: '', label: '카테고리' },
-    { value: '반찬', label: '반찬' },
-    { value: '국&찌개', label: '국&찌개' },
-    { value: '일품', label: '일품' },
     { value: '밥', label: '밥' },
-    { value: '후식', label: '후식' },
+    { value: '죽/스프', label: '죽/스프' },
+    { value: '국/찌개', label: '국/찌개' },
+    { value: '탕/전골', label: '탕/전골' },
+    { value: '반찬', label: '반찬' },
+    { value: '무침', label: '무침' },
+    { value: '전/부침', label: '전/부침' },
+    { value: '샐러드', label: '샐러드' },
+    { value: '면 요리', label: '면 요리' },
+    { value: '빵/과자', label: '빵/과자' },
+    { value: '디저트', label: '디저트' },
+    { value: '음료', label: '음료' },
+    { value: '소스/양념', label: '소스/양념' },
     { value: '기타', label: '기타' },
   ],
   cookingMethodOptions: [
     { value: '', label: '조리방법' },
-    { value: '끓이기', label: '끓이기' },
-    { value: '굽기', label: '굽기' },
-    { value: '볶기', label: '볶기' },
-    { value: '찌기', label: '찌기' },
-    { value: '튀기기', label: '튀기기' },
+    { value: '볶음', label: '볶음' },
+    { value: '찜', label: '찜' },
+    { value: '구이', label: '구이' },
+    { value: '튀김', label: '튀김' },
+    { value: '조림', label: '조림' },
+    { value: '무침', label: '무침' },
+    { value: '삶기', label: '삶기' },
+    { value: '전자레인지 조리', label: '전자레인지 조리' },
+    { value: '에어프라이기 조리', label: '에어프라이기 조리' },
     { value: '기타', label: '기타' },
   ],
 })
@@ -417,7 +429,7 @@ watch(
   top: 25px;
   left: 0;
   z-index: 1000;
-  min-width: 120px;
+  min-width: fit-content;
   background-color: white;
   border: 1px solid #dadce0;
   border-radius: 8px;

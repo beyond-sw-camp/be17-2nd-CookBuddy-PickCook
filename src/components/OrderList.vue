@@ -1,63 +1,94 @@
 <script setup>
-import { ref, onMounted, reactive } from 'vue'
+import { ref, reactive, onMounted, onUnmounted } from 'vue'
 import OderProductItemCard from './OderProductItemCard.vue'
 import { useRouter } from 'vue-router'
 import api from '@/api/payment'
 
-// 주문 목록 데이터
 const orders = reactive([])
 const router = useRouter()
+
 const pageResponse = reactive({
   content: [],
   currentPage: 0,
   totalPages: 0,
   totalElements: 0,
-  size: 10,
+  size: 4,
+  hasNext: true,
 })
 
-const getOrderList = async (period = '3M', page = 0) => {
-  const data = await api.orderList(period, page, pageResponse.size);
-
-  if (data && data.success) {
-    if (data.results) {
-      orders.splice(0, orders.length, ...data.results.content);
-      pageResponse.content = transformedOrders;
-      pageResponse.currentPage = data.results.currentPage;
-      pageResponse.totalPages = data.results.totalPages;
-      pageResponse.totalElements = data.results.totalElements;
-      pageResponse.size = data.results.size;
-    }
-  } else {
-    orders.splice(0);
-    pageResponse.content = [];
-    pageResponse.totalPages = 0;
-    pageResponse.totalElements = 0;
-  }
-};
-
-
-
-// 화면 로딩 시 주문 데이터 불러오기
-onMounted(() => getOrderList())
+const isLoading = ref(false) // 요청 중복 방지
 
 const options = ['3개월', '6개월', '1년', '3년']
 const selected = ref('3개월')
 const isOpen = ref(false)
 
 const periodMap = {
-  "3개월": "3M",
-  "6개월": "6M",
-  "1년": "1Y",
-  "3년": "3Y"
+  '3개월': '3M',
+  '6개월': '6M',
+  '1년': '1Y',
+  '3년': '3Y',
 }
+
+const getOrderList = async (period = '3M', page = 0) => {
+  if (isLoading.value) return
+  isLoading.value = true
+
+  try {
+    const data = await api.orderList(period, page, pageResponse.size)
+
+    if (data && data.success && data.results) {
+      const newOrders = data.results.content
+
+      if (page === 0) {
+        // 처음 불러올 때 초기화
+        orders.splice(0, orders.length, ...newOrders)
+      } else {
+        // 다음 페이지 이어붙이기
+        orders.push(...newOrders)
+      }
+
+      // 페이지 정보 갱신
+      pageResponse.content = orders
+      pageResponse.currentPage = data.results.currentPage
+      pageResponse.totalPages = data.results.totalPages
+      pageResponse.totalElements = data.results.totalElements
+      pageResponse.size = data.results.size
+      pageResponse.hasNext = data.results.hasNext ?? false
+    } else if (page === 0) {
+      // 데이터 없을 때 초기화
+      orders.splice(0)
+      pageResponse.content = []
+      pageResponse.totalPages = 0
+      pageResponse.totalElements = 0
+      pageResponse.hasNext = false
+    }
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const handleScroll = () => {
+  if (!pageResponse.hasNext || isLoading.value) return
+
+  // 화면 끝까지 스크롤 시 다음 페이지 요청
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+    getOrderList(periodMap[selected.value], pageResponse.currentPage + 1)
+  }
+}
+
+onMounted(() => {
+  getOrderList()
+  window.addEventListener('scroll', handleScroll)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 
 const selectOption = (option) => {
   selected.value = option
   isOpen.value = false
-
-  // ✅ 선택한 기간에 맞춰 API 요청
-  const period = periodMap[option]
-  getOrderList(period, 0)  // 페이지는 0부터 시작
+  getOrderList(periodMap[option], 0) // 페이지 0부터 다시 요청
 }
 
 const toggleDropdown = () => {
@@ -68,7 +99,6 @@ const closeDropdown = () => {
   isOpen.value = false
 }
 
-// 쇼핑 페이지로 이동
 const goToShopping = () => {
   router.push('/products')
 }
@@ -96,17 +126,18 @@ const goToShopping = () => {
             </div>
           </div>
         </div>
-        <!-- <div class="mypage-my-order-list-search-bar-container">
-          <img src="/public/assets/icons/ic-search.png" alt="돋보기" />
-          <input type="text" placeholder="상품명으로 검색해보세요." />
-        </div> -->
       </div>
     </div>
 
     <div class="mypage-body-box">
       <!-- 주문내역 리스트 -->
       <div class="mypage-main-content-scroll">
-        <OderProductItemCard v-for="order in orders" :key="order.orderNumber" :order="order" :show-buttons="false"/>
+        <OderProductItemCard
+          v-for="order in orders"
+          :key="order.orderNumber"
+          :order="order"
+          :show-buttons="false"
+        />
       </div>
     </div>
   </div>

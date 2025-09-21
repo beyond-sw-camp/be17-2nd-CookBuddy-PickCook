@@ -7,9 +7,13 @@ const route = useRoute()
 const router = useRouter()
 const auth = useUserStore()
 
-watch(() => auth.state.user, (newUser) => {
-  console.log('사용자 정보 변경됨:', newUser)
-}, { immediate: true })
+watch(
+  () => auth.state.user,
+  (newUser) => {
+    console.log('사용자 정보 변경됨:', newUser)
+  },
+  { immediate: true },
+)
 
 const activePath = ref(route.path.split('/').pop())
 
@@ -33,10 +37,10 @@ watch(
     <!-- 인사말 -->
     <div class="mypage-sub-menu-each-container">
       <p id="mypage-sub-menu-bar-hello">
-        반가워요! 
+        반가워요!
         <span id="mypage-sub-menu-bar-user">
-          {{ auth.state.user?.nickname || '사용자' }}
-        </span>님 :)
+          {{ auth.state.user?.nickname || '사용자' }} </span
+        >님 :)
       </p>
     </div>
 
@@ -90,6 +94,43 @@ watch(
       </div> -->
     </div>
 
+    <!-- 레시피 메뉴 -->
+    <div class="mypage-sub-menu-each-container">
+      <span class="mypage-sub-menu-bar-items-category">레시피</span>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'my_recipe_list' }"
+        @click="goTo('my_recipe_list')"
+      >
+        <img src="/public/assets/icons/ic-mypage-write-list.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">내 레시피 관리</p>
+      </div>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'recipe_like_list' }"
+        @click="goTo('recipe_like_list')"
+      >
+        <img src="/public/assets/icons/ic-mypage-like-list.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">좋아요 누른 레시피</p>
+      </div>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'recipe_scrap_list' }"
+        @click="goTo('recipe_scrap_list')"
+      >
+        <img src="/public/assets/icons/ic-mypage-scrap-list.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">스크랩한 레시피</p>
+      </div>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'recipe_reply_list' }"
+        @click="goTo('recipe_reply_list')"
+      >
+        <img src="/public/assets/icons/ic-mypage-reply-list.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">댓글 단 레시피</p>
+      </div>
+    </div>
+
     <!-- 커뮤니티 메뉴 -->
     <div class="mypage-sub-menu-each-container">
       <span class="mypage-sub-menu-bar-items-category">커뮤니티</span>
@@ -107,7 +148,7 @@ watch(
         @click="goTo('like_list')"
       >
         <img src="/public/assets/icons/ic-mypage-like-list.png" alt="메뉴이미지" />
-        <p class="mypage-sub-menu-title">좋아요 단 게시글</p>
+        <p class="mypage-sub-menu-title">좋아요 누른 게시글</p>
       </div>
       <div
         class="mypage-sub-menu-bar-items"

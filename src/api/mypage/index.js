@@ -25,10 +25,25 @@ const getOrderList = async () => {
 // 내가 작성한 게시글
 const getMyPosts = async (page, size, sort) => {
   try {
-    const response = await api.get(`/api/posts/mplist?page=${page}&size=${size}&sortType=${sort}&filterType=my`)
+    const response = await api.get(
+      `/api/posts/mplist?page=${page}&size=${size}&sortType=${sort}&filterType=my`,
+    )
     return response.data.results || []
   } catch (error) {
     console.error('내 게시글 조회 실패:', error)
+    return []
+  }
+}
+
+// 내가 작성한 레시피
+const getMyRecipes = async (page, size, sort) => {
+  try {
+    const response = await api.get(
+      `/api/recipe/mrlist?page=${page}&size=${size}&sortType=${sort}&filterType=my`,
+    )
+    return response.data.results || []
+  } catch (error) {
+    console.error('내 레시피 조회 실패:', error)
     return []
   }
 }
@@ -46,6 +61,19 @@ const getLikedPosts = async (page, size, sort) => {
   }
 }
 
+// 좋아요 누른 레시피
+const getLikedRecipes = async (page, size, sort) => {
+  try {
+    const response = await api.get(
+      `/api/recipe/mrlist?page=${page}&size=${size}&sortType=${sort}&filterType=liked`,
+    )
+    return response.data.results || []
+  } catch (error) {
+    console.error('좋아요 누른 레시피 조회 실패:', error)
+    return []
+  }
+}
+
 // 스크랩한 게시글
 const getScrappedPosts = async (page, size, sort) => {
   try {
@@ -55,6 +83,19 @@ const getScrappedPosts = async (page, size, sort) => {
     return response.data.results || []
   } catch (error) {
     console.error('스크랩한 게시글 조회 실패:', error)
+    return []
+  }
+}
+
+// 스크랩한 레시피
+const getScrappedRecipes = async (page, size, sort) => {
+  try {
+    const response = await api.get(
+      `/api/recipe/mrlist?page=${page}&size=${size}&sortType=${sort}&filterType=scrapped`,
+    )
+    return response.data.results || []
+  } catch (error) {
+    console.error('스크랩한 레시피 조회 실패:', error)
     return []
   }
 }
@@ -72,13 +113,26 @@ const getCommentedPosts = async (page, size, sort) => {
   }
 }
 
+// 댓글 단 레시피
+const getCommentedRecipes = async (page, size, sort) => {
+  try {
+    const response = await api.get(
+      `/api/recipe/mrlist?page=${page}&size=${size}&sortType=${sort}&filterType=replied`,
+    )
+    return response.data.results || []
+  } catch (error) {
+    console.error('댓글 단 레시피 조회 실패:', error)
+    return []
+  }
+}
+
 // 사용자 정보 수정
 const updateUserInfo = async (userData) => {
   try {
     const response = await api.patch('/api/user/profile', userData)
     return {
       success: response.data.success,
-      message: response.data.message
+      message: response.data.message,
     }
   } catch (error) {
     console.error('사용자 정보 수정 실패:', error)
@@ -92,14 +146,14 @@ const getAddresses = async () => {
     const response = await api.get('/api/user/addresses')
     return {
       success: true,
-      data: response.data.results || []
+      data: response.data.results || [],
     }
   } catch (error) {
     console.error('배송지 목록 조회 실패:', error)
     return {
       success: false,
       message: error.response?.data?.message || '배송지 목록 조회 중 오류가 발생했습니다.',
-      data: []
+      data: [],
     }
   }
 }
@@ -110,14 +164,14 @@ const getAddress = async (addressId) => {
     const response = await api.get(`/api/user/addresses/${addressId}`)
     return {
       success: true,
-      data: response.data.results
+      data: response.data.results,
     }
   } catch (error) {
     console.error('배송지 조회 실패:', error)
     return {
       success: false,
       message: error.response?.data?.message || '배송지 조회 중 오류가 발생했습니다.',
-      data: null
+      data: null,
     }
   }
 }
@@ -129,14 +183,14 @@ const createAddress = async (addressData) => {
     return {
       success: true,
       data: response.data.results,
-      message: response.data.message || '배송지가 성공적으로 추가되었습니다.'
+      message: response.data.message || '배송지가 성공적으로 추가되었습니다.',
     }
   } catch (error) {
     console.error('배송지 추가 실패:', error)
     return {
       success: false,
       message: error.response?.data?.message || '배송지 추가 중 오류가 발생했습니다.',
-      data: null
+      data: null,
     }
   }
 }
@@ -148,14 +202,14 @@ const updateAddress = async (addressId, addressData) => {
     return {
       success: true,
       data: response.data.results,
-      message: response.data.message || '배송지가 성공적으로 수정되었습니다.'
+      message: response.data.message || '배송지가 성공적으로 수정되었습니다.',
     }
   } catch (error) {
     console.error('배송지 수정 실패:', error)
     return {
       success: false,
       message: error.response?.data?.message || '배송지 수정 중 오류가 발생했습니다.',
-      data: null
+      data: null,
     }
   }
 }
@@ -166,13 +220,13 @@ const deleteAddress = async (addressId) => {
     const response = await api.delete(`/api/user/addresses/${addressId}`)
     return {
       success: true,
-      message: response.data.message || '배송지가 성공적으로 삭제되었습니다.'
+      message: response.data.message || '배송지가 성공적으로 삭제되었습니다.',
     }
   } catch (error) {
     console.error('배송지 삭제 실패:', error)
     return {
       success: false,
-      message: error.response?.data?.message || '배송지 삭제 중 오류가 발생했습니다.'
+      message: error.response?.data?.message || '배송지 삭제 중 오류가 발생했습니다.',
     }
   }
 }
@@ -183,30 +237,34 @@ const getDefaultAddress = async () => {
     const response = await api.get('/api/user/addresses/default')
     return {
       success: true,
-      data: response.data.results
+      data: response.data.results,
     }
   } catch (error) {
     console.error('기본배송지 조회 실패:', error)
     return {
       success: false,
       message: error.response?.data?.message || '기본배송지 조회 중 오류가 발생했습니다.',
-      data: null
+      data: null,
     }
   }
 }
 
-export default { 
-  getCartList, 
-  getOrderList, 
-  getMyPosts, 
-  getLikedPosts, 
-  getScrappedPosts, 
+export default {
+  getCartList,
+  getOrderList,
+  getMyPosts,
+  getLikedPosts,
+  getScrappedPosts,
   getCommentedPosts,
+  getMyRecipes,
+  getLikedRecipes,
+  getScrappedRecipes,
+  getCommentedRecipes,
   updateUserInfo,
   getAddresses,
   getAddress,
   createAddress,
   updateAddress,
   deleteAddress,
-  getDefaultAddress
+  getDefaultAddress,
 }

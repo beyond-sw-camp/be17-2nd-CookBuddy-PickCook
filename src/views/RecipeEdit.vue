@@ -1,19 +1,21 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import api from '@/api/recipe'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import CustomDropdown from '@/components/CustomDropdown.vue'
 
 const router = useRouter()
+const route = useRoute()
+const recipeId = route.params.recipeId
 
 // 기본 데이터 구조
 const recipe = ref({
-  coverImage: null,
+  coverImage: null, // 새로 업로드한 이미지 파일
   title: '',
   description: '',
   category: '',
   method: '',
-  ingredients: [{ name: '', amount: '', isMainIngredient: '주재료' }],
+  ingredients: [{ name: '', amount: '', type: '주재료' }],
   steps: [{ description: '', image: null, preview: null }],
   tip: '',
   hashtags: '',
@@ -22,65 +24,48 @@ const recipe = ref({
   difficulty_level: '',
 })
 
+// 커버 이미지 미리보기 & 업로드 ref
 const coverPreview = ref(null)
 const coverInput = ref(null)
-const fileInputs = ref([]) // step별 file input refs
-const categories = [
-  '밥',
-  '죽/스프',
-  '국/찌개',
-  '탕/전골',
-  '반찬',
-  '무침',
-  '전/부침',
-  '샐러드',
-  '면 요리',
-  '빵/과자',
-  '디저트',
-  '음료',
-  '소스/양념',
-  '기타'
-];
-const methods = [
-  '볶음',
-  '찜',
-  '구이',
-  '튀김',
-  '조림',
-  '무침',
-  '삶기',
-  '전자레인지 조리',
-  '에어프라이기 조리',
-  '기타'
-];
-const times = ['5분', '10분', '20분', '30분', '40분', '50분', '1시간', '2시간', '3시간+']
-const servings = ['1인분', '2인분', '3인분+']
-const difficulties = ['어려움', '보통', '쉬움']
-const ingredientType = ['주재료', '양념']
 
-// 커버 파일 선택 버튼 클릭
+// step별 file input refs
+const fileInputs = ref([])
+
+// 드롭다운 옵션
+const categories = [
+  '밥','죽/스프','국/찌개','탕/전골','반찬','무침','전/부침','샐러드',
+  '면 요리','빵/과자','디저트','음료','소스/양념','기타'
+]
+const methods = [
+  '볶음','찜','구이','튀김','조림','무침','삶기','전자레인지 조리','에어프라이기 조리','기타'
+]
+const times = ['5분','10분','20분','30분','40분','50분','1시간','2시간','3시간+']
+const servings = ['1인분','2인분','3인분+']
+const difficulties = ['어려움','보통','쉬움']
+const ingredientType = ['주재료','양념']
+
+// 커버 파일 선택
 const triggerCoverSelect = () => {
   coverInput.value.click()
 }
 
-// 커버 파일 선택 시
 const handleCoverUpload = (event) => {
   const file = event.target.files[0]
   if (file) {
     recipe.value.coverImage = file
-    coverPreview.value = URL.createObjectURL(file) // 미리보기 URL 생성
+    coverPreview.value = URL.createObjectURL(file)
   }
 }
 
 // 재료 추가/삭제
 const addIngredient = () => {
-  recipe.value.ingredients.push({ name: '', amount: '' })
+  recipe.value.ingredients.push({ name: '', amount: '', type: '주재료' })
 }
 const removeIngredient = (index) => {
   recipe.value.ingredients.splice(index, 1)
 }
 
-// 과정 추가/삭제
+// 단계 추가/삭제
 const addStep = () => {
   recipe.value.steps.push({ description: '', image: null, preview: null })
 }
@@ -88,7 +73,7 @@ const removeStep = (index) => {
   recipe.value.steps.splice(index, 1)
 }
 
-// 조리 과정 이미지 업로드 핸들러
+// step 이미지 업로드
 const handleImageUpload = (event, index) => {
   const file = event.target.files[0]
   if (file) {
@@ -97,22 +82,11 @@ const handleImageUpload = (event, index) => {
   }
 }
 
-// 제출
 const submitRecipe = async () => {
   try {
-    // 유효성 검사
-    if (!recipe.value.title?.trim()) {
-      alert('레시피 제목을 입력해주세요.')
-      return
-    }
-    if (!recipe.value.steps.length || !recipe.value.steps.some((s) => s.description?.trim())) {
-      alert('조리 단계를 최소 1개 이상 입력해주세요.')
-      return
-    }
-    if (!recipe.value.ingredients.length) {
-      alert('재료를 최소 1개 이상 입력해주세요.')
-      return
-    }
+    if (!recipe.value.title?.trim()) return alert('레시피 제목을 입력해주세요.')
+    if (!recipe.value.steps.length || !recipe.value.steps.some(s => s.description?.trim())) return alert('조리 단계를 최소 1개 이상 입력해주세요.')
+    if (!recipe.value.ingredients.length) return alert('재료를 최소 1개 이상 입력해주세요.')
 
     // DTO 생성
     const recipeDto = {
@@ -125,50 +99,78 @@ const submitRecipe = async () => {
       difficulty_level: recipe.value.difficulty_level,
       hashtags: recipe.value.hashtags,
       tip: recipe.value.tip,
-      steps: recipe.value.steps.map((s, idx) => ({
-        stepNumber: idx + 1,
-        description: s.description,
-      })),
-      ingredients: recipe.value.ingredients.map((i) => ({
-        ingredient_name: i.name,
-        quantity: i.amount,
-        isMainIngredient: i.type === '주재료', 
-      })),
+      steps: recipe.value.steps.map((s, idx) => ({ stepNumber: idx + 1, description: s.description })),
+      ingredients: recipe.value.ingredients.map(i => ({ ingredient_name: i.name, quantity: i.amount, isMainIngredient: i.type === '주재료' })),
       nutrition: null,
     }
 
     // FormData 생성
     const formData = new FormData()
-    formData.append('dto', new Blob([JSON.stringify(recipeDto)], { type: 'application/json' }))
+    formData.append('recipe', new Blob([JSON.stringify(recipeDto)], { type: 'application/json' }))
 
-    // 커버 이미지 (없으면 빈 파일 채우기)
+    // 커버 이미지 (small, large)
     const emptyFile = new Blob([], { type: 'application/octet-stream' })
     formData.append('files', recipe.value.coverImage || emptyFile) // small
     formData.append('files', recipe.value.coverImage || emptyFile) // large
 
-    // step 이미지 (없으면 빈 파일 채우기)
-    recipe.value.steps.forEach((s) => {
-      formData.append('files', s.image || emptyFile)
-    })
+    // step 이미지
+    recipe.value.steps.forEach(s => formData.append('files', s.image || emptyFile))
 
-    // API 호출
-    await api.registerRecipe(formData)
+    // PUT 요청
+    await api.recipeUpload(recipeId, formData)
 
-    alert('레시피가 성공적으로 등록되었습니다.')
-    router.push('/recipe')
+    alert('레시피가 성공적으로 수정되었습니다.')
+    router.replace('/recipe')
   } catch (error) {
-    console.error('레시피 등록 실패:', error)
-
-    if (error.response) {
-      alert(`등록 실패: ${error.response.data?.message || error.response.statusText}`)
-    } else if (error.request) {
-      alert('서버와 연결할 수 없습니다. 네트워크 상태를 확인해주세요.')
-    } else {
-      alert(`알 수 없는 오류가 발생했습니다: ${error.message}`)
-    }
+    console.error('레시피 수정 실패:', error)
+    if (error.response) alert(`수정 실패: ${error.response.data?.message || error.response.statusText}`)
+    else if (error.request) alert('서버와 연결할 수 없습니다. 네트워크 상태를 확인해주세요.')
+    else alert(`알 수 없는 오류: ${error.message}`)
   }
 }
+
+
+// 페이지 로딩 시 기존 레시피 데이터 불러오기
+onMounted(async () => {
+  const data = await api.getRecipe(recipeId)  
+
+  if (!data) {
+    alert('레시피 데이터를 불러오는 데 실패했습니다.')
+    router.back()
+    return
+  }
+
+  // 기본 정보 세팅
+  recipe.value.title = data.title || ''
+  recipe.value.description = data.description || ''
+  recipe.value.category = data.category || ''
+  recipe.value.method = data.cooking_method || ''
+  recipe.value.time_taken = data.time_taken || ''
+  recipe.value.serving_size = data.serving_size || ''
+  recipe.value.difficulty_level = data.difficulty_level || ''
+  recipe.value.hashtags = data.hashtags || ''
+  recipe.value.tip = data.tip || ''
+
+  // 커버 이미지
+  coverPreview.value = data.image_large_url || null
+  recipe.value.coverImage = null
+
+  // 재료 세팅
+  recipe.value.ingredients = (data.ingredients || []).map(i => ({
+    name: i.ingredient_name,
+    amount: i.quantity,
+    type: i.isMainIngredient ? '주재료' : '양념'
+  }))
+
+  // 단계 세팅
+  recipe.value.steps = (data.steps || []).map(s => ({
+    description: s.description,
+    image: null,
+    preview: s.image_url
+  }))
+})
 </script>
+
 
 <template>
   <div class="recipe-write">
@@ -314,7 +316,7 @@ const submitRecipe = async () => {
     </div>
 
     <!-- 제출 버튼 -->
-    <button @click="submitRecipe" class="upload-btn">레시피 등록</button>
+    <button @click="submitRecipe" class="upload-btn">수정 완료</button>
   </div>
 </template>
 
@@ -373,6 +375,7 @@ const submitRecipe = async () => {
   object-fit: cover;
   border-radius: 5px;
 }
+
 
 .ingredient-row,
 .step-row {

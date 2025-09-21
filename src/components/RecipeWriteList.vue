@@ -1,15 +1,20 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue'
-import MyWritePostItemCard from './MyPagePostItemCard.vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
+import { useBreakpoints } from '@/composables/useBreakpoints'
 import api from '@/api/mypage'
+import MyWriteRecipeItemCard from './MyWriteRecipeItemCard.vue'
 
-const posts = ref([])
+// 게시글 상태
+const recipes = ref([])
 const page = ref(0)
 const size = ref(6)
 const totalPages = ref(1)
 const loading = ref(false)
 const scrollContainer = ref(null)
 
+const { isMobileOrTablet } = useBreakpoints()
+
+// 드롭다운 상태
 const options = ['최신순', '오래된 순']
 const selected = ref('최신순')
 const isOpen = ref(false)
@@ -26,28 +31,33 @@ const selectOption = (option) => {
   selected.value = option
   isOpen.value = false
   page.value = 0
-  loadPosts(true)
+  loadRecipes(true) // 드롭다운 선택 변경 시 초기화
 }
 
-const loadPosts = async (reset = false) => {
+const loadRecipes = async (reset = false) => {
   if (loading.value) return
   loading.value = true
 
   try {
     const sortType = selected.value === '오래된 순' ? 'oldest' : 'latest'
-    const data = await api.getLikedPosts(page.value, size.value, sortType)
+    const data = await api.getMyRecipes(page.value, size.value, sortType)
     totalPages.value = data.totalPages
 
     if (reset) {
-      posts.value = data.content
+      recipes.value = data.content
     } else {
-      posts.value = [...posts.value, ...data.content]
+      recipes.value = [...recipes.value, ...data.content]
     }
   } catch (error) {
-    console.error('내 게시글 조회 실패:', error)
+    console.error('내 레시피 조회 실패:', error)
   } finally {
     loading.value = false
   }
+}
+
+const handleRecipeDelete = (recipeId) => {
+  // 부모 배열에서 삭제
+  recipes.value = recipes.value.filter((recipe) => recipe.idx !== recipeId)
 }
 
 // 무한 스크롤
@@ -57,12 +67,12 @@ const handleScroll = async () => {
 
   if (el.scrollTop + el.clientHeight >= el.scrollHeight - 50 && page.value + 1 < totalPages.value) {
     page.value += 1
-    await loadPosts()
+    await loadRecipes()
   }
 }
 
 onMounted(async () => {
-  await loadPosts()
+  await loadRecipes()
 
   if (scrollContainer.value) {
     scrollContainer.value.addEventListener('scroll', handleScroll)
@@ -79,7 +89,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="mypage-my-order-list-container">
     <div class="mypage-header-box">
-      <div class="mypage-header-box-title">좋아요 누른 게시글</div>
+      <div class="mypage-header-box-title">내 레시피 관리</div>
 
       <div class="mypage-my-order-list-search-container">
         <div class="dropdown" @click="toggleDropdown" @blur="closeDropdown" tabindex="0">
@@ -103,14 +113,15 @@ onBeforeUnmount(() => {
 
     <div class="mypage-body-box">
       <div class="mypage-main-content-scroll" ref="scrollContainer">
-        <MyWritePostItemCard
-          v-for="post in posts"
-          :key="post.id"
-          :post="post"
-          :showActions="false"
+        <MyWriteRecipeItemCard
+          v-for="recipe in recipes"
+          :key="recipe.id"
+          :recipe="recipe"
+          :is-mobile-or-tablet="isMobileOrTablet"
+          @delete="handleRecipeDelete"
         />
         <div v-if="loading" class="loading-text">로딩 중...</div>
-        <div v-if="!loading && posts.length === 0" class="empty-text">게시글이 없습니다.</div>
+        <div v-if="!loading && recipes.length === 0" class="empty-text">게시글이 없습니다.</div>
       </div>
     </div>
   </div>
@@ -165,5 +176,18 @@ onBeforeUnmount(() => {
 
 .arrow.open {
   transform: rotate(180deg);
+}
+
+.mypage-main-content-scroll {
+  max-height: 600px; /* 필요에 따라 조정 */
+  overflow-y: auto;
+  padding: 10px 0;
+}
+
+.loading-text,
+.empty-text {
+  text-align: center;
+  padding: 20px;
+  color: #666;
 }
 </style>

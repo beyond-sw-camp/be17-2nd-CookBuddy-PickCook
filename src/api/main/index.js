@@ -1,8 +1,24 @@
 import api from '@/plugins/axiosinterceptor'
 
-const recipeList = async () => {
+const recommendedRecipeList = async () => {
   let data = {}
   let url = 'api/recipe?page=0&size=6'
+
+  await api
+    .get(url)
+    .then((res) => {
+      data = res.data.results.content
+    })
+    .catch((error) => {
+      data = error.data.results
+    })
+
+  return data
+}
+
+const popularRecipeList = async () => {
+  let data = {}
+  let url = 'api/recipe/popular'
 
   await api
     .get(url)
@@ -35,9 +51,24 @@ const communityList = async () => {
   return data
 }
 
-const productList = async () => {
+const specialDealsProductList = async () => {
   let data = {}
-  let url = '/api/products?page=0&size=6&sort=id&dir=ASC'
+  let url = '/api/products?page=0&size=6&sort=discount_rate&dir=DESC'
+
+  await api
+    .get(url)
+    .then((res) => {
+      data = res.data.results.content
+    })
+    .catch((error) => {
+      data = error.data.results
+    })
+  return data
+}
+
+const bestSellerList = async () => {
+  let data = {}
+  let url = '/api/products?page=0&size=6&sort=review_count&dir=DESC'
 
   await api
     .get(url)
@@ -51,4 +82,10 @@ const productList = async () => {
   return data
 }
 
-export default { recipeList, communityList, productList }
+export default {
+  recommendedRecipeList,
+  popularRecipeList,
+  communityList,
+  specialDealsProductList,
+  bestSellerList,
+}

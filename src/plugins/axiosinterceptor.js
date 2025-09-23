@@ -4,20 +4,20 @@ import axios from 'axios'
 const API_TIMEOUT = 5000
 
 // Axios 인스턴스 생성
-// const api = axios.create({
-//   baseURL: import.meta.env.VITE_API_BASE_URL,
-//   timeout: API_TIMEOUT,
-//   headers: {
-//     'Content-Type': 'application/json'
-//   },
-//   withCredentials: true 
-// })
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://default-api', // 기존 VITE_API_BASE_URL 대신 사용
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: API_TIMEOUT,
-  headers: { 'Content-Type': 'application/json' },
-  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  withCredentials: true 
 })
+// const api = axios.create({
+//   baseURL: import.meta.env.VITE_API_URL || 'http://default-api', // 기존 VITE_API_BASE_URL 대신 사용
+//   timeout: API_TIMEOUT,
+//   headers: { 'Content-Type': 'application/json' },
+//   withCredentials: true,
+// })
 
 
 // 요청 인터셉터

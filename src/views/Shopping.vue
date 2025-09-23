@@ -34,12 +34,17 @@ const loadPage = (newPage = null) => {
   const page = newPage !== null ? newPage : getPageFromQuery()
 
   if (selectedCategoryId.value) {
-    loadCategoryPage(page, selectedCategoryId.value, keyword)
+    loadCategoryPage(page, selectedCategoryId.value)
   } else {
     getProductList(page, keyword)
   }
 
-  const query = { ...route.query, page }
+  // ✅ URL에 카테고리 정보도 함께 저장
+  const query = {
+    ...route.query,
+    page,
+    ...(selectedCategoryId.value && { categoryId: selectedCategoryId.value }),
+  }
   router.replace({ query })
 }
 
@@ -69,7 +74,7 @@ const getProductList = async (page = 0, keyword = '') => {
 // ==============================
 // 카테고리 + 검색어 + 페이지
 // ==============================
-const loadCategoryPage = async (page, categoryId, keyword = '') => {
+const loadCategoryPage = async (page, categoryId) => {
   try {
     const data = await api.getProductsByCategory(
       categoryId,
@@ -77,7 +82,6 @@ const loadCategoryPage = async (page, categoryId, keyword = '') => {
       pageResponse.size,
       filterState.currentSort.field,
       filterState.currentSort.direction,
-      keyword,
     )
     updateProductsAndPagination(data)
   } catch (error) {
@@ -108,9 +112,24 @@ const updateProductsAndPagination = (data) => {
 const filterByCategory = async (categoryId) => {
   isFiltering.value = true
   selectedCategoryId.value = categoryId
+
   try {
-    const data = await api.getProductsByCategory(categoryId)
+    const data = await api.getProductsByCategory(
+      categoryId,
+      0, // 첫 페이지로 리셋
+      pageResponse.size,
+      filterState.currentSort.field,
+      filterState.currentSort.direction,
+    )
     updateProductsAndPagination(data)
+
+    // ✅ URL에 카테고리 정보와 페이지 정보 저장
+    const query = {
+      ...route.query,
+      page: 0,
+      categoryId: categoryId,
+    }
+    router.replace({ query })
   } catch (error) {
     console.error('카테고리 필터링 실패:', error)
   } finally {
@@ -121,6 +140,11 @@ const filterByCategory = async (categoryId) => {
 const showAllProducts = async () => {
   selectedCategoryId.value = null
   await getProductList(0)
+
+  // ✅ URL에서 카테고리 정보 제거
+  const query = { ...route.query, page: 0 }
+  delete query.categoryId
+  router.replace({ query })
 }
 
 // ==============================
@@ -176,10 +200,18 @@ const selectSortOption = async (option) => {
   filterState.openDropdown = null
 
   if (selectedCategoryId.value) {
-    await loadCategoryPage(0, selectedCategoryId.value, getKeyword())
+    await loadCategoryPage(0, selectedCategoryId.value)
   } else {
     await getProductList(0, getKeyword())
   }
+
+  // ✅ URL 업데이트
+  const query = {
+    ...route.query,
+    page: 0,
+    ...(selectedCategoryId.value && { categoryId: selectedCategoryId.value }),
+  }
+  router.replace({ query })
 }
 
 // ==============================
@@ -224,6 +256,12 @@ watch(
 // 초기 마운트
 // ==============================
 onMounted(() => {
+  // ✅ URL에서 카테고리 정보 복원
+  const categoryFromQuery = route.query.categoryId
+  if (categoryFromQuery) {
+    selectedCategoryId.value = parseInt(categoryFromQuery)
+  }
+
   loadPage(getPageFromQuery())
   document.addEventListener('click', closeAllDropdowns)
 })

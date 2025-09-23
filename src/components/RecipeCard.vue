@@ -17,8 +17,9 @@ const scrapAnimating = ref(false)
 // 로컬 상태
 const isLiked = ref(props.recipe.likedByUser || false)
 const likeCount = ref(props.recipe.likeCount || 0)
-const isScrapped = ref(props.recipe.scrappedByUser || false)
-const scrapCount = ref(props.recipe.scrapCount || 0)
+
+const isScrapped = ref(props.recipe.scrappedByUser)
+const scrapCount = ref(props.recipe.scrapCount)
 
 // 아이콘 경로
 const likeSrc = computed(() =>
@@ -26,7 +27,7 @@ const likeSrc = computed(() =>
 )
 
 const scrapSrc = computed(() =>
-  isScrapped.value ? '/assets/icons/ic-full-scrap.png' : '/assets/icons/ic-gray-empty-scrap.png',
+  isScrapped.value ? '/assets/icons/ic-full-scrap.png' : '/assets/icons/ic-empty-scrap.png',
 )
 
 // 좋아요 토글
@@ -62,13 +63,9 @@ const toggleScrap = async (event) => {
   event.stopPropagation()
   event.preventDefault()
 
-  // 이전 상태 저장
-  const previousScrapped = isScrapped.value
-  const previousCount = scrapCount.value
-
   // UI 업데이트
   isScrapped.value = !isScrapped.value
-  scrapCount.value = Math.max(0, (scrapCount.value || 0) + (isScrapped.value ? 1 : -1))
+  scrapCount.value += isScrapped.value ? 1 : -1
 
   scrapAnimating.value = true
   setTimeout(() => {
@@ -77,11 +74,12 @@ const toggleScrap = async (event) => {
 
   try {
     await scrapAPI.toggleScrap('RECIPE', props.recipe.idx)
+    // 성공 → 그대로 유지
   } catch (err) {
     console.error('스크랩 실패', err)
-    // 실패 시 롤백
-    isScrapped.value = previousScrapped
-    scrapCount.value = previousCount
+    // 실패 → 원래 상태로 롤백
+    isScrapped.value = !isScrapped.value
+    scrapCount.value += isScrapped.value ? 1 : -1
   }
 }
 </script>
@@ -94,31 +92,35 @@ const toggleScrap = async (event) => {
           :src="props.recipe.image_large_url || '/assets/images/no-image.png'"
           :alt="props.recipe.title"
         />
+        <img
+          class="recipe-scrap-icon scrap-js"
+          :src="scrapSrc"
+          alt="스크랩"
+          @click="toggleScrap"
+          :class="{ 'icon-pop': scrapAnimating }"
+        />
       </div>
 
       <div class="recipe-card-content card-content">
         <div class="recipe-title-container">
           <h3 class="recipe-title card-title">{{ props.recipe.title }}</h3>
-          <div style="display: flex; gap: 10px">
-            <span class="recipe-likes-count" @click="toggleLike" style="cursor: pointer">
-              {{ likeCount || 0 }}
-              <img
-                class="like-js"
-                :src="likeSrc"
-                alt="좋아요"
-                :class="{ 'icon-pop': likeAnimating }"
-              />
-            </span>
-            <span class="recipe-likes-count" @click="toggleScrap" style="cursor: pointer">
-              {{ scrapCount || 0 }}
-              <img
-                class="scrap-js"
-                :src="scrapSrc"
-                alt="스크랩"
-                :class="{ 'icon-pop': scrapAnimating }"
-              />
-            </span>
-          </div>
+          <span class="recipe-likes-count" style="cursor: default">
+            {{ props.recipe.commentCount || 0 }}
+            <img
+              style="margin: 0px 8px 2px 0px; width: 21px; opacity: 60%"
+              src="/assets/icons/ic-review.png"
+              alt="댓글"
+            />
+          </span>
+          <span class="recipe-likes-count" @click="toggleLike" style="cursor: pointer">
+            {{ likeCount || 0 }}
+            <img
+              class="like-js"
+              :src="likeSrc"
+              alt="좋아요"
+              :class="{ 'icon-pop': likeAnimating }"
+            />
+          </span>
         </div>
 
         <div class="recipe-card-stats card-stats">

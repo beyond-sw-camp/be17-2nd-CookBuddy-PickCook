@@ -197,7 +197,7 @@ onUnmounted(() => {
 <template>
   <div class="login-and-signup-body">
     <div class="login-container">
-      <a class="logo-text" href="/">로그인</a>
+      <a class="logo-text" href="/">PICKCOOK</a>
       <!-- <span id="title">로그인</span> -->
 
       <form ref="formRef" action="/login" method="post" @submit.prevent="login">
@@ -210,7 +210,7 @@ onUnmounted(() => {
             name="email"
             placeholder="이메일"
             @blur="validateEmail"
-            @input="clearEmailError"
+            @input="clearEmailError"  
             required
           />
           <!-- 에러 메시지 표시 (실시간) -->

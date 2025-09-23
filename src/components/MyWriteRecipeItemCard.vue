@@ -13,7 +13,7 @@ const props = defineProps({
   isMobileOrTablet: Boolean,
 })
 
-console.log("받은 레시피 데이터 ", props.recipe)
+console.log('받은 레시피 데이터 ', props.recipe)
 
 const actionStyle = computed(() => !props.isMobileOrTablet)
 const showMoreMenus = ref(false)
@@ -70,16 +70,17 @@ const goToDetail = () => {
           <p>{{ recipe.title }}</p>
           <p>{{ recipe.description || '\u00A0' }}</p>
           <span
-            >{{ formatRelativeTime(recipe.updatedAt) }} · 좋아요
-            {{ recipe.likeCount || 0 }}개 · 스크랩 {{ recipe.scrapCount || 0 }}개 · 댓글
-            {{ recipe.commentCount || 0 }}개</span
+            >{{ formatRelativeTime(recipe.updatedAt) }} · 좋아요 {{ recipe.likeCount || 0 }}개 ·
+            스크랩 {{ recipe.scrapCount || 0 }}개 · 댓글 {{ recipe.commentCount || 0 }}개</span
           >
         </div>
       </div>
       <div v-if="showActions">
         <div v-if="actionStyle" class="mypage-my-activity-boards-right">
           <div class="mypage-my-activity-boards-edit-button" @click.stop="goToEdit">수정</div>
-          <div class="mypage-my-activity-boards-delete-button" @click.stop="handleDelete(recipe)">삭제</div>
+          <div class="mypage-my-activity-boards-delete-button" @click.stop="handleDelete(recipe)">
+            삭제
+          </div>
         </div>
 
         <div v-else class="mypage-my-activity-board-more-menu-button">
@@ -126,7 +127,5 @@ const goToDetail = () => {
     width: 70px;
     height: 70px;
   }
-
-  
 }
 </style>

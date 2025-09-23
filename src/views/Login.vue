@@ -197,7 +197,7 @@ onUnmounted(() => {
 <template>
   <div class="login-and-signup-body">
     <div class="login-container">
-      <a class="logo-text" href="/">로그인</a>
+      <a class="logo-text" href="/">PickCook</a>
       <!-- <span id="title">로그인</span> -->
 
       <form ref="formRef" action="/login" method="post" @submit.prevent="login">

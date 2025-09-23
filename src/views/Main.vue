@@ -122,7 +122,7 @@ onMounted(async () => {
       <h2 v-if="userStore.state.isLogin" class="section-title">
         🍳 냉장고 재료로 만들 수 있는 레시피
       </h2>
-      <h2 v-else class="section-title">🍳 많이 좋아한 레시피</h2>
+      <h2 v-else class="section-title">🍳 인기 레시피</h2>
       <RouterLink to="/recipe" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">
@@ -167,7 +167,7 @@ onMounted(async () => {
   <!-- 베스트 셀러 -->
   <div class="content-section">
     <div class="section-header">
-      <h2 class="section-title">🔥 베스트 셀러</h2>
+      <h2 class="section-title">🔥 베스트 상품</h2>
       <RouterLink to="/products" class="section-more">더보기 &gt;</RouterLink>
     </div>
     <div class="content-grid">

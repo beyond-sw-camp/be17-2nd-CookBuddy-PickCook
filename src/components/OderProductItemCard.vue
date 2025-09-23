@@ -1,9 +1,11 @@
 <script setup>
 import { useRouter, useRoute } from 'vue-router'
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
+import RefundModal from './RefundModal.vue'
 
 const router = useRouter()
 const route = useRoute()
+const modalOpen = ref(null)
 
 const orderId = route.params.orderId
 const props = defineProps({
@@ -17,7 +19,6 @@ const props = defineProps({
     default: true,
   },
 })
-
 
 function statusClass(status) {
   switch (status) {
@@ -109,8 +110,8 @@ const goToReview = (productId) => {
             <div class="mypage-my-order-boards-product-name-and-status">
               <p @click="goProductDetail(product.product_id)">{{ product.product_name }}</p>
 
-              <div :class="['order-status-code-tag', statusClass(order.status)]">
-                <span>{{ statusText(order.status) }}</span>
+              <div :class="['order-status-code-tag', statusClass(product.status)]">
+                <span>{{ statusText(product.status) }}</span>
               </div>
             </div>
             <div class="mypage-my-order-boards-product-amount-and-quantity">
@@ -124,10 +125,18 @@ const goToReview = (productId) => {
           </div>
           <div v-if="showButtons" class="mypage-my-order-boards-buttons-container">
             <!-- hasReview가 false일 때만 리뷰 작성 버튼 표시 -->
-            <button v-if="!product.hasReview" @click="goToReview(product.product_id)">
+            <button v-if="!product.hasReview && product.status !== 'REFUNDED'"  @click="goToReview(product.product_id)">
               리뷰작성
             </button>
-            <button>반품신청</button>
+            <button v-if="product.status !== 'REFUNDED'" @click="modalOpen = product.product_id">반품신청</button>
+
+            <RefundModal
+              v-if="modalOpen === product.product_id"
+              :order="product"
+              :cost="discountedPrice(product)"
+              :paymentId="order.paymentId"
+              @close="modalOpen = null"
+            />
           </div>
         </div>
       </div>
@@ -152,4 +161,38 @@ const goToReview = (productId) => {
 .mypage-my-order-boards-buttons-container > button:hover {
   background-color: #dcdcdc;
 }
+
+.preparing-product {
+  background-color: #f0ad4e; /* 주황색 */
+  color: white;
+}
+
+.in-delivery-product {
+  background-color: #5bc0de; /* 파란색 */
+  color: white;
+}
+
+.delivery-completed-product {
+  background-color: #5cb85c; /* 초록색 */
+  color: white;
+}
+
+.delivery-canceled-product {
+  background-color: #d9534f; /* 빨강색 */
+  color: white;
+}
+
+.delivery-refunded-product {
+  background-color: #777; /* 회색 */
+  color: white;
+}
+
+.order-status-code-tag {
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-weight: 500;
+  display: inline-block;
+  text-align: center;
+}
+
 </style>

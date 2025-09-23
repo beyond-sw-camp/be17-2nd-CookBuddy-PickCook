@@ -146,6 +146,24 @@ const orderProductInfo = async (productId, orderId) => {
   return data
 }
 
+const refundPayment = async (payload) => {
+  let data = {}
+
+  let url = 'api/order/refund'
+
+  await api
+    .post(url, payload)
+    .then((res) => {
+      data = res.data
+    })
+    .catch((error) => {
+      console.error('환불 요청 실패:', error.response?.data || error)
+      data = { success: false, message: '환불 요청 실패' }
+    })
+
+  return data
+}
+
 export default {
   startPayment,
   validatePayment,
@@ -154,4 +172,5 @@ export default {
   userInfo,
   userAddress,
   orderProductInfo,
+  refundPayment,
 }

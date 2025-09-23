@@ -2,7 +2,7 @@ import api from '@/plugins/axiosinterceptor'
 
 const recommendedRecipeList = async () => {
   let data = {}
-  let url = 'api/recipe?page=0&size=6'
+  let url = 'api/recipe/recommendation?page=0&size=6'
 
   await api
     .get(url)

@@ -442,6 +442,7 @@ watch(
   cursor: pointer;
   font-size: 13px;
   border-bottom: 1px solid #f1f3f4;
+  width: 95px;
 }
 
 .dropdown-item:last-child {

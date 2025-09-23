@@ -5,11 +5,15 @@ import RecipeComment from '@/components/RecipeComment.vue'
 import api from '@/api/recipe'
 import { onMounted, reactive, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import likeAPI from '@/api/like'
+import scrapAPI from '@/api/scrap'
 
 const route = useRoute()
 const uploadedImage = ref('')
 const newComment = ref('')
 const activeReplyId = ref(null)
+
+const recipeId = computed(() => route.params.id)
 
 const refreshComments = () => {
   getComments()
@@ -31,6 +35,82 @@ const recipe = reactive({
   steps: [],
   comments: [],
 })
+
+// 좋아요 및 스크랩 상태 (reactive)
+const likeScrapState = reactive({
+  isLiked: false,
+  likeCount: 0,
+  isScrapped: false,
+  scrapCount: 0,
+  likeAnimating: false,
+  scrapAnimating: false,
+})
+
+// 아이콘 경로
+const likeSrc = computed(() =>
+  likeScrapState.isLiked ? '/assets/icons/ic-full-like.png' : '/assets/icons/ic-empty-like.png',
+)
+const scrapSrc = computed(() =>
+  likeScrapState.isScrapped
+    ? '/assets/icons/ic-full-scrap.png'
+    : '/assets/icons/ic-gray-empty-scrap.png',
+)
+
+// 좋아요 토글
+const toggleLike = async () => {
+  // UI 업데이트 (Optimistic UI)
+  const previousLiked = likeScrapState.isLiked
+  const previousCount = likeScrapState.likeCount
+
+  likeScrapState.isLiked = !likeScrapState.isLiked
+  likeScrapState.likeCount += likeScrapState.isLiked ? 1 : -1
+
+  likeScrapState.likeAnimating = true
+  setTimeout(() => {
+    likeScrapState.likeAnimating = false
+  }, 300)
+
+  try {
+    await likeAPI.toggleLike('RECIPE', recipeId.value)
+  } catch (err) {
+    console.error('좋아요 실패', err)
+    // 실패 시 롤백
+    likeScrapState.isLiked = previousLiked
+    likeScrapState.likeCount = previousCount
+  }
+}
+
+// 스크랩 토글
+const toggleScrap = async () => {
+  // UI 업데이트 (Optimistic UI)
+  const previousScrapped = likeScrapState.isScrapped
+  const previousCount = likeScrapState.scrapCount
+
+  likeScrapState.isScrapped = !likeScrapState.isScrapped
+  likeScrapState.scrapCount += likeScrapState.isScrapped ? 1 : -1
+
+  likeScrapState.scrapAnimating = true
+  setTimeout(() => {
+    likeScrapState.scrapAnimating = false
+  }, 300)
+
+  try {
+    await scrapAPI.toggleScrap('RECIPE', recipeId.value)
+  } catch (err) {
+    console.error('스크랩 실패', err)
+    // 실패 시 롤백
+    likeScrapState.isScrapped = previousScrapped
+    likeScrapState.scrapCount = previousCount
+  }
+}
+
+// 레시피 상세 조회 시 좋아요/스크랩 정보 초기화
+const initializeLikeScrapData = (recipe) => {
+  likeScrapState.isLiked = recipe.likedByUser || false
+  likeScrapState.likeCount = recipe.likeCount || 0
+  likeScrapState.isScrapped = recipe.scrappedByUser || false
+  likeScrapState.scrapCount = recipe.scrapCount || 0
+}
 
 const getComments = async () => {
   const recipeId = route.params.id
@@ -189,6 +269,7 @@ const getRecipe = async () => {
     recipe.steps = data.steps
     // 재료 처리
     recipe.ingredients = processIngredients(data.ingredients)
+    initializeLikeScrapData(data)
   }
 }
 
@@ -202,6 +283,43 @@ onMounted(async () => {
   <div class="rd-container">
     <section class="recipe-image">
       <img :src="recipe.image_large_url || '/assets/images/no-image.png'" alt="레시피 이미지" />
+      <div
+        class="recipe-like-scrap-container"
+        style="
+          display: flex;
+          gap: 20px;
+          margin: 10px 0px 0px 0px;
+          align-items: center;
+          justify-content: center;
+        "
+      >
+        <span
+          class="recipe-likes-count"
+          @click="toggleLike"
+          style="cursor: pointer; display: flex; align-items: center; gap: 5px"
+        >
+          {{ likeScrapState.likeCount }}
+          <img
+            :src="likeSrc"
+            alt="좋아요"
+            :class="{ 'icon-pop': likeScrapState.likeAnimating }"
+            style="width: 24px; height: 24px"
+          />
+        </span>
+        <span
+          class="recipe-likes-count"
+          @click="toggleScrap"
+          style="cursor: pointer; display: flex; align-items: center; gap: 5px"
+        >
+          {{ likeScrapState.scrapCount }}
+          <img
+            :src="scrapSrc"
+            alt="스크랩"
+            :class="{ 'icon-pop': likeScrapState.scrapAnimating }"
+            style="width: 24px; height: 24px"
+          />
+        </span>
+      </div>
       <h2 class="recipe-title">{{ recipe.title }}</h2>
       <p class="recipe-description">{{ recipe.description }}</p>
       <div class="recipe-detaile-serving-time-level">
@@ -406,7 +524,7 @@ onMounted(async () => {
 }
 
 .recipe-description {
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
 .comment-input {

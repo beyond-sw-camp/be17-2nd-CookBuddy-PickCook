@@ -15,11 +15,10 @@ const likeAnimating = ref(false)
 const scrapAnimating = ref(false)
 
 // 로컬 상태
-const isLiked = ref(props.recipe.likedByUser)
-const likeCount = ref(props.recipe.likeCount)
-
-const isScrapped = ref(props.recipe.scrappedByUser)
-const scrapCount = ref(props.recipe.scrapCount)
+const isLiked = ref(props.recipe.likedByUser || false)
+const likeCount = ref(props.recipe.likeCount || 0)
+const isScrapped = ref(props.recipe.scrappedByUser || false)
+const scrapCount = ref(props.recipe.scrapCount || 0)
 
 // 아이콘 경로
 const likeSrc = computed(() =>
@@ -35,9 +34,13 @@ const toggleLike = async (event) => {
   event.stopPropagation()
   event.preventDefault()
 
+  // 이전 상태 저장
+  const previousLiked = isLiked.value
+  const previousCount = likeCount.value
+
   // UI 업데이트
   isLiked.value = !isLiked.value
-  likeCount.value += isLiked.value ? 1 : -1
+  likeCount.value = Math.max(0, (likeCount.value || 0) + (isLiked.value ? 1 : -1))
 
   likeAnimating.value = true
   setTimeout(() => {
@@ -46,12 +49,11 @@ const toggleLike = async (event) => {
 
   try {
     await likeAPI.toggleLike('RECIPE', props.recipe.idx)
-    // 성공 → 그대로 유지
   } catch (err) {
     console.error('좋아요 실패', err)
-    // 실패 → 원래 상태로 롤백
-    isLiked.value = !isLiked.value
-    likeCount.value += isLiked.value ? 1 : -1
+    // 실패 시 롤백
+    isLiked.value = previousLiked
+    likeCount.value = previousCount
   }
 }
 
@@ -60,9 +62,13 @@ const toggleScrap = async (event) => {
   event.stopPropagation()
   event.preventDefault()
 
+  // 이전 상태 저장
+  const previousScrapped = isScrapped.value
+  const previousCount = scrapCount.value
+
   // UI 업데이트
   isScrapped.value = !isScrapped.value
-  scrapCount.value += isScrapped.value ? 1 : -1
+  scrapCount.value = Math.max(0, (scrapCount.value || 0) + (isScrapped.value ? 1 : -1))
 
   scrapAnimating.value = true
   setTimeout(() => {
@@ -71,12 +77,11 @@ const toggleScrap = async (event) => {
 
   try {
     await scrapAPI.toggleScrap('RECIPE', props.recipe.idx)
-    // 성공 → 그대로 유지
   } catch (err) {
     console.error('스크랩 실패', err)
-    // 실패 → 원래 상태로 롤백
-    isScrapped.value = !isScrapped.value
-    scrapCount.value += isScrapped.value ? 1 : -1
+    // 실패 시 롤백
+    isScrapped.value = previousScrapped
+    scrapCount.value = previousCount
   }
 }
 </script>
@@ -96,7 +101,7 @@ const toggleScrap = async (event) => {
           <h3 class="recipe-title card-title">{{ props.recipe.title }}</h3>
           <div style="display: flex; gap: 10px">
             <span class="recipe-likes-count" @click="toggleLike" style="cursor: pointer">
-              {{ likeCount }}
+              {{ likeCount || 0 }}
               <img
                 class="like-js"
                 :src="likeSrc"
@@ -105,7 +110,7 @@ const toggleScrap = async (event) => {
               />
             </span>
             <span class="recipe-likes-count" @click="toggleScrap" style="cursor: pointer">
-              {{ scrapCount }}
+              {{ scrapCount || 0 }}
               <img
                 class="scrap-js"
                 :src="scrapSrc"

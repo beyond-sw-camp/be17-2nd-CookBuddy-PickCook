@@ -105,7 +105,7 @@ const login = async () => {
 
     if (result.success) {
       // ✅ 추가: 로그인 후 즉시 최신 사용자 정보 조회
-      const currentUserResult = await auth.getCurrentUser() 
+      const currentUserResult = await auth.getCurrentUser()
       const nickname = result.user?.nickname || '사용자'
       const encodedNickname = encodeURIComponent(nickname)
       router.push(`/?loginSuccess=true&nickname=${encodedNickname}&loginType=normal`)
@@ -197,7 +197,7 @@ onUnmounted(() => {
 <template>
   <div class="login-and-signup-body">
     <div class="login-container">
-      <a class="logo-text" href="/">PICKCOOK</a>
+      <a class="logo-text" href="/">로그인</a>
       <!-- <span id="title">로그인</span> -->
 
       <form ref="formRef" action="/login" method="post" @submit.prevent="login">
@@ -210,7 +210,7 @@ onUnmounted(() => {
             name="email"
             placeholder="이메일"
             @blur="validateEmail"
-            @input="clearEmailError"  
+            @input="clearEmailError"
             required
           />
           <!-- 에러 메시지 표시 (실시간) -->
@@ -272,7 +272,6 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-
 .kakao-login-button {
   color: #3f1010;
   background-color: #f9e000;

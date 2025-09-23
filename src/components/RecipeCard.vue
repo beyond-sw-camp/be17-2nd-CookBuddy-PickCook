@@ -27,7 +27,7 @@ const likeSrc = computed(() =>
 )
 
 const scrapSrc = computed(() =>
-  isScrapped.value ? '/assets/icons/ic-full-scrap.png' : '/assets/icons/ic-empty-scrap.png',
+  isScrapped.value ? '/assets/icons/ic-full-scrap.png' : '/assets/icons/ic-gray-empty-scrap.png',
 )
 
 // 좋아요 토글
@@ -89,27 +89,31 @@ const toggleScrap = async (event) => {
           :src="props.recipe.image_large_url || '/assets/images/no-image.png'"
           :alt="props.recipe.title"
         />
-        <img
-          class="recipe-scrap-icon scrap-js"
-          :src="scrapSrc"
-          alt="스크랩"
-          @click="toggleScrap"
-          :class="{ 'icon-pop': scrapAnimating }"
-        />
       </div>
 
       <div class="recipe-card-content card-content">
         <div class="recipe-title-container">
           <h3 class="recipe-title card-title">{{ props.recipe.title }}</h3>
-          <span class="recipe-likes-count" @click="toggleLike" style="cursor: pointer">
-            {{ likeCount }}
-            <img
-              class="like-js"
-              :src="likeSrc"
-              alt="좋아요"
-              :class="{ 'icon-pop': likeAnimating }"
-            />
-          </span>
+          <div style="display: flex; gap: 10px">
+            <span class="recipe-likes-count" @click="toggleLike" style="cursor: pointer">
+              {{ likeCount }}
+              <img
+                class="like-js"
+                :src="likeSrc"
+                alt="좋아요"
+                :class="{ 'icon-pop': likeAnimating }"
+              />
+            </span>
+            <span class="recipe-likes-count" @click="toggleScrap" style="cursor: pointer">
+              {{ scrapCount }}
+              <img
+                class="scrap-js"
+                :src="scrapSrc"
+                alt="스크랩"
+                :class="{ 'icon-pop': scrapAnimating }"
+              />
+            </span>
+          </div>
         </div>
 
         <div class="recipe-card-stats card-stats">

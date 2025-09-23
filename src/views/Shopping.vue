@@ -285,6 +285,48 @@ onUnmounted(() => {
           />
           <span class="padding">수산·해산·건어물</span>
         </span>
+      </div>
+
+      <div class="shopping-category-grid">
+        <!-- 전체 상품 보기 - 첫 번째 위치에 고정 -->
+        <span
+          class="shopping-category c-hover-2"
+          :class="{ 'category-active': selectedCategoryId === 4 }"
+          @click="filterByCategory(4)"
+        >
+          <img
+            class="shopping-ingredient-item-image"
+            src="/assets/icons/ic-ingredient-category-fruit.png"
+            alt=""
+          />
+          <span class="padding">과일·견과·쌀</span>
+        </span>
+
+        <span
+          class="shopping-category c-hover-2"
+          :class="{ 'category-active': selectedCategoryId === 9 }"
+          @click="filterByCategory(9)"
+        >
+          <img
+            class="shopping-ingredient-item-image"
+            src="/assets/icons/ic-ingredient-category-conveniencefood.png"
+            alt=""
+          />
+          <span class="padding">면·양념·오일</span>
+        </span>
+
+        <span
+          class="shopping-category c-hover-2"
+          :class="{ 'category-active': selectedCategoryId === 8 }"
+          @click="filterByCategory(8)"
+        >
+          <img
+            class="shopping-ingredient-item-image"
+            src="/assets/icons/ic-ingredient-category-milk.png"
+            alt=""
+          />
+          <span class="padding">유제품</span>
+        </span>
 
         <span
           class="shopping-category c-hover-2"
@@ -450,15 +492,16 @@ onUnmounted(() => {
   margin: 20px 0px 20px 0px;
   border: 2px solid #eaedef;
   border-radius: 10px;
-  padding: 15px 0px 15px 0px;
+  padding: 15px 20px 15px 0px;
   background-color: white;
 }
 
 .shopping-category-grid {
   width: 100%;
   display: flex;
-  padding: 0 20px;
-  justify-content: space-between;
+  margin: 10px;
+  padding: 10px;
+  justify-content: space-around;
 }
 
 .all-category-icon {
@@ -508,11 +551,14 @@ onUnmounted(() => {
 
 /* 활성 카테고리 스타일 - 기존 c-hover-2 색상 사용 */
 .category-active {
-  font-weight: 600 !important;
+  font-weight: 450 !important;
+  text-decoration: underline;
+  color: #2e80cd;
 }
 
 .c-hover-2:hover {
   color: #2e80cd;
+  text-decoration: underline;
 }
 
 /* 활성 상태일 때 hover 효과 무시 */

@@ -107,8 +107,8 @@ const toggleScrap = async (event) => {
           <span class="recipe-likes-count" style="cursor: default">
             {{ props.recipe.commentCount || 0 }}
             <img
-              style="margin: 0px 8px 2px 0px; width: 21px; opacity: 60%"
-              src="/assets/icons/ic-review.png"
+              style="margin: 0px 8px 2px 0px; width: 18px; opacity: 60%"
+              src="/assets/icons/ic-reply-count.png"
               alt="댓글"
             />
           </span>

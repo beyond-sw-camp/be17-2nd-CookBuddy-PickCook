@@ -1,6 +1,6 @@
 <script setup>
 import api from '@/api/community'
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import PostListCard from '@/components/PostListCard.vue'
 import Pagination from '@/components/Pagination.vue'
@@ -12,6 +12,8 @@ const posts = reactive([])
 const showDropdown = ref(false)
 const sortDirection = ref('DESC')
 const searchKeyword = ref('')
+const dropdownRef = ref(null)
+const selectedSortLabel = ref('최신순')
 
 const pageResponse = reactive({
   content: [],
@@ -26,6 +28,9 @@ const updateFromQuery = () => {
   searchKeyword.value = route.query.keyword || ''
   sortDirection.value = route.query.dir || 'DESC'
   pageResponse.currentPage = parseInt(route.query.page) || 0
+
+  // 정렬 방향에 따라 표시 텍스트 갱신
+  selectedSortLabel.value = sortDirection.value === 'DESC' ? '최신순' : '오래된순'
 }
 
 // 게시글 API 호출
@@ -62,13 +67,33 @@ const loadPage = (newPage) => {
 
 // 정렬 변경
 const sortPostList = (direction) => {
+  sortDirection.value = direction
+  selectedSortLabel.value = direction === 'DESC' ? '최신순' : '오래된순'
+
   router.push({
     query: {
       ...route.query,
       dir: direction,
     },
   })
+
+  showDropdown.value = false
 }
+
+// 외부 클릭 감지
+const handleClickOutside = (event) => {
+  if (dropdownRef.value && !dropdownRef.value.contains(event.target)) {
+    showDropdown.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 // route.query 변화 감지 → 상태 동기화 + API 호출
 watch(
@@ -83,13 +108,17 @@ watch(
 <template>
   <!-- 필터 섹션 -->
   <div class="filter-section">
-    <div class="filter-container" @click="showDropdown = !showDropdown">
-      <span class="filter-tag">정렬 &nbsp;▼</span>
+    <div
+      class="filter-container community-filter-container"
+      @click.stop="showDropdown = !showDropdown"
+      ref="dropdownRef"
+    >
+      <span class="filter-tag">{{ selectedSortLabel }} &nbsp;▼</span>
+      <div v-if="showDropdown" class="dropdown-menu">
+        <p class="dropdown-item" @click="sortPostList('DESC')">최신순</p>
+        <p class="dropdown-item" @click="sortPostList('ASCE')">오래된순</p>
+      </div>
     </div>
-  </div>
-  <div v-if="showDropdown" class="dropdown-menu">
-    <p class="dropdown-item" @click="sortPostList('ASCE')">최신순</p>
-    <p class="dropdown-item" @click="sortPostList('DESC')">오래된순</p>
   </div>
 
   <!-- 컨텐츠 섹션 -->
@@ -114,8 +143,13 @@ watch(
   text-align: center;
 }
 
+.community-filter-container {
+  position: relative;
+}
+
 .dropdown-menu {
   position: absolute;
+  top: 35px;
   width: fit-content;
   background-color: white;
   border: 1px solid #dadce0;
@@ -128,6 +162,7 @@ watch(
   padding: 8px 14px;
   cursor: pointer;
   border-bottom: 1px solid #f5f5f5;
+  font-size: 13px;
 }
 
 .dropdown-item:hover {

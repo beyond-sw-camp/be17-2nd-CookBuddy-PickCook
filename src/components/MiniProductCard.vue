@@ -47,7 +47,11 @@ const goToProductDetail = () => {
 <template>
   <div class="product" @click="goToProductDetail">
     <div class="product-image-container">
-      <img :src="mainImageUrl" :alt="title" />
+      <img
+  :src="mainImageUrl || '/assets/images/no-image.png'"
+  alt="상품 이미지"
+/>
+
       <div v-if="matchType === 'INGREDIENT_MATCH'" class="match-badge ingredient">
         {{ matchedIngredient }}
       </div>

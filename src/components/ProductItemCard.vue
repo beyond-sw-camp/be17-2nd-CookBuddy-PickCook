@@ -73,7 +73,10 @@ const hasRating = computed(() => {
   <router-link :to="`/products/detail/${props.product.id}`">
     <div class="ingredients-card content-card">
       <div class="card-image">
-        <img :src="props.product.main_image_url" :alt="props.product.title" />
+        <<img
+          :src="props.product.main_image_url || '/assets/images/no-image.png'"
+          alt="상품 이미지"
+        />
       </div>
       <div class="card-content">
         <div class="ingredients-title-container">

@@ -35,6 +35,7 @@ import RecipeEdit from '@/views/RecipeEdit.vue'
 import RecipeLikeList from '@/components/RecipeLikeList.vue'
 import RecipeScrapList from '@/components/RecipeScrapList.vue'
 import RecipeReplyList from '@/components/RecipeReplyList.vue'
+import ReviewList from '@/components/ReviewList.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -139,6 +140,7 @@ const router = createRouter({
         { path: 'recipe_reply_list', name: 'mypage-recipe-reply', component: RecipeReplyList },
         { path: 'address_list', name: 'mypage-address', component: AddressList },
         { path: 'payment_method', name: 'mypage-payment', component: PaymentMethodList },
+        { path: 'my_review_list', name: 'mypage-review', component: ReviewList },
       ],
       meta: { requiresAuth: true },
     },

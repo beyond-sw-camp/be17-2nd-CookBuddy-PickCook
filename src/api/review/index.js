@@ -79,7 +79,27 @@ const reviewWrite = async (orderId, productId, payload) => {
 }
 
 
+const getMyReviews = async () => {
+  try {
+    const url = `/api/reviews/my`
+    const res = await api.get(url)
+    return res.data
+  } catch (error) {
+    console.error('리뷰 받아오기 API 에러:', error)
+    return error.response?.data || { success: false, message: 'API 요청 실패' }
+  }
+}
 
+const deleteReview = async (reviewId) => {
+  try {
+    const url = `/api/reviews/${reviewId}`
+    const res = await api.delete(url)
+    return res.data
+  } catch (error) {
+    console.error('리뷰 삭제 API 에러:', error)
+    return error.response?.data || { success: false, message: 'API 요청 실패' }
+  }
+}
 
 const reviewAPI = {
   getProductReviews,
@@ -87,6 +107,8 @@ const reviewAPI = {
   getPresignedUrl,
   uploadImage,
   reviewWrite,
+  getMyReviews,
+  deleteReview,
 }
 
 export default reviewAPI

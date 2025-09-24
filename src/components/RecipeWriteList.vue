@@ -144,7 +144,7 @@ onBeforeUnmount(() => {
   border-radius: 5px;
   cursor: pointer;
   width: 125px;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .dropdown-menu {
@@ -162,7 +162,7 @@ onBeforeUnmount(() => {
 .dropdown-item {
   padding: 10px;
   cursor: pointer;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .dropdown-item:hover {

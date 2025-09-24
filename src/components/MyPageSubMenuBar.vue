@@ -38,9 +38,8 @@ watch(
     <div class="mypage-sub-menu-each-container">
       <p id="mypage-sub-menu-bar-hello">
         반가워요!
-        <span id="mypage-sub-menu-bar-user">
-          {{ auth.state.user?.nickname || '사용자' }} </span
-        >님 :)
+        <span id="mypage-sub-menu-bar-user"> {{ auth.state.user?.nickname || '사용자' }} </span>님
+        :)
       </p>
     </div>
 
@@ -165,6 +164,19 @@ watch(
       >
         <img src="/public/assets/icons/ic-mypage-reply-list.png" alt="메뉴이미지" />
         <p class="mypage-sub-menu-title">댓글 단 게시글</p>
+      </div>
+    </div>
+
+    <!-- 리뷰 관리 -->
+    <div class="mypage-sub-menu-each-container">
+      <span class="mypage-sub-menu-bar-items-category">리뷰</span>
+      <div
+        class="mypage-sub-menu-bar-items"
+        :class="{ active: activePath === 'my_review_list' }"
+        @click="goTo('my_review_list')"
+      >
+        <img src="/public/assets/icons/ic-mypage-reply-list.png" alt="메뉴이미지" />
+        <p class="mypage-sub-menu-title">내가 쓴 리뷰</p>
       </div>
     </div>
   </div>
